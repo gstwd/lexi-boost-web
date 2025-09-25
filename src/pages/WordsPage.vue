@@ -1,140 +1,215 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Words Library</h1>
-        <p class="text-gray-600">Manage and explore your vocabulary collection</p>
-      </div>
-
-      <div v-if="loading" class="flex justify-center items-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-      </div>
-
-      <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-        <div class="flex">
-          <div class="text-red-400 mr-3">
-            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-            </svg>
-          </div>
-          <div>
-            <h3 class="text-sm font-medium text-red-800">Error loading words</h3>
-            <div class="mt-2 text-sm text-red-700">
-              <p>{{ error }}</p>
+  <div class="word-page">
+    <el-container>
+      <el-header height="auto" class="header">
+        <el-row justify="center">
+          <el-col :span="20">
+            <div class="header-content">
+              <h1 class="page-title">词汇库</h1>
+              <p class="page-subtitle">管理和探索你的词汇收藏</p>
             </div>
-            <div class="mt-4">
-              <button
-                @click="refreshWords"
-                class="bg-red-100 hover:bg-red-200 text-red-800 text-sm font-medium py-2 px-4 rounded-md transition-colors"
+          </el-col>
+        </el-row>
+      </el-header>
+
+      <el-main>
+        <el-row justify="center">
+          <el-col :span="20">
+            <el-card v-loading="loading" element-loading-text="加载中...">
+              <template #header>
+                <div class="card-header">
+                  <el-row justify="space-between" align="middle">
+                    <el-col :span="12">
+                      <el-text type="info">
+                        显示 {{ words.length }} / {{ pagination.total }} 个单词
+                      </el-text>
+                    </el-col>
+                    <el-col :span="12" style="text-align: right">
+                      <el-button type="primary" @click="showAddDialog = true" :icon="Plus">
+                        添加单词
+                      </el-button>
+                      <el-button @click="refreshWords" :icon="Refresh">
+                        刷新
+                      </el-button>
+                    </el-col>
+                  </el-row>
+                </div>
+              </template>
+
+              <el-alert
+                v-if="error"
+                :title="error"
+                type="error"
+                show-icon
+                :closable="false"
+                class="mb-4"
               >
-                Try Again
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+                <template #default>
+                  <el-button type="danger" size="small" @click="refreshWords">
+                    重试
+                  </el-button>
+                </template>
+              </el-alert>
 
-      <div v-else>
-        <div class="flex justify-between items-center mb-6">
-          <div class="text-sm text-gray-600">
-            Showing {{ words.length }} of {{ pagination.total }} words
-          </div>
-          <button
-            @click="refreshWords"
-            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md font-medium transition-colors"
-          >
-            Refresh
-          </button>
-        </div>
+              <el-empty v-if="!loading && words.length === 0" description="暂无单词数据">
+                <el-button type="primary" @click="showAddDialog = true">
+                  添加第一个单词
+                </el-button>
+              </el-empty>
 
-        <div v-if="words.length === 0" class="text-center py-12">
-          <div class="text-gray-400 mb-4">
-            <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-          </div>
-          <h3 class="text-lg font-medium text-gray-900 mb-2">No words found</h3>
-          <p class="text-gray-600">Start building your vocabulary by adding some words.</p>
-        </div>
+              <el-row v-else :gutter="16">
+                <el-col
+                  v-for="word in words"
+                  :key="word.id"
+                  :xs="24"
+                  :sm="12"
+                  :md="8"
+                  :lg="6"
+                  class="mb-4"
+                >
+                  <el-card class="word-card" shadow="hover">
+                    <template #header>
+                      <div class="word-header">
+                        <el-text tag="h3" class="word-title">{{ word.word }}</el-text>
+                        <el-tag
+                          :type="getDifficultyTagType(word.difficulty)"
+                          size="small"
+                        >
+                          {{ getDifficultyText(word.difficulty) }}
+                        </el-tag>
+                      </div>
+                    </template>
 
-        <div v-else class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <div
-            v-for="word in words"
-            :key="word.id"
-            class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow"
-          >
-            <div class="flex justify-between items-start mb-3">
-              <h3 class="text-lg font-semibold text-gray-900">{{ word.word }}</h3>
-              <span
-                :class="difficultyBadgeClass(word.difficulty)"
-                class="px-2 py-1 text-xs font-medium rounded-full"
-              >
-                {{ word.difficulty }}
-              </span>
-            </div>
+                    <div class="word-content">
+                      <el-text class="word-meaning">{{ word.meaning }}</el-text>
 
-            <p class="text-gray-600 mb-3">{{ word.meaning }}</p>
+                      <div v-if="word.pronunciation" class="word-pronunciation">
+                        <el-text type="info" size="small">
+                          <el-icon><Microphone /></el-icon>
+                          {{ word.pronunciation }}
+                        </el-text>
+                      </div>
 
-            <div v-if="word.pronunciation" class="text-sm text-gray-500 mb-3">
-              <span class="font-medium">Pronunciation:</span> {{ word.pronunciation }}
-            </div>
+                      <div v-if="word.tags && word.tags.length > 0" class="word-tags">
+                        <el-tag
+                          v-for="tag in word.tags"
+                          :key="tag"
+                          size="small"
+                          effect="plain"
+                          class="tag-item"
+                        >
+                          {{ tag }}
+                        </el-tag>
+                      </div>
+                    </div>
 
-            <div v-if="word.tags && word.tags.length > 0" class="flex flex-wrap gap-1">
-              <span
-                v-for="tag in word.tags"
-                :key="tag"
-                class="bg-gray-100 text-gray-700 px-2 py-1 text-xs rounded-md"
-              >
-                {{ tag }}
-              </span>
-            </div>
-          </div>
-        </div>
+                    <template #footer>
+                      <div class="word-actions">
+                        <el-button type="primary" size="small" @click="editWord(word)" :icon="Edit">
+                          编辑
+                        </el-button>
+                        <el-button type="danger" size="small" @click="deleteWord(word)" :icon="Delete">
+                          删除
+                        </el-button>
+                      </div>
+                    </template>
+                  </el-card>
+                </el-col>
+              </el-row>
 
-        <div v-if="totalPages > 1" class="mt-8 flex justify-center">
-          <nav class="flex items-center space-x-2">
-            <button
-              @click="goToPage(pagination.page - 1)"
-              :disabled="pagination.page <= 1"
-              class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Previous
-            </button>
+              <div v-if="totalPages > 1" class="pagination-wrapper">
+                <el-pagination
+                  v-model:current-page="pagination.page"
+                  :page-size="pagination.limit"
+                  :total="pagination.total"
+                  layout="prev, pager, next, jumper"
+                  @current-change="goToPage"
+                  background
+                />
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+      </el-main>
+    </el-container>
 
-            <span class="px-3 py-2 text-sm text-gray-700">
-              Page {{ pagination.page }} of {{ totalPages }}
-            </span>
-
-            <button
-              @click="goToPage(pagination.page + 1)"
-              :disabled="pagination.page >= totalPages"
-              class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Next
-            </button>
-          </nav>
-        </div>
-      </div>
-    </div>
+    <el-dialog
+      v-model="showAddDialog"
+      title="添加单词"
+      width="500px"
+      :before-close="handleDialogClose"
+    >
+      <el-form :model="wordForm" label-width="80px">
+        <el-form-item label="单词" required>
+          <el-input v-model="wordForm.word" placeholder="请输入单词" />
+        </el-form-item>
+        <el-form-item label="释义" required>
+          <el-input
+            v-model="wordForm.meaning"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入单词释义"
+          />
+        </el-form-item>
+        <el-form-item label="发音">
+          <el-input v-model="wordForm.pronunciation" placeholder="请输入发音" />
+        </el-form-item>
+        <el-form-item label="难度">
+          <el-select v-model="wordForm.difficulty" placeholder="请选择难度">
+            <el-option label="简单" value="easy" />
+            <el-option label="中等" value="medium" />
+            <el-option label="困难" value="hard" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="标签">
+          <el-input v-model="wordForm.tagsInput" placeholder="用逗号分隔多个标签" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="handleDialogClose">取消</el-button>
+        <el-button type="primary" @click="handleSaveWord">保存</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, ref, reactive } from 'vue'
 import { useWordsStore } from '@/store'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { Plus, Refresh, Edit, Delete, Microphone } from '@element-plus/icons-vue'
+import type { Word } from '@/api/types'
 
 const wordsStore = useWordsStore()
 
 const { words, loading, error, pagination } = wordsStore
 const totalPages = computed(() => wordsStore.totalPages)
 
-const difficultyBadgeClass = (difficulty: string) => {
-  const classes = {
-    easy: 'bg-green-100 text-green-800',
-    medium: 'bg-yellow-100 text-yellow-800',
-    hard: 'bg-red-100 text-red-800'
+const showAddDialog = ref(false)
+const wordForm = reactive({
+  word: '',
+  meaning: '',
+  pronunciation: '',
+  difficulty: 'medium' as 'easy' | 'medium' | 'hard',
+  tagsInput: ''
+})
+
+const getDifficultyTagType = (difficulty: string) => {
+  const typeMap = {
+    easy: 'success',
+    medium: 'warning',
+    hard: 'danger'
   }
-  return classes[difficulty as keyof typeof classes] || 'bg-gray-100 text-gray-800'
+  return typeMap[difficulty as keyof typeof typeMap] || 'info'
+}
+
+const getDifficultyText = (difficulty: string) => {
+  const textMap = {
+    easy: '简单',
+    medium: '中等',
+    hard: '困难'
+  }
+  return textMap[difficulty as keyof typeof textMap] || difficulty
 }
 
 const refreshWords = () => {
@@ -147,7 +222,193 @@ const goToPage = (page: number) => {
   }
 }
 
+const handleDialogClose = () => {
+  showAddDialog.value = false
+  resetForm()
+}
+
+const resetForm = () => {
+  Object.assign(wordForm, {
+    word: '',
+    meaning: '',
+    pronunciation: '',
+    difficulty: 'medium' as const,
+    tagsInput: ''
+  })
+}
+
+const handleSaveWord = async () => {
+  if (!wordForm.word || !wordForm.meaning) {
+    ElMessage.error('请填写单词和释义')
+    return
+  }
+
+  try {
+    const tags = wordForm.tagsInput ? wordForm.tagsInput.split(',').map(tag => tag.trim()).filter(Boolean) : []
+
+    await wordsStore.addWord({
+      word: wordForm.word,
+      meaning: wordForm.meaning,
+      pronunciation: wordForm.pronunciation || undefined,
+      difficulty: wordForm.difficulty,
+      tags: tags.length > 0 ? tags : undefined
+    })
+
+    ElMessage.success('单词添加成功')
+    handleDialogClose()
+    refreshWords()
+  } catch (error) {
+    ElMessage.error('添加失败，请稍后重试')
+  }
+}
+
+const editWord = (word: Word) => {
+  ElMessage.info('编辑功能开发中...')
+}
+
+const deleteWord = async (word: Word) => {
+  try {
+    await ElMessageBox.confirm(
+      `确定要删除单词 "${word.word}" 吗？`,
+      '确认删除',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    )
+
+    await wordsStore.deleteWord(word.id)
+    ElMessage.success('删除成功')
+    refreshWords()
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败，请稍后重试')
+    }
+  }
+}
+
 onMounted(() => {
   refreshWords()
 })
 </script>
+
+<style scoped>
+.word-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.header {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 20px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  text-align: center;
+}
+
+.page-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+  background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+.card-header {
+  padding: 0;
+}
+
+.word-card {
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.word-card:hover {
+  transform: translateY(-4px);
+}
+
+.word-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+}
+
+.word-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.word-content {
+  padding: 16px 0;
+}
+
+.word-meaning {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.word-pronunciation {
+  margin-bottom: 12px;
+}
+
+.word-pronunciation .el-text {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.word-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-item {
+  font-size: 12px;
+}
+
+.word-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.mb-4 {
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 24px;
+  }
+
+  .word-actions {
+    justify-content: center;
+  }
+}
+</style>

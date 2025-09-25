@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is "Lexi Boost" - a Vue 3 vocabulary learning web application. It helps users manage and study words with features for CRUD operations on vocabulary and study modes.
+This is "Lexi Boost" - a Vue 3 vocabulary learning web application. It helps users manage and study words with features for CRUD operations on vocabulary.
 
 ## Commands
 
@@ -19,7 +19,7 @@ This is "Lexi Boost" - a Vue 3 vocabulary learning web application. It helps use
 **Project Structure**:
 - `src/api/` - HTTP client and API endpoints (words CRUD operations)
 - `src/store/` - Pinia stores for state management (words store with pagination)
-- `src/pages/` - Vue page components (WordsPage, StudyPage)
+- `src/pages/` - Vue page components (WordsPage)
 - `src/router/` - Vue Router configuration with navigation guards
 
 **Key Patterns**:
@@ -39,5 +39,5 @@ This is "Lexi Boost" - a Vue 3 vocabulary learning web application. It helps use
 
 **Routing**:
 - Default redirect to `/words`
-- Two main routes: `/words` (word list) and `/study` (study mode)
+- Main route: `/words` (word list)
 - Dynamic page titles set via route meta and beforeEach guard

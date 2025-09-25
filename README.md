@@ -1,6 +1,6 @@
 # Lexi Boost - 词汇学习Web应用
 
-一个基于 Vue 3 的现代化词汇学习应用，帮助用户管理和学习单词，提供增删改查功能和学习模式。
+一个基于 Vue 3 的现代化词汇学习应用，帮助用户管理和学习单词，提供增删改查功能。
 
 ## 🚀 技术栈
 
@@ -35,8 +35,7 @@ lexi-boost-web/
 │   │   ├── index.ts          # API 模块导出
 │   │   └── words.ts          # 单词相关 API 接口
 │   ├── pages/                # 页面组件
-│   │   ├── WordsPage.vue     # 单词列表页面
-│   │   └── StudyPage.vue     # 学习模式页面
+│   │   └── WordsPage.vue     # 单词列表页面
 │   ├── router/               # 路由配置
 │   │   └── index.ts          # Vue Router 路由定义
 │   ├── store/                # 状态管理
@@ -62,7 +61,7 @@ lexi-boost-web/
 ### 各部分作用说明
 
 - **`src/api/`** - 处理所有HTTP请求，包含Axios客户端配置和词汇CRUD操作
-- **`src/pages/`** - Vue页面组件，包含词汇列表和学习模式界面
+- **`src/pages/`** - Vue页面组件，包含词汇列表界面
 - **`src/router/`** - 路由配置，管理页面跳转和导航守卫
 - **`src/store/`** - Pinia状态管理，处理全局状态（词汇数据、分页、加载状态等）
 

@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import WordsPage from '@/pages/WordsPage.vue'
-import StudyPage from '@/pages/StudyPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,14 +14,6 @@ const router = createRouter({
       component: WordsPage,
       meta: {
         title: 'Words List'
-      }
-    },
-    {
-      path: '/study',
-      name: 'study',
-      component: StudyPage,
-      meta: {
-        title: 'Study'
       }
     },
     {
