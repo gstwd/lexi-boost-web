@@ -1,8 +1,15 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { wordsApi, type Word, type WordsResponse } from '@/api'
+import type {
+  UserWordRecord,
+  WordEntry,
+  WordRecordFilters,
+  DuplicationAnalysis
+} from '@/types'
 
 export const useWordsStore = defineStore('words', () => {
+  // 原有状态
   const words = ref<Word[]>([])
   const currentWord = ref<Word | null>(null)
   const loading = ref(false)
@@ -13,8 +20,35 @@ export const useWordsStore = defineStore('words', () => {
     total: 0
   })
 
-  const totalPages = computed(() => Math.ceil(pagination.value.total / pagination.value.limit))
+  // 新增状态
+  const wordRecords = ref<UserWordRecord[]>([])
+  const currentWordRecord = ref<UserWordRecord | null>(null)
+  const wordEntries = ref<WordEntry[]>([])
+  const searchResults = ref<WordEntry[]>([])
+  const duplicationAnalysis = ref<DuplicationAnalysis | null>(null)
+  const recordFilters = ref<WordRecordFilters>({})
+  const recordPagination = ref({
+    page: 1,
+    limit: 20,
+    total: 0
+  })
 
+  // Computed
+  const totalPages = computed(() => Math.ceil(pagination.value.total / pagination.value.limit))
+  const totalRecordPages = computed(() => Math.ceil(recordPagination.value.total / recordPagination.value.limit))
+
+  const uniqueWordsCount = computed(() => {
+    const uniqueWords = new Set(wordRecords.value.map(record => record.wordEntryId))
+    return uniqueWords.size
+  })
+
+  const averageConfidence = computed(() => {
+    if (wordRecords.value.length === 0) return 0
+    const total = wordRecords.value.reduce((sum, record) => sum + record.confidence, 0)
+    return Number((total / wordRecords.value.length).toFixed(2))
+  })
+
+  // 原有方法
   const fetchWords = async (page = 1, limit = 20) => {
     loading.value = true
     error.value = null
@@ -108,6 +142,189 @@ export const useWordsStore = defineStore('words', () => {
     }
   }
 
+  // 新增方法 - 词条管理
+  const searchWordEntries = async (query: string, page = 1, limit = 20) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await wordsApi.searchWordEntries(query, page, limit)
+      if (response.success) {
+        searchResults.value = response.data.items
+      }
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to search word entries'
+      console.error('Error searching word entries:', err)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const getWordEntry = async (word: string) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await wordsApi.getWordEntry(word)
+      if (response.success) {
+        return response.data
+      }
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to get word entry'
+      console.error('Error getting word entry:', err)
+    } finally {
+      loading.value = false
+    }
+    return null
+  }
+
+  // 用户单词记录管理
+  const createWordRecord = async (record: Omit<UserWordRecord, 'id' | 'createdAt' | 'updatedAt'>) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await wordsApi.createWordRecord(record)
+      if (response.success) {
+        wordRecords.value.unshift(response.data)
+        recordPagination.value.total += 1
+        return response.data
+      }
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to create word record'
+      console.error('Error creating word record:', err)
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const fetchWordRecords = async (filters: WordRecordFilters = {}, page = 1, limit = 20) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await wordsApi.getWordRecords(filters, page, limit)
+      if (response.success) {
+        wordRecords.value = response.data.items
+        recordPagination.value = {
+          page: response.data.page,
+          limit: response.data.limit,
+          total: response.data.total
+        }
+      }
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to fetch word records'
+      console.error('Error fetching word records:', err)
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const getWordRecord = async (id: number) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await wordsApi.getWordRecord(id)
+      if (response.success) {
+        currentWordRecord.value = response.data
+        return response.data
+      }
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to get word record'
+      console.error('Error getting word record:', err)
+    } finally {
+      loading.value = false
+    }
+    return null
+  }
+
+  const updateWordRecord = async (id: number, updates: Partial<UserWordRecord>) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await wordsApi.updateWordRecord(id, updates)
+      if (response.success) {
+        const index = wordRecords.value.findIndex(r => r.id === id)
+        if (index !== -1) {
+          wordRecords.value[index] = response.data
+        }
+        if (currentWordRecord.value?.id === id) {
+          currentWordRecord.value = response.data
+        }
+        return response.data
+      }
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to update word record'
+      console.error('Error updating word record:', err)
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const deleteWordRecord = async (id: number) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      await wordsApi.deleteWordRecord(id)
+      wordRecords.value = wordRecords.value.filter(r => r.id !== id)
+      recordPagination.value.total -= 1
+      if (currentWordRecord.value?.id === id) {
+        currentWordRecord.value = null
+      }
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to delete word record'
+      console.error('Error deleting word record:', err)
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // 重复检测
+  const checkDuplication = async (word: string, meaning: string, context: string) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await wordsApi.checkDuplication(word, meaning, context)
+      if (response.success) {
+        duplicationAnalysis.value = response.data
+        return response.data
+      }
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to check duplication'
+      console.error('Error checking duplication:', err)
+    } finally {
+      loading.value = false
+    }
+    return null
+  }
+
+  const getDuplicationAnalysis = async (wordEntryId: number) => {
+    loading.value = true
+    error.value = null
+
+    try {
+      const response = await wordsApi.getDuplicationAnalysis(wordEntryId)
+      if (response.success) {
+        duplicationAnalysis.value = response.data
+        return response.data
+      }
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Failed to get duplication analysis'
+      console.error('Error getting duplication analysis:', err)
+    } finally {
+      loading.value = false
+    }
+    return null
+  }
+
+  // 工具方法
   const clearError = () => {
     error.value = null
   }
@@ -116,7 +333,20 @@ export const useWordsStore = defineStore('words', () => {
     currentWord.value = null
   }
 
+  const resetCurrentWordRecord = () => {
+    currentWordRecord.value = null
+  }
+
+  const setRecordFilters = (filters: WordRecordFilters) => {
+    recordFilters.value = filters
+  }
+
+  const clearFilters = () => {
+    recordFilters.value = {}
+  }
+
   return {
+    // 原有状态和方法
     words,
     currentWord,
     loading,
@@ -129,6 +359,38 @@ export const useWordsStore = defineStore('words', () => {
     updateWord,
     deleteWord,
     clearError,
-    resetCurrentWord
+    resetCurrentWord,
+
+    // 新增状态和方法
+    wordRecords,
+    currentWordRecord,
+    wordEntries,
+    searchResults,
+    duplicationAnalysis,
+    recordFilters,
+    recordPagination,
+    totalRecordPages,
+    uniqueWordsCount,
+    averageConfidence,
+
+    // 词条管理
+    searchWordEntries,
+    getWordEntry,
+
+    // 用户记录管理
+    createWordRecord,
+    fetchWordRecords,
+    getWordRecord,
+    updateWordRecord,
+    deleteWordRecord,
+
+    // 重复检测
+    checkDuplication,
+    getDuplicationAnalysis,
+
+    // 工具方法
+    resetCurrentWordRecord,
+    setRecordFilters,
+    clearFilters
   }
 })

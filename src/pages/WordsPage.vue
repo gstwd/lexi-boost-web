@@ -178,7 +178,7 @@ import { onMounted, computed, ref, reactive } from 'vue'
 import { useWordsStore } from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Refresh, Edit, Delete, Microphone } from '@element-plus/icons-vue'
-import type { Word } from '@/api/types'
+import type { Word } from '@/api/words'
 
 const wordsStore = useWordsStore()
 
