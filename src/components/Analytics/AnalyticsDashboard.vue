@@ -177,14 +177,12 @@
         <div class="bg-white border rounded-lg p-4">
           <LineChart
             v-if="(selectedChartType === 'words' || selectedChartType === 'reviews' || selectedChartType === 'accuracy') && chartDataReady"
-            :data="getTrendChartData(selectedChartType)"
-            :options="getTrendChartOptions(selectedChartType)"
+            :option="getTrendChartData(selectedChartType)"
             height="300px"
           />
           <BarChart
             v-else-if="selectedChartType === 'time' && chartDataReady"
-            :data="getTimeChartData()"
-            :options="getTimeChartOptions()"
+            :option="getTimeChartData()"
             height="300px"
           />
           <div v-else class="flex items-center justify-center h-72 text-gray-500">
@@ -200,7 +198,7 @@
           <!-- 掌握度饼图 -->
           <div class="bg-white border rounded-lg p-4">
             <PieChart
-              :data="getMasteryDistributionChartData()"
+              :option="getMasteryDistributionChartData()"
               height="280px"
             />
           </div>
@@ -503,7 +501,6 @@ const exportData = async () => {
 // Chart data generation methods
 const getTrendChartData = (type: string) => {
   try {
-    // Generate sample data based on analytics store data
     const sampleData = generateSampleTrendData()
 
     if (!sampleData || sampleData.length === 0) {
@@ -514,55 +511,64 @@ const getTrendChartData = (type: string) => {
     if (type === 'words' || type === 'reviews') {
       return ChartUtils.generateLearningTrendChart(sampleData)
     } else if (type === 'accuracy') {
+      const categories = sampleData.map(d => {
+        const date = new Date(d.date)
+        return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+      })
+
       return {
-        labels: sampleData.map(d => {
-          const date = new Date(d.date)
-          return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
-        }),
-        datasets: [{
-          label: '正确率',
+        tooltip: {
+          trigger: 'axis'
+        },
+        xAxis: {
+          type: 'category' as const,
+          data: categories,
+          name: '日期',
+          nameLocation: 'middle' as const,
+          nameGap: 30
+        },
+        yAxis: {
+          type: 'value' as const,
+          name: '正确率 (%)',
+          min: 0,
+          max: 100,
+          axisLabel: {
+            formatter: '{value}%'
+          }
+        },
+        series: [{
+          name: '正确率',
+          type: 'line' as const,
           data: sampleData.map(d => d.accuracy * 100),
-          borderColor: '#F59E0B',
-          backgroundColor: 'rgba(245, 158, 11, 0.1)',
-          borderWidth: 2,
-          fill: true,
-          tension: 0.4
-        }]
+          smooth: true,
+          lineStyle: {
+            color: '#F59E0B',
+            width: 2
+          },
+          areaStyle: {
+            color: {
+              type: 'linear' as const,
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [{
+                offset: 0, color: 'rgba(245, 158, 11, 0.3)'
+              }, {
+                offset: 1, color: 'rgba(245, 158, 11, 0.1)'
+              }]
+            }
+          }
+        }],
+        animation: true,
+        animationDuration: 1000
       }
     }
-    return { labels: [], datasets: [] }
+    return {}
   } catch (error) {
     console.error('Error generating trend chart data:', error)
-    return { labels: [], datasets: [] }
+    return {}
   }
-}
-
-const getTrendChartOptions = (type: string) => {
-  if (type === 'accuracy') {
-    return {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        title: {
-          display: true,
-          text: '正确率趋势',
-          font: { size: 16, weight: 'bold' as const }
-        },
-        legend: { position: 'top' as const }
-      },
-      scales: {
-        x: {
-          title: { display: true, text: '日期' }
-        },
-        y: {
-          title: { display: true, text: '正确率 (%)' },
-          min: 0,
-          max: 100
-        }
-      }
-    }
-  }
-  return ChartUtils.getLearningTrendOptions()
 }
 
 const getTimeChartData = () => {
@@ -579,19 +585,7 @@ const getTimeChartData = () => {
     return ChartUtils.generateStudyTimeChart(sampleTimeData)
   } catch (error) {
     console.error('Error generating time chart data:', error)
-    return { labels: [], datasets: [] }
-  }
-}
-
-const getTimeChartOptions = () => {
-  try {
-    return ChartUtils.getStudyTimeOptions()
-  } catch (error) {
-    console.error('Error getting time chart options:', error)
-    return {
-      responsive: true,
-      maintainAspectRatio: false
-    }
+    return {}
   }
 }
 
@@ -606,7 +600,7 @@ const getMasteryDistributionChartData = () => {
     return ChartUtils.generateMasteryDistributionChart(masteryData)
   } catch (error) {
     console.error('Error generating mastery distribution chart data:', error)
-    return { labels: [], datasets: [] }
+    return {}
   }
 }
 

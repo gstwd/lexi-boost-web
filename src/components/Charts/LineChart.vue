@@ -1,125 +1,116 @@
 <template>
   <div class="line-chart-container" :style="{ width: width, height: height }">
-    <canvas ref="chartRef"></canvas>
+    <v-chart
+      ref="chartRef"
+      :option="chartOption"
+      :theme="theme"
+      :autoresize="true"
+      @click="onChartClick"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { use } from 'echarts/core'
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-  type ChartData,
-  type ChartOptions
-} from 'chart.js'
+  CanvasRenderer
+} from 'echarts/renderers'
+import {
+  LineChart
+} from 'echarts/charts'
+import {
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  GridComponent
+} from 'echarts/components'
+import VChart from 'vue-echarts'
+import type { EChartsOption } from 'echarts'
 
-// 注册Chart.js组件
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-)
+// 注册ECharts组件
+use([
+  CanvasRenderer,
+  LineChart,
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  GridComponent
+])
 
 interface Props {
-  data: ChartData<'line'>
-  options?: ChartOptions<'line'>
+  option: EChartsOption
   width?: string
   height?: string
+  theme?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
   height: '400px',
-  options: () => ({
+  theme: 'default'
+})
+
+const emit = defineEmits<{
+  click: [params: any]
+}>()
+
+const chartRef = ref<InstanceType<typeof VChart>>()
+
+// 合并默认配置和传入的配置
+const chartOption = computed(() => {
+  const defaultOption: EChartsOption = {
+    animation: true,
+    animationDuration: 1000,
     responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top'
-      },
-      title: {
-        display: false
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      borderColor: 'rgba(255, 255, 255, 0.1)',
+      borderWidth: 1,
+      textStyle: {
+        color: 'white'
       }
     },
-    scales: {
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: 'rgba(0, 0, 0, 0.1)'
-        }
-      },
-      x: {
-        grid: {
-          display: false
-        }
-      }
-    },
-    interaction: {
-      intersect: false,
-      mode: 'index'
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
     }
-  })
-})
-
-const chartRef = ref<HTMLCanvasElement>()
-let chartInstance: ChartJS<'line'> | null = null
-
-const createChart = () => {
-  if (!chartRef.value) return
-
-  const ctx = chartRef.value.getContext('2d')
-  if (!ctx) return
-
-  try {
-    chartInstance = new ChartJS(ctx, {
-      type: 'line',
-      data: props.data,
-      options: props.options
-    })
-  } catch (error) {
-    console.error('Failed to create line chart:', error)
   }
-}
 
-const updateChart = () => {
-  if (chartInstance) {
-    chartInstance.data = props.data
-    chartInstance.update()
-  }
-}
-
-const destroyChart = () => {
-  if (chartInstance) {
-    chartInstance.destroy()
-    chartInstance = null
-  }
-}
-
-// 监听数据变化
-watch(() => props.data, updateChart, { deep: true })
-
-onMounted(() => {
-  try {
-    createChart()
-  } catch (error) {
-    console.error('Failed to mount LineChart:', error)
+  // 深度合并配置
+  return {
+    ...defaultOption,
+    ...props.option,
+    tooltip: {
+      ...defaultOption.tooltip,
+      ...props.option.tooltip
+    },
+    grid: {
+      ...defaultOption.grid,
+      ...props.option.grid
+    }
   }
 })
 
-onUnmounted(() => {
-  destroyChart()
+// 监听配置变化
+watch(() => props.option, () => {
+  // ECharts会自动处理配置更新
+}, { deep: true })
+
+const onChartClick = (params: any) => {
+  emit('click', params)
+}
+
+// 暴露图表实例方法
+const getEchartsInstance = () => {
+  return chartRef.value?.getEchartsInstance()
+}
+
+defineExpose({
+  getEchartsInstance
 })
 </script>
 

@@ -1,98 +1,113 @@
 <template>
   <div class="pie-chart-container" :style="{ width: width, height: height }">
-    <canvas ref="chartRef"></canvas>
+    <v-chart
+      ref="chartRef"
+      :option="chartOption"
+      :theme="theme"
+      :autoresize="true"
+      @click="onChartClick"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { use } from 'echarts/core'
 import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-  type ChartData,
-  type ChartOptions
-} from 'chart.js'
+  CanvasRenderer
+} from 'echarts/renderers'
+import {
+  PieChart
+} from 'echarts/charts'
+import {
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent
+} from 'echarts/components'
+import VChart from 'vue-echarts'
+import type { EChartsOption } from 'echarts'
 
-// 注册Chart.js组件
-ChartJS.register(ArcElement, Tooltip, Legend)
+// 注册ECharts组件
+use([
+  CanvasRenderer,
+  PieChart,
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent
+])
 
 interface Props {
-  data: ChartData<'pie'>
-  options?: ChartOptions<'pie'>
+  option: EChartsOption
   width?: string
   height?: string
+  theme?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   width: '100%',
   height: '300px',
-  options: () => ({
+  theme: 'default'
+})
+
+const emit = defineEmits<{
+  click: [params: any]
+}>()
+
+const chartRef = ref<InstanceType<typeof VChart>>()
+
+// 合并默认配置和传入的配置
+const chartOption = computed(() => {
+  const defaultOption: EChartsOption = {
+    animation: true,
+    animationDuration: 1000,
     responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'bottom',
-        labels: {
-          padding: 20,
-          usePointStyle: true
-        }
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      borderColor: 'rgba(255, 255, 255, 0.1)',
+      borderWidth: 1,
+      textStyle: {
+        color: 'white'
       },
-      tooltip: {
-        callbacks: {
-          label: (context) => {
-            const label = context.label || ''
-            const value = context.parsed || 0
-            const total = (context.dataset.data as number[]).reduce((sum, val) => sum + val, 0)
-            const percentage = ((value / total) * 100).toFixed(1)
-            return `${label}: ${value} (${percentage}%)`
-          }
-        }
-      }
+      formatter: '{a} <br/>{b}: {c} ({d}%)'
+    },
+    legend: {
+      bottom: '5%',
+      left: 'center'
     }
-  })
+  }
+
+  // 深度合并配置
+  return {
+    ...defaultOption,
+    ...props.option,
+    tooltip: {
+      ...defaultOption.tooltip,
+      ...props.option.tooltip
+    },
+    legend: {
+      ...defaultOption.legend,
+      ...props.option.legend
+    }
+  }
 })
 
-const chartRef = ref<HTMLCanvasElement>()
-let chartInstance: ChartJS<'pie'> | null = null
+// 监听配置变化
+watch(() => props.option, () => {
+  // ECharts会自动处理配置更新
+}, { deep: true })
 
-const createChart = () => {
-  if (!chartRef.value) return
-
-  const ctx = chartRef.value.getContext('2d')
-  if (!ctx) return
-
-  chartInstance = new ChartJS(ctx, {
-    type: 'pie',
-    data: props.data,
-    options: props.options
-  })
+const onChartClick = (params: any) => {
+  emit('click', params)
 }
 
-const updateChart = () => {
-  if (chartInstance) {
-    chartInstance.data = props.data
-    chartInstance.update()
-  }
+// 暴露图表实例方法
+const getEchartsInstance = () => {
+  return chartRef.value?.getEchartsInstance()
 }
 
-const destroyChart = () => {
-  if (chartInstance) {
-    chartInstance.destroy()
-    chartInstance = null
-  }
-}
-
-// 监听数据变化
-watch(() => props.data, updateChart, { deep: true })
-
-onMounted(() => {
-  createChart()
-})
-
-onUnmounted(() => {
-  destroyChart()
+defineExpose({
+  getEchartsInstance
 })
 </script>
 

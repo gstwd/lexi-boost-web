@@ -2,7 +2,7 @@
   <div class="charts-demo bg-white rounded-lg shadow-lg p-6">
     <div class="mb-6">
       <h2 class="text-xl font-semibold text-gray-800 mb-2">数据可视化演示</h2>
-      <p class="text-gray-600">Chart.js 图表库集成示例</p>
+      <p class="text-gray-600">ECharts 图表库集成示例</p>
     </div>
 
     <div class="space-y-8">
@@ -11,8 +11,7 @@
         <h3 class="font-semibold text-gray-800 mb-4">学习趋势</h3>
         <div class="bg-white border rounded-lg p-4">
           <LineChart
-            :data="learningTrendData"
-            :options="learningTrendOptions"
+            :option="learningTrendData"
             height="300px"
           />
         </div>
@@ -24,7 +23,7 @@
           <h3 class="font-semibold text-gray-800 mb-4">掌握度分布</h3>
           <div class="bg-white border rounded-lg p-4">
             <PieChart
-              :data="masteryDistributionData"
+              :option="masteryDistributionData"
               height="300px"
             />
           </div>
@@ -35,7 +34,7 @@
           <h3 class="font-semibold text-gray-800 mb-4">难度分布</h3>
           <div class="bg-white border rounded-lg p-4">
             <BarChart
-              :data="difficultyDistributionData"
+              :option="difficultyDistributionData"
               height="300px"
             />
           </div>
@@ -47,8 +46,7 @@
         <h3 class="font-semibold text-gray-800 mb-4">每日学习时间分布</h3>
         <div class="bg-white border rounded-lg p-4">
           <BarChart
-            :data="studyTimeData"
-            :options="studyTimeOptions"
+            :option="studyTimeData"
             height="300px"
           />
         </div>
@@ -77,10 +75,6 @@ const learningTrendRawData = [
 
 const learningTrendData = computed(() =>
   ChartUtils.generateLearningTrendChart(learningTrendRawData)
-)
-
-const learningTrendOptions = computed(() =>
-  ChartUtils.getLearningTrendOptions()
 )
 
 // 掌握度分布数据
@@ -121,9 +115,5 @@ const studyTimeRawData = [
 
 const studyTimeData = computed(() =>
   ChartUtils.generateStudyTimeChart(studyTimeRawData)
-)
-
-const studyTimeOptions = computed(() =>
-  ChartUtils.getStudyTimeOptions()
 )
 </script>
