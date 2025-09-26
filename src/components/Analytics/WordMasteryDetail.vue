@@ -224,10 +224,10 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { WordMasteryProgress } from '@/types'
+import type { WordMasteryDetail } from '@/types'
 
 interface Props {
-  word: WordMasteryProgress
+  word: WordMasteryDetail
 }
 
 const props = defineProps<Props>()
@@ -278,16 +278,24 @@ const getMasteryLevelColor = (level: number): string => {
   return '#6B7280'
 }
 
-const getTrendClass = (trend: number): string => {
-  if (trend > 0.1) return 'bg-green-100 text-green-800'
-  if (trend < -0.1) return 'bg-red-100 text-red-800'
-  return 'bg-gray-100 text-gray-800'
+const getTrendClass = (trend: string): string => {
+  switch (trend) {
+    case 'improving': return 'bg-green-100 text-green-800'
+    case 'declining': return 'bg-red-100 text-red-800'
+    case 'stable': return 'bg-blue-100 text-blue-800'
+    case 'fluctuating': return 'bg-yellow-100 text-yellow-800'
+    default: return 'bg-gray-100 text-gray-800'
+  }
 }
 
-const formatTrend = (trend: number): string => {
-  if (Math.abs(trend) < 0.1) return '稳定'
-  const direction = trend > 0 ? '上升' : '下降'
-  return `${direction} ${Math.abs(trend).toFixed(1)}`
+const formatTrend = (trend: string): string => {
+  switch (trend) {
+    case 'improving': return '上升'
+    case 'declining': return '下降'
+    case 'stable': return '稳定'
+    case 'fluctuating': return '波动'
+    default: return '未知'
+  }
 }
 
 const getQuestionTypeLabel = (type: string): string => {

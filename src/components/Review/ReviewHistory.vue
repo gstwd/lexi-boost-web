@@ -285,8 +285,8 @@ const filters = reactive<ReviewSessionFilters>({
 let searchTimeout: number | null = null
 
 // Computed
-const sessions = computed(() => reviewsStore.sessionHistory || [])
-const totalSessions = computed(() => reviewsStore.sessionHistoryTotal || 0)
+const sessions = computed(() => reviewsStore.sessions || [])
+const totalSessions = computed(() => reviewsStore.sessions?.length || 0)
 const totalPages = computed(() => Math.ceil(totalSessions.value / pageSize.value))
 
 const visiblePages = computed(() => {
@@ -313,17 +313,17 @@ const visiblePages = computed(() => {
 })
 
 const totalQuestions = computed(() => {
-  return sessions.value.reduce((sum, session) => sum + session.totalQuestions, 0)
+  return sessions.value.reduce((sum: number, session: any) => sum + session.totalQuestions, 0)
 })
 
 const averageAccuracy = computed(() => {
   if (sessions.value.length === 0) return 0
-  const totalCorrect = sessions.value.reduce((sum, session) => sum + session.correctAnswers, 0)
+  const totalCorrect = sessions.value.reduce((sum: number, session: any) => sum + session.correctAnswers, 0)
   return (totalCorrect / totalQuestions.value) * 100
 })
 
 const totalStudyTime = computed(() => {
-  return sessions.value.reduce((sum, session) => sum + (session.duration || 0), 0)
+  return sessions.value.reduce((sum: number, session: any) => sum + (session.duration || 0), 0)
 })
 
 // 方法

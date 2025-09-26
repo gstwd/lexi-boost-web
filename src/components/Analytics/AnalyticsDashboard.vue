@@ -518,7 +518,7 @@ const getTrendChartData = (type: string) => {
 
       return {
         tooltip: {
-          trigger: 'axis'
+          trigger: 'axis' as const
         },
         xAxis: {
           type: 'category' as const,

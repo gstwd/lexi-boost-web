@@ -129,7 +129,7 @@
             <!-- 趋势指示器 -->
             <div class="flex items-center justify-end mt-2">
               <svg
-                v-if="word.masteryTrend > 0"
+                v-if="word.masteryTrend === 'improving'"
                 class="w-4 h-4 text-green-500"
                 fill="none"
                 stroke="currentColor"
@@ -138,7 +138,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
               </svg>
               <svg
-                v-else-if="word.masteryTrend < 0"
+                v-else-if="word.masteryTrend === 'declining'"
                 class="w-4 h-4 text-red-500"
                 fill="none"
                 stroke="currentColor"
@@ -222,7 +222,7 @@
         </div>
 
         <div class="p-6">
-          <WordMasteryDetail :word="selectedWord" />
+          <WordMasteryDetailComponent :word="selectedWord" />
         </div>
       </div>
     </div>
@@ -231,16 +231,12 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
-import { useAnalyticsStore } from '@/store'
-import type { WordMasteryProgress } from '@/types'
-import WordMasteryDetail from './WordMasteryDetail.vue'
-
-// Store
-const analyticsStore = useAnalyticsStore()
+import type { WordMasteryDetail } from '@/types'
+import WordMasteryDetailComponent from './WordMasteryDetail.vue'
 
 // 状态
 const loading = ref(false)
-const selectedWord = ref<WordMasteryProgress | null>(null)
+const selectedWord = ref<WordMasteryDetail | null>(null)
 const currentPage = ref(1)
 const pageSize = ref(10)
 const sortBy = ref('masteryLevel')
@@ -253,10 +249,10 @@ const filters = reactive({
 })
 
 // 搜索防抖
-let searchTimeout: number | null = null
+let searchTimeout: NodeJS.Timeout | null = null
 
 // 模拟数据
-const words = ref<WordMasteryProgress[]>([
+const words = ref<WordMasteryDetail[]>([
   {
     id: 1,
     wordEntryId: 101,
@@ -264,7 +260,7 @@ const words = ref<WordMasteryProgress[]>([
     meaning: '详细阐述；精心制作的',
     difficulty: 4,
     masteryLevel: 3.8,
-    masteryTrend: 0.5,
+    masteryTrend: 'improving',
     accuracy: 0.82,
     reviewCount: 12,
     correctCount: 10,
@@ -286,7 +282,7 @@ const words = ref<WordMasteryProgress[]>([
     meaning: '大量的；实质的；重要的',
     difficulty: 3,
     masteryLevel: 4.2,
-    masteryTrend: 0.3,
+    masteryTrend: 'stable',
     accuracy: 0.91,
     reviewCount: 8,
     correctCount: 7,
@@ -308,7 +304,7 @@ const words = ref<WordMasteryProgress[]>([
     meaning: '复杂的；错综复杂的',
     difficulty: 5,
     masteryLevel: 2.1,
-    masteryTrend: -0.2,
+    masteryTrend: 'declining',
     accuracy: 0.58,
     reviewCount: 15,
     correctCount: 9,
@@ -483,7 +479,7 @@ const changePage = (page: number) => {
   }
 }
 
-const viewWordDetail = (word: WordMasteryProgress) => {
+const viewWordDetail = (word: WordMasteryDetail) => {
   selectedWord.value = word
 }
 

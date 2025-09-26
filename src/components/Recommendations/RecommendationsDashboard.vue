@@ -9,7 +9,7 @@
     <div class="flex items-center justify-between mb-6">
       <div class="flex items-center space-x-4">
         <div class="text-sm text-gray-600">
-          最后更新: {{ formatDate(recommendations?.lastUpdated || '') }}
+          最后更新: {{ formatDate(recommendations?.generatedAt || '') }}
         </div>
         <button
           @click="refreshRecommendations"
@@ -58,18 +58,18 @@
           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
             <div
               v-for="word in urgentReviews.slice(0, 6)"
-              :key="word.wordId"
+              :key="word.wordRecordId"
               class="flex items-center justify-between p-3 bg-white rounded border border-red-100 hover:shadow-sm transition-shadow"
             >
               <div class="flex-1">
                 <div class="font-medium text-gray-800">{{ word.word }}</div>
-                <div class="text-sm text-gray-600">{{ word.meaning }}</div>
+                <div class="text-sm text-gray-600">{{ word.meaning || '未提供释义' }}</div>
                 <div class="text-xs text-red-600 mt-1">
-                  逾期 {{ getOverdueDays(word.dueDate) }} 天
+                  逾期 {{ getOverdueDays(word.dueDate || '') }} 天
                 </div>
               </div>
               <button
-                @click="reviewWord(word.wordId)"
+                @click="reviewWord(word.wordRecordId)"
                 class="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
               >
                 复习
@@ -129,11 +129,11 @@
       </div>
 
       <!-- 推荐单词 -->
-      <div class="mb-8" v-if="contentRecommendations?.suggestedWords.length > 0">
+      <div class="mb-8" v-if="contentRecommendations?.suggestedWords && contentRecommendations.suggestedWords.length > 0">
         <h3 class="font-semibold text-gray-800 mb-4">推荐学习单词</h3>
         <div class="grid md:grid-cols-2 gap-4">
           <div
-            v-for="word in contentRecommendations.suggestedWords.slice(0, 4)"
+            v-for="word in contentRecommendations?.suggestedWords?.slice(0, 4) || []"
             :key="word.word"
             class="border rounded-lg p-4 hover:shadow-md transition-shadow"
           >
@@ -223,7 +223,7 @@
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div
             v-for="goal in weeklyGoals"
-            :key="goal.id"
+            :key="goal.id || goal.type"
             class="border rounded-lg p-4"
           >
             <div class="flex items-center justify-between mb-2">
@@ -252,11 +252,11 @@
       </div>
 
       <!-- 个性化提示 -->
-      <div v-if="learningStrategies?.personalizedTips.length > 0" class="mb-8">
+      <div v-if="learningStrategies?.personalizedTips && learningStrategies.personalizedTips.length > 0" class="mb-8">
         <h3 class="font-semibold text-gray-800 mb-4">个性化建议</h3>
         <div class="space-y-3">
           <div
-            v-for="(tip, index) in learningStrategies.personalizedTips.slice(0, 3)"
+            v-for="(tip, index) in learningStrategies?.personalizedTips?.slice(0, 3) || []"
             :key="index"
             class="flex items-start space-x-3 p-4 bg-yellow-50 border border-yellow-200 rounded-lg"
           >
@@ -344,6 +344,7 @@ const formatDate = (dateString: string): string => {
 }
 
 const getOverdueDays = (dueDateString: string): number => {
+  if (!dueDateString) return 0
   const dueDate = new Date(dueDateString)
   const now = new Date()
   const diffTime = now.getTime() - dueDate.getTime()
@@ -396,10 +397,10 @@ const refreshRecommendations = async () => {
   }
 }
 
-const reviewWord = async (wordId: number) => {
+const reviewWord = async (wordRecordId: number) => {
   try {
     // 跳转到复习界面或开始单词复习
-    console.log('Review word:', wordId)
+    console.log('Review word:', wordRecordId)
   } catch (error) {
     console.error('Review word failed:', error)
   }

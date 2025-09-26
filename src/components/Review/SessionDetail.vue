@@ -90,7 +90,7 @@
           </div>
           <div class="text-right">
             <div class="text-xs text-red-600">{{ getReviewTypeLabel(word.questionType) }}</div>
-            <div class="text-xs text-red-500">用时 {{ word.timeSpent }}秒</div>
+            <div class="text-xs text-red-500">用时 {{ word.timeSpent || 0 }}秒</div>
           </div>
         </div>
       </div>
@@ -150,8 +150,8 @@
           :key="question.id"
           class="border rounded-lg p-4"
           :class="{
-            'border-green-200 bg-green-50': question.correct,
-            'border-red-200 bg-red-50': !question.correct
+            'border-green-200 bg-green-50': question.isCorrect,
+            'border-red-200 bg-red-50': !question.isCorrect
           }"
         >
           <div class="flex items-center justify-between mb-2">
@@ -163,11 +163,11 @@
               <span
                 class="text-xs px-2 py-1 rounded-full"
                 :class="{
-                  'bg-green-100 text-green-800': question.correct,
-                  'bg-red-100 text-red-800': !question.correct
+                  'bg-green-100 text-green-800': question.isCorrect,
+                  'bg-red-100 text-red-800': !question.isCorrect
                 }"
               >
-                {{ question.correct ? '正确' : '错误' }}
+                {{ question.isCorrect ? '正确' : '错误' }}
               </span>
             </div>
           </div>
@@ -177,13 +177,13 @@
           </div>
 
           <div class="text-sm text-gray-600 mb-2">
-            用时: {{ question.timeSpent }}秒
+            用时: {{ question.timeSpent || 0 }}秒
             <span v-if="question.difficulty" class="ml-4">
               难度反馈: {{ question.difficulty }}/5
             </span>
           </div>
 
-          <div v-if="!question.correct" class="text-sm">
+          <div v-if="!question.isCorrect" class="text-sm">
             <div class="text-red-600">你的答案: {{ question.userAnswer }}</div>
             <div class="text-green-600">正确答案: {{ question.correctAnswer }}</div>
           </div>
@@ -204,7 +204,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { ReviewSession, ReviewQuestion } from '@/types'
+import type { ReviewSession } from '@/types'
 
 interface Props {
   session: ReviewSession
@@ -249,7 +249,7 @@ const typeAnalysis = computed(() => {
     }
     const data = analysis.get(type)!
     data.total++
-    if (question.correct) {
+    if (question.isCorrect) {
       data.correct++
     }
   })
@@ -267,7 +267,7 @@ const incorrectWords = computed(() => {
   if (!props.session.questions) return []
 
   return props.session.questions
-    .filter(q => !q.correct)
+    .filter(q => !q.isCorrect)
     .map(q => ({
       wordId: q.wordId,
       word: q.word,
@@ -275,7 +275,7 @@ const incorrectWords = computed(() => {
       questionType: q.type,
       userAnswer: q.userAnswer,
       correctAnswer: q.correctAnswer,
-      timeSpent: q.timeSpent
+      timeSpent: q.timeSpent || 0
     }))
 })
 

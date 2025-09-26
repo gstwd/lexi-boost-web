@@ -12,7 +12,9 @@ import type {
   StudyTimeRecommendation,
   DifficultyAdjustment,
   PaginatedResponse,
-  DuplicationAnalysis
+  DuplicationAnalysis,
+  ReviewType,
+  MasteryTrend
 } from '@/types'
 
 class MockDataService {
@@ -68,7 +70,9 @@ class MockDataService {
       ],
       frequency: 850,
       difficulty: 3.2,
-      etymology: "Late Middle English: from Latin elaboratus"
+      etymology: "Late Middle English: from Latin elaboratus",
+      createdAt: this.getRandomDate(365),
+      updatedAt: this.getRandomDate(30)
     },
     {
       id: 2,
@@ -88,7 +92,9 @@ class MockDataService {
       ],
       frequency: 1200,
       difficulty: 2.8,
-      etymology: "Middle English: from Old French substantiel"
+      etymology: "Middle English: from Old French substantiel",
+      createdAt: this.getRandomDate(365),
+      updatedAt: this.getRandomDate(30)
     },
     {
       id: 3,
@@ -108,7 +114,9 @@ class MockDataService {
       ],
       frequency: 650,
       difficulty: 3.5,
-      etymology: "Late Middle English: from Latin intricatus"
+      etymology: "Late Middle English: from Latin intricatus",
+      createdAt: this.getRandomDate(365),
+      updatedAt: this.getRandomDate(30)
     },
     {
       id: 4,
@@ -128,7 +136,9 @@ class MockDataService {
       ],
       frequency: 420,
       difficulty: 4.1,
-      etymology: "Late Middle English: via late Latin from Greek paradeigma"
+      etymology: "Late Middle English: via late Latin from Greek paradeigma",
+      createdAt: this.getRandomDate(365),
+      updatedAt: this.getRandomDate(30)
     },
     {
       id: 5,
@@ -148,7 +158,9 @@ class MockDataService {
       ],
       frequency: 890,
       difficulty: 3.0,
-      etymology: "Mid 17th century: from Latin resilire 'to rebound'"
+      etymology: "Mid 17th century: from Latin resilire 'to rebound'",
+      createdAt: this.getRandomDate(365),
+      updatedAt: this.getRandomDate(30)
     }
   ]
 
@@ -382,7 +394,7 @@ class MockDataService {
     return this.createResponse(newRecord)
   }
 
-  async getWordRecords(filters?: any, page = 1, limit = 20) {
+  async getWordRecords(_filters?: any, page = 1, limit = 20) {
     await this.delay()
     const start = (page - 1) * limit
     const items = this.userWordRecords.slice(start, start + limit)
@@ -408,12 +420,12 @@ class MockDataService {
     return this.createResponse({ ...record, ...updates, updatedAt: new Date().toISOString() })
   }
 
-  async deleteWordRecord(id: number) {
+  async deleteWordRecord(_id: number) {
     await this.delay()
     return this.createResponse(undefined)
   }
 
-  async checkDuplication(word: string, meaning: string, context: string) {
+  async checkDuplication(_word: string, _meaning: string, _context: string) {
     await this.delay()
     const analysis: DuplicationAnalysis = {
       id: Math.floor(Math.random() * 1000) + 1,
@@ -425,7 +437,7 @@ class MockDataService {
       meaningEvolution: [
         {
           recordId: 1,
-          meaning: meaning,
+          meaning: _meaning,
           confidence: 4.0,
           recordedAt: this.getRandomDate(7),
           semanticDistance: 0.1,
@@ -472,14 +484,14 @@ class MockDataService {
     return this.createResponse(createdRecords)
   }
 
-  async exportWordRecords(filters?: any) {
+  async exportWordRecords(_filters?: any) {
     await this.delay()
     return this.createResponse({
       downloadUrl: 'https://example.com/download/words-export.csv'
     })
   }
 
-  async getWordRecordStats(filters?: any) {
+  async getWordRecordStats(_filters?: any) {
     await this.delay()
     return this.createResponse({
       totalRecords: this.userWordRecords.length,
@@ -502,7 +514,7 @@ class MockDataService {
   }
 
   // Reviews API Mock Methods
-  async getReviewSchedules(filters?: any, page = 1, limit = 20) {
+  async getReviewSchedules(_filters?: any, page = 1, limit = 20) {
     await this.delay()
     const start = (page - 1) * limit
     const items = this.reviewSchedules.slice(start, start + limit)
@@ -590,7 +602,7 @@ class MockDataService {
     })
   }
 
-  async endReviewSession(sessionId: string) {
+  async endReviewSession(_sessionId: string) {
     await this.delay()
     return this.createResponse({
       completedReviews: Math.floor(Math.random() * 10) + 5,
@@ -600,7 +612,7 @@ class MockDataService {
     })
   }
 
-  async getReviewSessions(page = 1, limit = 20, filters?: any) {
+  async getReviewSessions(page = 1, limit = 20, _filters?: any) {
     await this.delay()
     const sessions = Array.from({ length: limit }, (_, i) => ({
       id: (page - 1) * limit + i + 1,
@@ -715,12 +727,12 @@ class MockDataService {
     })
   }
 
-  async updateReviewSettings(settings: any) {
+  async updateReviewSettings(_settings: any) {
     await this.delay()
     return this.createResponse(undefined)
   }
 
-  async markMultipleAsReviewed(scheduleIds: number[], result: string) {
+  async markMultipleAsReviewed(scheduleIds: number[], _result: string) {
     await this.delay()
     return this.createResponse({
       updated: scheduleIds.length,
@@ -728,13 +740,13 @@ class MockDataService {
     })
   }
 
-  async resetReviewProgress(wordRecordIds: number[]) {
+  async resetReviewProgress(_wordRecordIds: number[]) {
     await this.delay()
     return this.createResponse(undefined)
   }
 
   // Analytics API Mock Methods
-  async getLearningStats(filters: any) {
+  async getLearningStats(_filters: any) {
     await this.delay()
     const stats: LearningStats = {
       userId: 1,
@@ -784,7 +796,7 @@ class MockDataService {
     return this.createResponse(stats)
   }
 
-  async getHistoricalStats(period: any, limit = 30, groupBy = 'day') {
+  async getHistoricalStats(_period: any, limit = 30, groupBy = 'day') {
     await this.delay()
     const labels = Array.from({ length: limit }, (_, i) => {
       const date = new Date()
@@ -810,7 +822,7 @@ class MockDataService {
     })
   }
 
-  async getWordMasteryProgress(filters?: any, page = 1, limit = 20) {
+  async getWordMasteryProgress(_filters?: any, page = 1, limit = 20) {
     await this.delay()
     const items: WordMasteryProgress[] = Array.from({ length: limit }, (_, i) => ({
       wordEntryId: (page - 1) * limit + i + 1,
@@ -877,7 +889,7 @@ class MockDataService {
         context: `上下文 ${i + 1}`,
         confidence: Math.random() * 2 + 3
       })),
-      reviewHistory: Array.from({ length: 5 }, (_, i) => ({
+      reviewHistory: Array.from({ length: 5 }, (_, _i) => ({
         date: this.getRandomDate(20),
         reviewType: ['recognition', 'recall', 'context'][Math.floor(Math.random() * 3)],
         accuracy: Math.random() * 0.3 + 0.7,

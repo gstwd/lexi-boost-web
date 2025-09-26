@@ -144,6 +144,21 @@ export interface ReviewSession extends BaseEntity {
   totalQuestions: number
   correctAnswers: number
   questions: ReviewQuestion[]
+  type?: ReviewType // 会话类型
+}
+
+// 简化的复习会话（用于组件中的会话管理）
+export interface SimpleReviewSession {
+  sessionId: string
+  reviews: ReviewSchedule[]
+  currentIndex: number
+  startTime: number
+  status?: 'active' | 'completed' | 'paused' | 'abandoned'
+  elapsedTime?: number
+  answeredQuestions?: ReviewQuestion[]
+  totalQuestions?: number
+  correctAnswers?: number
+  questions?: ReviewQuestion[]
 }
 
 // 复习问题
@@ -153,13 +168,23 @@ export interface ReviewQuestion {
   word: string
   type: ReviewType
   question: string
-  options?: string[]
+  options?: QuestionOption[]
   correctAnswer: string
   userAnswer?: string
   isCorrect?: boolean
   responseTime?: number
   hintsUsed: number
   difficulty: number
+  meaning?: string
+  context?: string
+  explanation?: string
+  timeSpent?: number // 回答用时（秒）
+}
+
+export interface QuestionOption {
+  id: string
+  text: string
+  correct: boolean
 }
 
 export type ReviewType = 'recognition' | 'recall' | 'context' | 'production' | 'synonym' | 'antonym'
@@ -222,6 +247,30 @@ export interface WordMasteryProgress {
   milestones: MasteryMilestone[]
 }
 
+// 单词掌握详情 (用于分析组件)
+export interface WordMasteryDetail {
+  id: number
+  wordEntryId: number
+  word: string
+  meaning: string
+  difficulty: number
+  masteryLevel: number
+  masteryTrend: MasteryTrend
+  accuracy: number
+  reviewCount: number
+  correctCount: number
+  lastReviewedAt: string
+  averageResponseTime: number
+  consistencyScore: number
+  retentionRate: number
+  forgettingRate: number
+  nextReviewDue: string
+  strengthAreas: string[]
+  weaknessAreas: string[]
+  errorPatterns: string[]
+  learningHistory: any[]
+}
+
 export type MasteryTrend = 'improving' | 'stable' | 'declining' | 'fluctuating'
 
 // 掌握度统计
@@ -244,6 +293,7 @@ export interface MasteryMilestone {
 export interface PersonalizedRecommendations {
   userId: number
   generatedAt: string
+  lastUpdated?: string
 
   // 复习推荐
   urgentReviews: WordRecommendation[]
@@ -254,6 +304,13 @@ export interface PersonalizedRecommendations {
   studyTimeOptimization: StudyTimeRecommendation
   difficultyAdjustments: DifficultyAdjustment[]
   learningStrategies: string[]
+  contentRecommendations?: {
+    suggestedWords?: {
+      word: string
+      meaning: string
+      priority: number
+    }[]
+  } | null
 }
 
 export interface WordRecommendation {
@@ -266,9 +323,12 @@ export interface WordRecommendation {
   contexts: string[]
   lastReviewDate?: string
   urgencyLevel: 'low' | 'medium' | 'high' | 'critical'
+  meaning?: string // 单词释义
+  dueDate?: string // 到期日期
 }
 
 export interface WeeklyGoal {
+  id?: number
   type: 'review' | 'new_words' | 'mastery' | 'consistency'
   target: number
   current: number
@@ -332,9 +392,78 @@ export interface ReviewFilters {
   masteryLevel?: number[]
 }
 
+export interface ReviewSessionFilters {
+  dateRange?: [string, string]
+  reviewType?: ReviewType[]
+  status?: ('completed' | 'abandoned' | 'paused')[]
+  accuracy?: [number, number]
+  duration?: [number, number]
+}
+
 export interface StatsFilters {
   period: StatsPeriod
   startDate?: string
   endDate?: string
   groupBy?: 'day' | 'week' | 'month'
+}
+
+// 进度报告
+export interface ProgressReport {
+  userId: number
+  period: StatsPeriod
+  generatedAt: string
+  totalWordsLearned: number
+  totalReviewsCompleted: number
+  averageAccuracy: number
+  streakDays: number
+  timeSpent: number
+  masteryProgress: {
+    mastered: number
+    learning: number
+    struggling: number
+  }
+  weeklyProgress: {
+    date: string
+    wordsLearned: number
+    reviewsCompleted: number
+    accuracy: number
+  }[]
+  monthlyTrends: {
+    month: string
+    performance: number
+  }[]
+  recommendations: string[]
+  achievements: string[]
+}
+
+// 复习设置
+export interface ReviewSettings {
+  userId: number
+  dailyReviewLimit: number
+  sessionTimeLimit: number
+  difficultyAdjustment: 'auto' | 'manual'
+  reviewTypes: ReviewType[]
+  intervalSettings: {
+    initialInterval: number
+    maxInterval: number
+    easeFactor: number
+    difficultyModifier: number
+  }
+  reminderSettings: {
+    enabled: boolean
+    times: string[]
+    daysOfWeek: number[]
+  }
+  displaySettings: {
+    showContext: boolean
+    showHints: boolean
+    showProgress: boolean
+    theme: 'light' | 'dark'
+  }
+  advancedSettings: {
+    adaptiveDifficulty: boolean
+    spacedRepetition: boolean
+    contextualLearning: boolean
+    errorAnalysis: boolean
+  }
 }
