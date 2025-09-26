@@ -8,7 +8,7 @@
       </div>
 
       <!-- 录入组件 -->
-      <EnhancedWordInput />
+      <enhanced-word-input />
     </div>
   </div>
 </template>

@@ -5,12 +5,10 @@
       <p class="text-gray-600">记录你遇到的单词，包括语境和地点信息</p>
     </div>
 
-    <form @submit.prevent="handleSubmit" class="space-y-6">
+    <form class="space-y-6" @submit.prevent="handleSubmit">
       <!-- 单词输入 -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          单词 *
-        </label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">单词 *</label>
         <div class="relative">
           <input
             v-model="form.word"
@@ -20,17 +18,24 @@
             placeholder="输入单词..."
             @blur="handleWordBlur"
             @input="handleWordInput"
-          >
+          />
           <!-- 词条搜索建议 -->
-          <div v-if="searchSuggestions.length > 0" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+          <div
+            v-if="searchSuggestions.length > 0"
+            class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto"
+          >
             <div
               v-for="suggestion in searchSuggestions"
               :key="suggestion.id"
               class="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
               @click="selectWordSuggestion(suggestion)"
             >
-              <div class="font-medium text-gray-800">{{ suggestion.word }}</div>
-              <div class="text-sm text-gray-600">{{ suggestion.standardDefinitions[0]?.meaning.substring(0, 100) }}...</div>
+              <div class="font-medium text-gray-800">
+                {{ suggestion.word }}
+              </div>
+              <div class="text-sm text-gray-600">
+                {{ suggestion.standardDefinitions[0]?.meaning.substring(0, 100) }}...
+              </div>
               <div class="text-xs text-gray-500 mt-1">
                 <span class="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded">
                   {{ suggestion.standardDefinitions[0]?.partOfSpeech }}
@@ -68,38 +73,32 @@
 
       <!-- 用户理解的含义 -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          你理解的含义 *
-        </label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">你理解的含义 *</label>
         <textarea
           v-model="form.meaning"
           required
           rows="3"
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none transition-colors"
           placeholder="用你自己的话描述这个单词的含义..."
-        ></textarea>
+        />
       </div>
 
       <!-- 上下文 -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          上下文语境 *
-        </label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">上下文语境 *</label>
         <textarea
           v-model="form.context"
           required
           rows="4"
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none transition-colors"
           placeholder="描述你是在什么情况下遇到这个单词的，包括完整的句子或段落..."
-        ></textarea>
+        />
       </div>
 
       <!-- 来源信息 -->
       <div class="grid md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            来源类型
-          </label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">来源类型</label>
           <select
             v-model="form.sourceType"
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
@@ -114,9 +113,7 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">
-            信心度
-          </label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">信心度</label>
           <select
             v-model.number="form.confidence"
             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
@@ -132,15 +129,13 @@
 
       <!-- 来源详情 -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          来源详情
-        </label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">来源详情</label>
         <input
           v-model="form.sourceDetail"
           type="text"
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
           placeholder="如：书名、文章标题、对话对象等..."
-        >
+        />
       </div>
 
       <!-- 地点信息 -->
@@ -152,7 +147,7 @@
               v-model="includeLocation"
               type="checkbox"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            >
+            />
             <span class="ml-2 text-sm text-gray-600">记录地点</span>
           </label>
         </div>
@@ -160,21 +155,17 @@
         <div v-if="includeLocation" class="space-y-4">
           <div class="grid md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                地点名称
-              </label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">地点名称</label>
               <input
                 v-model="form.location.name"
                 type="text"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
                 placeholder="如：家里、学校、咖啡厅..."
-              >
+              />
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                地点类型
-              </label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">地点类型</label>
               <select
                 v-model="form.location.type"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
@@ -192,28 +183,34 @@
             <button
               type="button"
               class="flex items-center px-4 py-2 text-sm bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors"
-              @click="getCurrentLocation"
               :disabled="gettingLocation"
+              @click="getCurrentLocation"
             >
               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
               {{ gettingLocation ? '获取中...' : '获取当前位置' }}
             </button>
 
-            <span v-if="form.location.coordinates" class="text-sm text-gray-600">
-              已获取位置坐标
-            </span>
+            <span v-if="form.location.coordinates" class="text-sm text-gray-600">已获取位置坐标</span>
           </div>
         </div>
       </div>
 
       <!-- 标签 -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          标签
-        </label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">标签</label>
         <div class="flex flex-wrap gap-2 mb-3">
           <span
             v-for="tag in form.tags"
@@ -221,11 +218,7 @@
             class="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"
           >
             {{ tag }}
-            <button
-              type="button"
-              class="ml-2 w-4 h-4 text-blue-600 hover:text-blue-800"
-              @click="removeTag(tag)"
-            >
+            <button type="button" class="ml-2 w-4 h-4 text-blue-600 hover:text-blue-800" @click="removeTag(tag)">
               ×
             </button>
           </span>
@@ -237,7 +230,7 @@
             class="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
             placeholder="添加标签..."
             @keydown.enter.prevent="addTag"
-          >
+          />
           <button
             type="button"
             class="px-4 py-2 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition-colors"
@@ -250,26 +243,36 @@
 
       <!-- 备注 -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          备注
-        </label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">备注</label>
         <textarea
           v-model="form.notes"
           rows="2"
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none transition-colors"
           placeholder="其他需要记录的信息..."
-        ></textarea>
+        />
       </div>
 
       <!-- 重复检测提醒 -->
       <div v-if="duplicationWarning" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
         <div class="flex items-start">
-          <svg class="w-5 h-5 text-yellow-400 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"/>
+          <svg
+            class="w-5 h-5 text-yellow-400 mr-3 mt-0.5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"
+            />
           </svg>
           <div>
             <h4 class="font-medium text-yellow-800 mb-1">检测到重复录入</h4>
-            <p class="text-sm text-yellow-700">{{ duplicationWarning.message }}</p>
+            <p class="text-sm text-yellow-700">
+              {{ duplicationWarning.message }}
+            </p>
             <div class="mt-2 space-x-2">
               <button
                 type="button"
@@ -311,7 +314,7 @@
     </form>
 
     <!-- 重复分析模态框 -->
-    <DuplicationAnalysisModal
+    <duplication-analysis-modal
       v-if="showDuplicationModal"
       :analysis="duplicationAnalysisData"
       @close="showDuplicationModal = false"
@@ -405,14 +408,11 @@ const getCurrentLocation = () => {
 
   gettingLocation.value = true
   navigator.geolocation.getCurrentPosition(
-    (position) => {
-      form.location.coordinates = [
-        position.coords.latitude,
-        position.coords.longitude
-      ]
+    position => {
+      form.location.coordinates = [position.coords.latitude, position.coords.longitude]
       gettingLocation.value = false
     },
-    (error) => {
+    error => {
       console.error('获取位置失败:', error)
       alert('获取位置失败，请检查权限设置')
       gettingLocation.value = false
@@ -436,18 +436,15 @@ const removeTag = (tag: string) => {
 }
 
 // 重复检测
-watch(
-  [() => form.word, () => form.meaning, () => form.context],
-  async ([word, meaning, context]) => {
-    if (word.trim() && meaning.trim() && context.trim()) {
-      // 防抖检查重复
-      if (searchTimeout) clearTimeout(searchTimeout)
-      searchTimeout = setTimeout(async () => {
-        await checkDuplication(word.trim(), meaning.trim(), context.trim())
-      }, 1000)
-    }
+watch([() => form.word, () => form.meaning, () => form.context], async ([word, meaning, context]) => {
+  if (word.trim() && meaning.trim() && context.trim()) {
+    // 防抖检查重复
+    if (searchTimeout) clearTimeout(searchTimeout)
+    searchTimeout = setTimeout(async () => {
+      await checkDuplication(word.trim(), meaning.trim(), context.trim())
+    }, 1000)
   }
-)
+})
 
 const checkDuplication = async (word: string, meaning: string, context: string) => {
   try {
@@ -501,7 +498,6 @@ const handleSubmit = async () => {
     // 成功提示
     alert('单词录入成功！')
     resetForm()
-
   } catch (error) {
     console.error('Submit failed:', error)
     alert('录入失败，请重试')

@@ -76,34 +76,24 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
 
   // Computed
   const hasUrgentReviews = computed(() => urgentReviews.value.length > 0)
-  const criticalUrgentReviews = computed(() =>
-    urgentReviews.value.filter(review => review.urgencyLevel === 'critical')
-  )
+  const criticalUrgentReviews = computed(() => urgentReviews.value.filter(review => review.urgencyLevel === 'critical'))
 
-  const completedGoals = computed(() =>
-    weeklyGoals.value.filter(goal => goal.current >= goal.target)
-  )
+  const completedGoals = computed(() => weeklyGoals.value.filter(goal => goal.current >= goal.target))
 
-  const pendingGoals = computed(() =>
-    weeklyGoals.value.filter(goal => goal.current < goal.target)
-  )
+  const pendingGoals = computed(() => weeklyGoals.value.filter(goal => goal.current < goal.target))
 
   const goalProgress = computed(() => {
     if (weeklyGoals.value.length === 0) return 0
-    const totalProgress = weeklyGoals.value.reduce((sum, goal) =>
-      sum + Math.min(goal.current / goal.target, 1), 0
-    )
+    const totalProgress = weeklyGoals.value.reduce((sum, goal) => sum + Math.min(goal.current / goal.target, 1), 0)
     return (totalProgress / weeklyGoals.value.length) * 100
   })
 
-  const highPriorityAdjustments = computed(() =>
-    difficultyAdjustments.value.filter(adj => adj.confidence > 0.8)
-  )
+  const highPriorityAdjustments = computed(() => difficultyAdjustments.value.filter(adj => adj.confidence > 0.8))
 
   const dailyPlanDuration = computed(() => dailyPlan.value?.estimatedDuration || 0)
 
-  const easyStrategies = computed(() =>
-    learningStrategies.value?.suggestedStrategies.filter(s => s.difficulty === 'easy') || []
+  const easyStrategies = computed(
+    () => learningStrategies.value?.suggestedStrategies.filter(s => s.difficulty === 'easy') || []
   )
 
   // 推荐获取
@@ -340,12 +330,15 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
   }
 
   // 反馈系统
-  const provideFeedback = async (recommendationId: string, feedback: {
-    helpful: boolean
-    followed: boolean
-    rating: number
-    comment?: string
-  }) => {
+  const provideFeedback = async (
+    recommendationId: string,
+    feedback: {
+      helpful: boolean
+      followed: boolean
+      rating: number
+      comment?: string
+    }
+  ) => {
     loading.value = true
     error.value = null
 

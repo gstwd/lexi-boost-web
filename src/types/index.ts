@@ -60,9 +60,16 @@ export interface Definition {
 }
 
 export type PartOfSpeech =
-  | 'noun' | 'verb' | 'adjective' | 'adverb'
-  | 'pronoun' | 'preposition' | 'conjunction'
-  | 'interjection' | 'article' | 'other'
+  | 'noun'
+  | 'verb'
+  | 'adjective'
+  | 'adverb'
+  | 'pronoun'
+  | 'preposition'
+  | 'conjunction'
+  | 'interjection'
+  | 'article'
+  | 'other'
 
 // 用户单词记录
 export interface UserWordRecord extends BaseEntity {

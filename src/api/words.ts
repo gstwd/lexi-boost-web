@@ -72,12 +72,18 @@ export const wordsApi = {
   },
 
   // 用户单词记录
-  async createWordRecord(record: Omit<UserWordRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<UserWordRecord>> {
+  async createWordRecord(
+    record: Omit<UserWordRecord, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<ApiResponse<UserWordRecord>> {
     const response = await apiClient.post('/api/word-records', record)
     return response.data
   },
 
-  async getWordRecords(filters?: WordRecordFilters, page = 1, limit = 20): Promise<ApiResponse<PaginatedResponse<UserWordRecord>>> {
+  async getWordRecords(
+    filters?: WordRecordFilters,
+    page = 1,
+    limit = 20
+  ): Promise<ApiResponse<PaginatedResponse<UserWordRecord>>> {
     const response = await apiClient.get('/api/word-records', {
       params: { ...filters, page, limit }
     })
@@ -115,7 +121,9 @@ export const wordsApi = {
   },
 
   // 批量操作
-  async bulkCreateWordRecords(records: Omit<UserWordRecord, 'id' | 'createdAt' | 'updatedAt'>[]): Promise<ApiResponse<UserWordRecord[]>> {
+  async bulkCreateWordRecords(
+    records: Omit<UserWordRecord, 'id' | 'createdAt' | 'updatedAt'>[]
+  ): Promise<ApiResponse<UserWordRecord[]>> {
     const response = await apiClient.post('/api/word-records/bulk', { records })
     return response.data
   },
@@ -126,13 +134,15 @@ export const wordsApi = {
   },
 
   // 统计信息
-  async getWordRecordStats(filters?: WordRecordFilters): Promise<ApiResponse<{
-    totalRecords: number
-    uniqueWords: number
-    averageConfidence: number
-    sourceTypeDistribution: Record<string, number>
-    locationDistribution: Record<string, number>
-  }>> {
+  async getWordRecordStats(filters?: WordRecordFilters): Promise<
+    ApiResponse<{
+      totalRecords: number
+      uniqueWords: number
+      averageConfidence: number
+      sourceTypeDistribution: Record<string, number>
+      locationDistribution: Record<string, number>
+    }>
+  > {
     const response = await apiClient.get('/api/word-records/stats', { params: filters })
     return response.data
   }

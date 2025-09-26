@@ -13,12 +13,18 @@ This is "Lexi Boost" - a comprehensive Vue 3 vocabulary learning web application
 - **Build (Development)**: `npm run build:dev` - Build for production without type checking (faster)
 - **Type Check**: `npm run type-check` - Run TypeScript type checking only
 - **Preview**: `npm run preview` - Preview production build locally
+- **Linting**: `npm run lint` - Run ESLint to check code quality
+- **Lint Fix**: `npm run lint:fix` - Run ESLint with auto-fix
+- **Formatting**: `npm run format` - Format code with Prettier
+- **Format Check**: `npm run format:check` - Check if code is formatted correctly
+- **Lint & Format**: `npm run lint:format` - Run linting with fixes and formatting together
 
 ## Architecture
 
-**Tech Stack**: Vue 3 + TypeScript + Vite + Pinia + Vue Router + Element Plus + Chart.js + Axios
+**Tech Stack**: Vue 3 + TypeScript + Vite + Pinia + Vue Router + Element Plus + ECharts + Axios + ESLint + Prettier
 
 **Project Structure**:
+
 - `src/api/` - HTTP client and API endpoints (words, reviews, analytics, recommendations)
 - `src/store/` - Pinia stores for state management (words, reviews, analytics, recommendations)
 - `src/pages/` - Vue page components (Dashboard, Words, Input, Review, Analytics, Recommendations)
@@ -29,6 +35,7 @@ This is "Lexi Boost" - a comprehensive Vue 3 vocabulary learning web application
 - `src/services/` - Business logic services (review scheduling)
 
 **Key Features**:
+
 - **Dashboard**: Overview of learning progress and statistics
 - **Word Input**: Enhanced word entry with duplication detection
 - **Word Library**: Comprehensive word management with CRUD operations
@@ -37,6 +44,7 @@ This is "Lexi Boost" - a comprehensive Vue 3 vocabulary learning web application
 - **Recommendations**: AI-powered learning suggestions and optimization
 
 **Key Patterns**:
+
 - Uses Composition API with `<script setup>` syntax
 - Pinia store pattern with composables (useWordsStore, useReviewsStore, etc.)
 - Centralized API client with Axios interceptors for logging and error handling
@@ -44,6 +52,7 @@ This is "Lexi Boost" - a comprehensive Vue 3 vocabulary learning web application
 - Environment variable `VITE_API_BASE_URL` for API base URL (defaults to http://localhost:3001)
 
 **Data Models**:
+
 - `Word` interface: Basic word structure (id, word, meaning, pronunciation, difficulty, tags)
 - `WordEntry`: Dictionary-level word entries with standard definitions
 - `UserWordRecord`: User-specific word records with context and confidence
@@ -53,12 +62,14 @@ This is "Lexi Boost" - a comprehensive Vue 3 vocabulary learning web application
 - See `src/types/index.ts` for complete type definitions
 
 **State Management**:
+
 - **Words Store**: Vocabulary and word records management
 - **Reviews Store**: Review scheduling and session management
 - **Analytics Store**: Learning statistics and progress tracking
 - **Recommendations Store**: AI-powered learning suggestions
 
 **Routing**:
+
 - Default redirect to `/dashboard`
 - Main routes:
   - `/dashboard` - Learning overview and quick stats
@@ -78,3 +89,10 @@ This is "Lexi Boost" - a comprehensive Vue 3 vocabulary learning web application
 **Charts**: Integrated Chart.js with vue-chartjs for learning analytics visualizations.
 
 **API Structure**: RESTful API design with consistent response formats using ApiResponse<T> wrapper.
+
+**Code Quality**:
+- ESLint 9.x with flat configuration for JavaScript, TypeScript, and Vue files
+- Prettier for consistent code formatting
+- Practical Vue linting rules (max 3 attributes per line for single-line elements)
+- TypeScript-specific rules with unused variable pattern support
+- Integrated formatting and linting commands for streamlined development

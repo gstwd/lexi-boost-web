@@ -18,9 +18,9 @@
             <option value="year">年度报告</option>
           </select>
           <button
-            @click="generateReport"
             :disabled="generating"
             class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            @click="generateReport"
           >
             {{ generating ? '生成中...' : '更新报告' }}
           </button>
@@ -29,7 +29,7 @@
     </div>
 
     <div v-if="generating" class="text-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
       <p class="text-gray-600">生成学习报告中...</p>
     </div>
 
@@ -39,7 +39,12 @@
         <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
           <h3 class="text-lg font-semibold text-blue-800 mb-4 flex items-center">
             <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             {{ getReportPeriodLabel(reportPeriod) }}总结
           </h3>
@@ -60,30 +65,44 @@
                 {{ formatTrend(report.comparison.wordsAdded.trend) }}
               </div>
             </div>
-            <div class="text-2xl font-bold text-gray-800">{{ report.comparison.wordsAdded.current }}</div>
+            <div class="text-2xl font-bold text-gray-800">
+              {{ report.comparison.wordsAdded.current }}
+            </div>
             <div class="text-sm text-gray-500">上期: {{ report.comparison.wordsAdded.previous }}</div>
           </div>
 
           <div class="bg-white border rounded-lg p-4">
             <div class="flex items-center justify-between mb-3">
               <div class="text-sm font-medium text-gray-600">复习会话</div>
-              <div class="text-xs px-2 py-1 rounded-full" :class="getTrendClass(report.comparison.reviewSessions.trend)">
+              <div
+                class="text-xs px-2 py-1 rounded-full"
+                :class="getTrendClass(report.comparison.reviewSessions.trend)"
+              >
                 {{ formatTrend(report.comparison.reviewSessions.trend) }}
               </div>
             </div>
-            <div class="text-2xl font-bold text-gray-800">{{ report.comparison.reviewSessions.current }}</div>
+            <div class="text-2xl font-bold text-gray-800">
+              {{ report.comparison.reviewSessions.current }}
+            </div>
             <div class="text-sm text-gray-500">上期: {{ report.comparison.reviewSessions.previous }}</div>
           </div>
 
           <div class="bg-white border rounded-lg p-4">
             <div class="flex items-center justify-between mb-3">
               <div class="text-sm font-medium text-gray-600">平均正确率</div>
-              <div class="text-xs px-2 py-1 rounded-full" :class="getTrendClass(report.comparison.averageAccuracy.trend)">
+              <div
+                class="text-xs px-2 py-1 rounded-full"
+                :class="getTrendClass(report.comparison.averageAccuracy.trend)"
+              >
                 {{ formatTrend(report.comparison.averageAccuracy.trend) }}
               </div>
             </div>
-            <div class="text-2xl font-bold text-gray-800">{{ (report.comparison.averageAccuracy.current * 100).toFixed(1) }}%</div>
-            <div class="text-sm text-gray-500">上期: {{ (report.comparison.averageAccuracy.previous * 100).toFixed(1) }}%</div>
+            <div class="text-2xl font-bold text-gray-800">
+              {{ (report.comparison.averageAccuracy.current * 100).toFixed(1) }}%
+            </div>
+            <div class="text-sm text-gray-500">
+              上期: {{ (report.comparison.averageAccuracy.previous * 100).toFixed(1) }}%
+            </div>
           </div>
 
           <div class="bg-white border rounded-lg p-4">
@@ -93,7 +112,9 @@
                 {{ formatTrend(report.comparison.studyTime.trend) }}
               </div>
             </div>
-            <div class="text-2xl font-bold text-gray-800">{{ formatDuration(report.comparison.studyTime.current) }}</div>
+            <div class="text-2xl font-bold text-gray-800">
+              {{ formatDuration(report.comparison.studyTime.current) }}
+            </div>
             <div class="text-sm text-gray-500">上期: {{ formatDuration(report.comparison.studyTime.previous) }}</div>
           </div>
         </div>
@@ -107,7 +128,12 @@
           <div class="border rounded-lg p-4">
             <h4 class="font-medium text-gray-800 mb-3 flex items-center">
               <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                />
               </svg>
               进步最快
             </h4>
@@ -118,16 +144,16 @@
                 class="flex items-center justify-between"
               >
                 <div>
-                  <div class="font-medium text-gray-800">{{ word.word }}</div>
-                  <div class="text-sm text-gray-600">{{ word.meaning }}</div>
+                  <div class="font-medium text-gray-800">
+                    {{ word.word }}
+                  </div>
+                  <div class="text-sm text-gray-600">
+                    {{ word.meaning }}
+                  </div>
                 </div>
                 <div class="text-right">
-                  <div class="text-sm font-medium text-green-600">
-                    +{{ word.masteryImprovement.toFixed(1) }}
-                  </div>
-                  <div class="text-xs text-gray-500">
-                    {{ word.previousLevel }} → {{ word.currentLevel }}
-                  </div>
+                  <div class="text-sm font-medium text-green-600">+{{ word.masteryImprovement.toFixed(1) }}</div>
+                  <div class="text-xs text-gray-500">{{ word.previousLevel }} → {{ word.currentLevel }}</div>
                 </div>
               </div>
             </div>
@@ -137,7 +163,12 @@
           <div class="border rounded-lg p-4">
             <h4 class="font-medium text-gray-800 mb-3 flex items-center">
               <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6 6"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 17h8m0 0V9m0 8l-8-8-4 4-6 6"
+                />
               </svg>
               需要加强
             </h4>
@@ -148,16 +179,18 @@
                 class="flex items-center justify-between"
               >
                 <div>
-                  <div class="font-medium text-gray-800">{{ word.word }}</div>
-                  <div class="text-sm text-gray-600">{{ word.meaning }}</div>
+                  <div class="font-medium text-gray-800">
+                    {{ word.word }}
+                  </div>
+                  <div class="text-sm text-gray-600">
+                    {{ word.meaning }}
+                  </div>
                 </div>
                 <div class="text-right">
                   <div class="text-sm font-medium text-red-600">
                     {{ word.masteryImprovement.toFixed(1) }}
                   </div>
-                  <div class="text-xs text-gray-500">
-                    {{ word.previousLevel }} → {{ word.currentLevel }}
-                  </div>
+                  <div class="text-xs text-gray-500">{{ word.previousLevel }} → {{ word.currentLevel }}</div>
                 </div>
               </div>
             </div>
@@ -183,8 +216,10 @@
                   <div class="w-16 bg-gray-200 rounded-full h-2">
                     <div
                       class="bg-blue-500 h-2 rounded-full"
-                      :style="{ width: `${(timeSlot.sessions / Math.max(...report.patterns.activeTimeSlots.map(t => t.sessions))) * 100}%` }"
-                    ></div>
+                      :style="{
+                        width: `${(timeSlot.sessions / Math.max(...report.patterns.activeTimeSlots.map(t => t.sessions))) * 100}%`
+                      }"
+                    />
                   </div>
                   <span class="text-sm text-gray-600">{{ timeSlot.sessions }}</span>
                 </div>
@@ -204,10 +239,7 @@
                 <span class="text-gray-700">{{ getQuestionTypeLabel(type.type) }}</span>
                 <div class="flex items-center space-x-2">
                   <div class="w-16 bg-gray-200 rounded-full h-2">
-                    <div
-                      class="bg-green-500 h-2 rounded-full"
-                      :style="{ width: `${type.accuracy * 100}%` }"
-                    ></div>
+                    <div class="bg-green-500 h-2 rounded-full" :style="{ width: `${type.accuracy * 100}%` }" />
                   </div>
                   <span class="text-sm text-gray-600">{{ (type.accuracy * 100).toFixed(0) }}%</span>
                 </div>
@@ -219,7 +251,9 @@
           <div class="border rounded-lg p-4">
             <h4 class="font-medium text-gray-800 mb-3">学习一致性</h4>
             <div class="text-center mb-4">
-              <div class="text-3xl font-bold text-blue-600">{{ report.patterns.consistency.streakDays }}</div>
+              <div class="text-3xl font-bold text-blue-600">
+                {{ report.patterns.consistency.streakDays }}
+              </div>
               <div class="text-sm text-gray-600">连续学习天数</div>
             </div>
             <div class="space-y-2 text-sm">
@@ -243,7 +277,7 @@
           <div class="space-y-4">
             <h4 class="font-medium text-blue-800 flex items-center">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
               继续保持
             </h4>
@@ -253,8 +287,12 @@
                 :key="strength.title"
                 class="p-3 bg-green-50 border border-green-200 rounded-lg"
               >
-                <div class="font-medium text-green-800">{{ strength.title }}</div>
-                <div class="text-sm text-green-700 mt-1">{{ strength.description }}</div>
+                <div class="font-medium text-green-800">
+                  {{ strength.title }}
+                </div>
+                <div class="text-sm text-green-700 mt-1">
+                  {{ strength.description }}
+                </div>
               </div>
             </div>
           </div>
@@ -262,7 +300,12 @@
           <div class="space-y-4">
             <h4 class="font-medium text-orange-800 flex items-center">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                />
               </svg>
               改进建议
             </h4>
@@ -272,8 +315,12 @@
                 :key="improvement.title"
                 class="p-3 bg-orange-50 border border-orange-200 rounded-lg"
               >
-                <div class="font-medium text-orange-800">{{ improvement.title }}</div>
-                <div class="text-sm text-orange-700 mt-1">{{ improvement.description }}</div>
+                <div class="font-medium text-orange-800">
+                  {{ improvement.title }}
+                </div>
+                <div class="text-sm text-orange-700 mt-1">
+                  {{ improvement.description }}
+                </div>
                 <div v-if="improvement.action" class="text-xs text-orange-600 mt-2 font-medium">
                   💡 {{ improvement.action }}
                 </div>
@@ -289,19 +336,27 @@
         <div class="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg p-6">
           <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="text-center">
-              <div class="text-2xl font-bold text-purple-600">{{ report.nextPeriodGoals.newWords }}</div>
+              <div class="text-2xl font-bold text-purple-600">
+                {{ report.nextPeriodGoals.newWords }}
+              </div>
               <div class="text-sm text-purple-700">新增单词目标</div>
             </div>
             <div class="text-center">
-              <div class="text-2xl font-bold text-purple-600">{{ report.nextPeriodGoals.reviewSessions }}</div>
+              <div class="text-2xl font-bold text-purple-600">
+                {{ report.nextPeriodGoals.reviewSessions }}
+              </div>
               <div class="text-sm text-purple-700">复习会话目标</div>
             </div>
             <div class="text-center">
-              <div class="text-2xl font-bold text-purple-600">{{ (report.nextPeriodGoals.targetAccuracy * 100).toFixed(0) }}%</div>
+              <div class="text-2xl font-bold text-purple-600">
+                {{ (report.nextPeriodGoals.targetAccuracy * 100).toFixed(0) }}%
+              </div>
               <div class="text-sm text-purple-700">目标正确率</div>
             </div>
             <div class="text-center">
-              <div class="text-2xl font-bold text-purple-600">{{ formatDuration(report.nextPeriodGoals.studyTime) }}</div>
+              <div class="text-2xl font-bold text-purple-600">
+                {{ formatDuration(report.nextPeriodGoals.studyTime) }}
+              </div>
               <div class="text-sm text-purple-700">学习时长目标</div>
             </div>
           </div>
@@ -314,20 +369,30 @@
       <!-- 操作按钮 -->
       <div class="flex items-center justify-center space-x-4">
         <button
-          @click="shareReport"
           class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+          @click="shareReport"
         >
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+            />
           </svg>
           分享报告
         </button>
         <button
-          @click="exportReport"
           class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center"
+          @click="exportReport"
         >
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
           </svg>
           导出PDF
         </button>
@@ -336,12 +401,17 @@
 
     <div v-else class="text-center py-12">
       <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        />
       </svg>
       <p class="text-gray-500 mb-4">还没有生成学习报告</p>
       <button
-        @click="generateReport"
         class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        @click="generateReport"
       >
         生成第一份报告
       </button>
@@ -507,7 +577,6 @@ const generateReport = async () => {
     // 模拟延迟
     await new Promise(resolve => setTimeout(resolve, 1500))
     report.value = mockReport
-
   } catch (error) {
     console.error('Generate report failed:', error)
     alert('生成报告失败，请重试')

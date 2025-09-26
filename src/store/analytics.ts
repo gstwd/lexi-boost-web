@@ -1,12 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { analyticsApi } from '@/api'
-import type {
-  LearningStats,
-  WordMasteryProgress,
-  StatsPeriod,
-  StatsFilters
-} from '@/types'
+import type { LearningStats, WordMasteryProgress, StatsPeriod, StatsFilters } from '@/types'
 
 export const useAnalyticsStore = defineStore('analytics', () => {
   // 状态
@@ -41,9 +36,9 @@ export const useAnalyticsStore = defineStore('analytics', () => {
       sessionCount: number
     }>
     difficultyTrends: {
-      easy: { accuracy: number, timeSpent: number }
-      medium: { accuracy: number, timeSpent: number }
-      hard: { accuracy: number, timeSpent: number }
+      easy: { accuracy: number; timeSpent: number }
+      medium: { accuracy: number; timeSpent: number }
+      hard: { accuracy: number; timeSpent: number }
     }
     reviewTypeEfficiency: Array<{
       type: string
@@ -127,9 +122,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
 
   const highPriorityRecommendations = computed(() => {
     if (!personalizedInsights.value) return []
-    return personalizedInsights.value.recommendations
-      .filter(rec => rec.priority === 'high')
-      .slice(0, 3)
+    return personalizedInsights.value.recommendations.filter(rec => rec.priority === 'high').slice(0, 3)
   })
 
   // 数据获取方法
@@ -150,11 +143,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
     }
   }
 
-  const fetchHistoricalStats = async (
-    period: StatsPeriod,
-    limit = 30,
-    groupBy: 'day' | 'week' | 'month' = 'day'
-  ) => {
+  const fetchHistoricalStats = async (period: StatsPeriod, limit = 30, groupBy: 'day' | 'week' | 'month' = 'day') => {
     loading.value = true
     error.value = null
 

@@ -49,24 +49,24 @@ export class EbbinghausScheduler {
 
       // 难度调整：难度越高，间隔越短
       difficultyMultiplier: {
-        1: 1.3,  // 很简单，延长间隔
-        2: 1.1,  // 简单
-        3: 1.0,  // 中等
-        4: 0.8,  // 困难，缩短间隔
-        5: 0.6   // 很困难，显著缩短间隔
+        1: 1.3, // 很简单，延长间隔
+        2: 1.1, // 简单
+        3: 1.0, // 中等
+        4: 0.8, // 困难，缩短间隔
+        5: 0.6 // 很困难，显著缩短间隔
       },
 
       // 正确率调整
       accuracyMultiplier: {
-        'excellent': 1.4,  // >95%
-        'good': 1.2,       // 85-95%
-        'fair': 1.0,       // 70-85%
-        'poor': 0.7,       // 50-70%
-        'failing': 0.4     // <50%
+        excellent: 1.4, // >95%
+        good: 1.2, // 85-95%
+        fair: 1.0, // 70-85%
+        poor: 0.7, // 50-70%
+        failing: 0.4 // <50%
       },
 
-      minInterval: 0.01,    // 最短14分钟
-      maxInterval: 365,     // 最长1年
+      minInterval: 0.01, // 最短14分钟
+      maxInterval: 365, // 最长1年
       personalityFactor: 1.0, // 个人学习特点调整
 
       ...params
@@ -80,11 +80,7 @@ export class EbbinghausScheduler {
    * @param currentMasteryLevel 当前掌握度
    * @returns 下次复习安排
    */
-  calculateNextReview(
-    wordId: number,
-    reviewHistory: ReviewRecord[],
-    currentMasteryLevel: number
-  ): NextReview {
+  calculateNextReview(wordId: number, reviewHistory: ReviewRecord[], currentMasteryLevel: number): NextReview {
     // 如果没有复习历史，使用第一个间隔
     if (reviewHistory.length === 0) {
       return this.createFirstReview(wordId)
@@ -135,8 +131,7 @@ export class EbbinghausScheduler {
     adjustedInterval *= decayFactor
 
     // 限制在合理范围内
-    adjustedInterval = Math.max(this.params.minInterval,
-                               Math.min(this.params.maxInterval, adjustedInterval))
+    adjustedInterval = Math.max(this.params.minInterval, Math.min(this.params.maxInterval, adjustedInterval))
 
     const nextReviewDate = new Date()
     nextReviewDate.setTime(nextReviewDate.getTime() + adjustedInterval * 24 * 60 * 60 * 1000)
@@ -167,9 +162,7 @@ export class EbbinghausScheduler {
       masteryLevel: number
     }>
   ): NextReview[] {
-    return words.map(word =>
-      this.calculateNextReview(word.wordId, word.reviewHistory, word.masteryLevel)
-    )
+    return words.map(word => this.calculateNextReview(word.wordId, word.reviewHistory, word.masteryLevel))
   }
 
   /**
@@ -217,7 +210,7 @@ export class EbbinghausScheduler {
     }>
   ): ScheduleParams {
     // 分析历史数据，优化参数
-    const performanceByInterval: Record<number, { correct: number, total: number }> = {}
+    const performanceByInterval: Record<number, { correct: number; total: number }> = {}
 
     historicalData.forEach(word => {
       word.reviewHistory.forEach((review, index) => {
@@ -345,8 +338,8 @@ export class EbbinghausScheduler {
   private getAccuracyLevel(accuracy: number): string {
     if (accuracy >= 0.95) return 'excellent'
     if (accuracy >= 0.85) return 'good'
-    if (accuracy >= 0.70) return 'fair'
-    if (accuracy >= 0.50) return 'poor'
+    if (accuracy >= 0.7) return 'fair'
+    if (accuracy >= 0.5) return 'poor'
     return 'failing'
   }
 
@@ -389,9 +382,9 @@ export class EbbinghausScheduler {
   ): 'low' | 'medium' | 'high' | 'critical' {
     // 逾期时间长或掌握度低的优先级高
     if (intervalDays < 0 && Math.abs(intervalDays) > 7) return 'critical' // 逾期超过一周
-    if (intervalDays < 0 && Math.abs(intervalDays) > 2) return 'high'     // 逾期超过两天
-    if (masteryLevel < 2.0 || accuracy < 0.6) return 'high'              // 掌握度低或错误率高
-    if (intervalDays < 1) return 'medium'                                 // 今日需复习
+    if (intervalDays < 0 && Math.abs(intervalDays) > 2) return 'high' // 逾期超过两天
+    if (masteryLevel < 2.0 || accuracy < 0.6) return 'high' // 掌握度低或错误率高
+    if (intervalDays < 1) return 'medium' // 今日需复习
     return 'low'
   }
 

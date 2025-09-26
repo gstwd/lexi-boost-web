@@ -8,13 +8,13 @@ const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 })
 
 // Mock data interceptor - intercept requests before they're sent if using mock data
 apiClient.interceptors.request.use(
-  async (config) => {
+  async config => {
     console.log('API Request:', config.method?.toUpperCase(), config.url)
 
     // Check if we should use mock data
@@ -62,8 +62,11 @@ apiClient.interceptors.response.use(
     console.error('Response Error:', error.response?.status, error.message)
 
     // If backend is unavailable, fallback to mock data
-    if (error.code === 'NETWORK_ERROR' || error.code === 'ECONNREFUSED' ||
-        (error.response?.status && error.response.status >= 500)) {
+    if (
+      error.code === 'NETWORK_ERROR' ||
+      error.code === 'ECONNREFUSED' ||
+      (error.response?.status && error.response.status >= 500)
+    ) {
       console.warn('Backend unavailable, falling back to mock data')
 
       const mockResponse = await handleMockRequest(error.config)
@@ -317,7 +320,6 @@ async function handleMockRequest(config: AxiosRequestConfig): Promise<any> {
       if (method === 'get') return mockDataService.getRecommendationSettings()
       if (method === 'put') return mockDataService.updateRecommendationSettings(data)
     }
-
   } catch (error) {
     console.error('Mock data error:', error)
   }

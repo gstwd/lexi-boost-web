@@ -8,7 +8,7 @@
       </div>
 
       <!-- 推荐仪表板 -->
-      <RecommendationsDashboard />
+      <recommendations-dashboard />
     </div>
   </div>
 </template>

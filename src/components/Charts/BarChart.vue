@@ -1,42 +1,20 @@
 <template>
   <div class="bar-chart-container" :style="{ width: width, height: height }">
-    <v-chart
-      ref="chartRef"
-      :option="chartOption"
-      :theme="theme"
-      :autoresize="true"
-      @click="onChartClick"
-    />
+    <v-chart ref="chartRef" :option="chartOption" :theme="theme" :autoresize="true" @click="onChartClick" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { use } from 'echarts/core'
-import {
-  CanvasRenderer
-} from 'echarts/renderers'
-import {
-  BarChart
-} from 'echarts/charts'
-import {
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-  GridComponent
-} from 'echarts/components'
+import { CanvasRenderer } from 'echarts/renderers'
+import { BarChart } from 'echarts/charts'
+import { TitleComponent, TooltipComponent, LegendComponent, GridComponent } from 'echarts/components'
 import VChart from 'vue-echarts'
 import type { EChartsOption } from 'echarts'
 
 // 注册ECharts组件
-use([
-  CanvasRenderer,
-  BarChart,
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent,
-  GridComponent
-])
+use([CanvasRenderer, BarChart, TitleComponent, TooltipComponent, LegendComponent, GridComponent])
 
 interface Props {
   option: EChartsOption
@@ -99,9 +77,13 @@ const chartOption = computed(() => {
 })
 
 // 监听配置变化
-watch(() => props.option, () => {
-  // ECharts会自动处理配置更新
-}, { deep: true })
+watch(
+  () => props.option,
+  () => {
+    // ECharts会自动处理配置更新
+  },
+  { deep: true }
+)
 
 const onChartClick = (params: any) => {
   emit('click', params)

@@ -10,9 +10,9 @@
               {{ currentQuestionIndex + 1 }} / {{ currentSession?.totalQuestions || 0 }}
             </div>
             <button
-              @click="pauseSession"
               class="px-4 py-2 text-blue-600 hover:text-blue-800 transition-colors"
               :disabled="!currentSession"
+              @click="pauseSession"
             >
               {{ sessionPaused ? '继续' : '暂停' }}
             </button>
@@ -24,7 +24,7 @@
           <div
             class="bg-blue-600 h-2 rounded-full transition-all duration-300"
             :style="{ width: `${sessionProgress}%` }"
-          ></div>
+          />
         </div>
 
         <!-- 会话信息 -->
@@ -36,10 +36,18 @@
       </div>
 
       <!-- 开始复习界面 -->
-      <div v-if="!currentSession && !sessionPaused && !sessionCompleted" class="bg-white rounded-xl shadow-lg p-8 text-center">
+      <div
+        v-if="!currentSession && !sessionPaused && !sessionCompleted"
+        class="bg-white rounded-xl shadow-lg p-8 text-center"
+      >
         <div class="mb-6">
           <svg class="w-16 h-16 text-blue-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.832 18.477 19.246 18 17.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.832 18.477 19.246 18 17.5 18c-1.746 0-3.332.477-4.5 1.253"
+            />
           </svg>
           <h2 class="text-2xl font-bold text-gray-800 mb-2">开始单词复习</h2>
           <p class="text-gray-600">准备开始你的学习之旅</p>
@@ -49,15 +57,17 @@
           <div class="bg-blue-50 p-4 rounded-lg">
             <h3 class="font-medium text-blue-800 mb-2">今日目标</h3>
             <div class="text-sm text-blue-700">
-              • 复习 20 个单词<br>
-              • 提高记忆效率<br>
+              • 复习 20 个单词
+              <br />
+              • 提高记忆效率
+              <br />
               • 巩固已学知识
             </div>
           </div>
 
           <button
-            @click="startNewSession"
             class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            @click="startNewSession"
           >
             开始复习
           </button>
@@ -65,7 +75,7 @@
       </div>
 
       <!-- 复习卡片区域 -->
-      <div class="bg-white rounded-xl shadow-lg p-8 mb-6" v-if="currentQuestion && !sessionPaused">
+      <div v-if="currentQuestion && !sessionPaused" class="bg-white rounded-xl shadow-lg p-8 mb-6">
         <!-- 复习类型显示 -->
         <div class="text-center mb-6">
           <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
@@ -76,7 +86,9 @@
         <!-- 识别模式 -->
         <div v-if="currentQuestion.type === 'recognition'" class="text-center">
           <div class="mb-6">
-            <h2 class="text-3xl font-bold text-gray-800 mb-2">{{ currentQuestion.word }}</h2>
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">
+              {{ currentQuestion.word }}
+            </h2>
             <div class="text-gray-500 mb-4">选择正确的含义</div>
           </div>
 
@@ -84,7 +96,6 @@
             <button
               v-for="(option, index) in currentQuestion.options"
               :key="index"
-              @click="submitAnswer(option.id)"
               :disabled="answerSubmitted"
               class="w-full p-4 text-left border rounded-lg hover:bg-gray-50 transition-colors"
               :class="{
@@ -92,6 +103,7 @@
                 'bg-red-100 border-red-500': answerSubmitted && selectedAnswerId === option.id && !option.correct,
                 'border-gray-300': !answerSubmitted
               }"
+              @click="submitAnswer(option.id)"
             >
               {{ option.text }}
             </button>
@@ -102,7 +114,9 @@
         <div v-else-if="currentQuestion.type === 'recall'" class="text-center">
           <div class="mb-6">
             <div class="text-gray-600 mb-4">这个含义对应的单词是？</div>
-            <p class="text-xl text-gray-800 mb-6">{{ currentQuestion.meaning }}</p>
+            <p class="text-xl text-gray-800 mb-6">
+              {{ currentQuestion.meaning }}
+            </p>
           </div>
 
           <div class="max-w-md mx-auto">
@@ -111,14 +125,14 @@
               type="text"
               placeholder="输入单词..."
               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-center text-xl"
-              @keydown.enter="submitAnswer(userAnswer.trim())"
               :disabled="answerSubmitted"
-            >
+              @keydown.enter="submitAnswer(userAnswer.trim())"
+            />
             <button
               v-if="!answerSubmitted"
-              @click="submitAnswer(userAnswer.trim())"
               class="w-full mt-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               :disabled="!userAnswer.trim()"
+              @click="submitAnswer(userAnswer.trim())"
             >
               提交答案
             </button>
@@ -132,14 +146,15 @@
             <div class="bg-gray-50 p-4 rounded-lg mb-4">
               <p class="text-gray-800 italic">"{{ currentQuestion.context }}"</p>
             </div>
-            <h2 class="text-2xl font-bold text-blue-600">{{ currentQuestion.word }}</h2>
+            <h2 class="text-2xl font-bold text-blue-600">
+              {{ currentQuestion.word }}
+            </h2>
           </div>
 
           <div class="space-y-3">
             <button
               v-for="(option, index) in currentQuestion.options"
               :key="index"
-              @click="submitAnswer(option.id)"
               :disabled="answerSubmitted"
               class="w-full p-4 text-left border rounded-lg hover:bg-gray-50 transition-colors"
               :class="{
@@ -147,6 +162,7 @@
                 'bg-red-100 border-red-500': answerSubmitted && selectedAnswerId === option.id && !option.correct,
                 'border-gray-300': !answerSubmitted
               }"
+              @click="submitAnswer(option.id)"
             >
               {{ option.text }}
             </button>
@@ -156,7 +172,9 @@
         <!-- 造句模式 -->
         <div v-else-if="currentQuestion.type === 'production'" class="text-center">
           <div class="mb-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">{{ currentQuestion.word }}</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">
+              {{ currentQuestion.word }}
+            </h2>
             <div class="text-gray-600 mb-4">含义: {{ currentQuestion.meaning }}</div>
             <div class="text-gray-500">请用这个单词造一个句子</div>
           </div>
@@ -168,12 +186,12 @@
               rows="4"
               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
               :disabled="answerSubmitted"
-            ></textarea>
+            />
             <button
               v-if="!answerSubmitted"
-              @click="submitAnswer(userAnswer.trim())"
               class="w-full mt-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               :disabled="!userAnswer.trim()"
+              @click="submitAnswer(userAnswer.trim())"
             >
               提交句子
             </button>
@@ -181,21 +199,28 @@
         </div>
 
         <!-- 答案反馈 -->
-        <div v-if="answerSubmitted" class="mt-8 p-4 rounded-lg" :class="{
-          'bg-green-50 border border-green-200': isCorrect,
-          'bg-red-50 border border-red-200': !isCorrect
-        }">
+        <div
+          v-if="answerSubmitted"
+          class="mt-8 p-4 rounded-lg"
+          :class="{
+            'bg-green-50 border border-green-200': isCorrect,
+            'bg-red-50 border border-red-200': !isCorrect
+          }"
+        >
           <div class="flex items-center justify-center mb-4">
             <svg v-if="isCorrect" class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
             <svg v-else class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
-            <span class="ml-2 text-lg font-medium" :class="{
-              'text-green-800': isCorrect,
-              'text-red-800': !isCorrect
-            }">
+            <span
+              class="ml-2 text-lg font-medium"
+              :class="{
+                'text-green-800': isCorrect,
+                'text-red-800': !isCorrect
+              }"
+            >
               {{ isCorrect ? '回答正确！' : '回答错误' }}
             </span>
           </div>
@@ -217,12 +242,12 @@
               <button
                 v-for="level in difficultyLevels"
                 :key="level.value"
-                @click="setQuestionDifficulty(level.value)"
                 class="px-3 py-1 text-xs rounded-full border transition-colors"
                 :class="{
                   'bg-blue-100 text-blue-800 border-blue-300': questionDifficulty === level.value,
                   'bg-gray-100 text-gray-600 border-gray-300': questionDifficulty !== level.value
                 }"
+                @click="setQuestionDifficulty(level.value)"
               >
                 {{ level.label }}
               </button>
@@ -233,8 +258,8 @@
         <!-- 继续按钮 -->
         <div v-if="answerSubmitted" class="text-center mt-6">
           <button
-            @click="nextQuestion"
             class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            @click="nextQuestion"
           >
             {{ currentQuestionIndex + 1 >= (currentSession?.totalQuestions || 0) ? '完成复习' : '下一题' }}
           </button>
@@ -245,7 +270,12 @@
       <div v-if="sessionPaused" class="bg-white rounded-xl shadow-lg p-8 text-center">
         <div class="mb-6">
           <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           <h2 class="text-xl font-semibold text-gray-800 mb-2">复习已暂停</h2>
           <p class="text-gray-600">休息一下，准备好后继续复习</p>
@@ -253,14 +283,14 @@
 
         <div class="space-y-4">
           <button
-            @click="resumeSession"
             class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            @click="resumeSession"
           >
             继续复习
           </button>
           <button
-            @click="endSession"
             class="w-full py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            @click="endSession"
           >
             结束本次复习
           </button>
@@ -271,7 +301,12 @@
       <div v-if="sessionCompleted" class="bg-white rounded-xl shadow-lg p-8 text-center">
         <div class="mb-6">
           <svg class="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
           <h2 class="text-2xl font-bold text-gray-800 mb-2">复习完成！</h2>
           <p class="text-gray-600">恭喜你完成了本次复习会话</p>
@@ -280,7 +315,9 @@
         <!-- 会话统计 -->
         <div class="grid md:grid-cols-3 gap-4 mb-6">
           <div class="bg-blue-50 p-4 rounded-lg">
-            <div class="text-2xl font-bold text-blue-600">{{ sessionStats.correctAnswers }}</div>
+            <div class="text-2xl font-bold text-blue-600">
+              {{ sessionStats.correctAnswers }}
+            </div>
             <div class="text-sm text-blue-700">答对题数</div>
           </div>
           <div class="bg-green-50 p-4 rounded-lg">
@@ -288,28 +325,27 @@
             <div class="text-sm text-green-700">正确率</div>
           </div>
           <div class="bg-purple-50 p-4 rounded-lg">
-            <div class="text-2xl font-bold text-purple-600">{{ formatTime(sessionStats.totalTime) }}</div>
+            <div class="text-2xl font-bold text-purple-600">
+              {{ formatTime(sessionStats.totalTime) }}
+            </div>
             <div class="text-sm text-purple-700">用时</div>
           </div>
         </div>
 
         <div class="space-y-4">
           <button
-            @click="viewDetailedResults"
             class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            @click="viewDetailedResults"
           >
             查看详细结果
           </button>
           <button
-            @click="startNewSession"
             class="w-full py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            @click="startNewSession"
           >
             开始新的复习
           </button>
-          <button
-            @click="$emit('close')"
-            class="w-full py-3 text-gray-600 hover:text-gray-800 transition-colors"
-          >
+          <button class="w-full py-3 text-gray-600 hover:text-gray-800 transition-colors" @click="$emit('close')">
             返回
           </button>
         </div>
@@ -482,10 +518,7 @@ const nextQuestion = async () => {
   // 提交难度反馈
   if (questionDifficulty.value) {
     try {
-      await reviewsStore.submitQuestionFeedback?.(
-        currentQuestion.value.id,
-        questionDifficulty.value
-      )
+      await reviewsStore.submitQuestionFeedback?.(currentQuestion.value.id, questionDifficulty.value)
     } catch (error) {
       console.error('Submit difficulty feedback failed:', error)
     }
@@ -599,9 +632,13 @@ onUnmounted(() => {
 })
 
 // 监听会话状态变化
-watch(() => reviewsStore.currentSession, (newSession) => {
-  if (newSession) {
-    currentSession.value = newSession
-  }
-}, { deep: true })
+watch(
+  () => reviewsStore.currentSession,
+  newSession => {
+    if (newSession) {
+      currentSession.value = newSession
+    }
+  },
+  { deep: true }
+)
 </script>

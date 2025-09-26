@@ -16,9 +16,9 @@
             :key="route.path"
             :to="route.path"
             class="nav-item"
-            :class="{ 'active': $route.path.startsWith(route.path) }"
+            :class="{ active: $route.path.startsWith(route.path) }"
           >
-            <div class="nav-icon" v-html="route.icon"></div>
+            <div class="nav-icon" v-html="route.icon" />
             <span class="nav-text">{{ route.title }}</span>
           </router-link>
         </div>
@@ -83,7 +83,13 @@ const mainRoutes = [
 
 <style scoped>
 #app {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   color: #1f2937;
 }
 

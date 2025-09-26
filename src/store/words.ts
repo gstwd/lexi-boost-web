@@ -1,12 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { wordsApi, type Word, type WordsResponse } from '@/api'
-import type {
-  UserWordRecord,
-  WordEntry,
-  WordRecordFilters,
-  DuplicationAnalysis
-} from '@/types'
+import type { UserWordRecord, WordEntry, WordRecordFilters, DuplicationAnalysis } from '@/types'
 
 export const useWordsStore = defineStore('words', () => {
   // 原有状态

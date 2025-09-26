@@ -44,14 +44,14 @@ export class ChartUtils {
   }
 
   private static colorPalette = [
-    '#3B82F6',  // blue
-    '#10B981',  // green
-    '#F59E0B',  // yellow
-    '#EF4444',  // red
-    '#8B5CF6',  // purple
-    '#6366F1',  // indigo
-    '#EC4899',  // pink
-    '#6B7280'   // gray
+    '#3B82F6', // blue
+    '#10B981', // green
+    '#F59E0B', // yellow
+    '#EF4444', // red
+    '#8B5CF6', // purple
+    '#6366F1', // indigo
+    '#EC4899', // pink
+    '#6B7280' // gray
   ]
 
   /**
@@ -133,11 +133,16 @@ export class ChartUtils {
               y: 0,
               x2: 0,
               y2: 1,
-              colorStops: [{
-                offset: 0, color: 'rgba(59, 130, 246, 0.3)'
-              }, {
-                offset: 1, color: 'rgba(59, 130, 246, 0.1)'
-              }]
+              colorStops: [
+                {
+                  offset: 0,
+                  color: 'rgba(59, 130, 246, 0.3)'
+                },
+                {
+                  offset: 1,
+                  color: 'rgba(59, 130, 246, 0.1)'
+                }
+              ]
             }
           }
         },
@@ -157,11 +162,16 @@ export class ChartUtils {
               y: 0,
               x2: 0,
               y2: 1,
-              colorStops: [{
-                offset: 0, color: 'rgba(16, 185, 129, 0.3)'
-              }, {
-                offset: 1, color: 'rgba(16, 185, 129, 0.1)'
-              }]
+              colorStops: [
+                {
+                  offset: 0,
+                  color: 'rgba(16, 185, 129, 0.3)'
+                },
+                {
+                  offset: 1,
+                  color: 'rgba(16, 185, 129, 0.1)'
+                }
+              ]
             }
           }
         },
@@ -470,7 +480,7 @@ export class ChartUtils {
           name: '单词数量',
           type: 'bar',
           barWidth: '60%',
-          data: data,
+          data,
           itemStyle: {
             color: this.colors.purple
           },
@@ -569,25 +579,27 @@ export class ChartUtils {
           trigger: 'item',
           formatter: '{a} <br/>{b}: {c} ({d}%)'
         },
-        series: [{
-          name: options?.label || '数据',
-          type: 'pie',
-          radius: '50%',
-          data: categories.map((name, index) => ({
-            value: values[index],
-            name,
-            itemStyle: {
-              color: this.colorPalette[index % this.colorPalette.length]
-            }
-          })),
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
+        series: [
+          {
+            name: options?.label || '数据',
+            type: 'pie',
+            radius: '50%',
+            data: categories.map((name, index) => ({
+              value: values[index],
+              name,
+              itemStyle: {
+                color: this.colorPalette[index % this.colorPalette.length]
+              }
+            })),
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
             }
           }
-        }]
+        ]
       }
     }
 
@@ -602,15 +614,17 @@ export class ChartUtils {
       yAxis: {
         type: 'value'
       },
-      series: [{
-        name: options?.label || '数据',
-        type: chartType,
-        data: values,
-        itemStyle: {
-          color: color
-        },
-        smooth: chartType === 'line'
-      }]
+      series: [
+        {
+          name: options?.label || '数据',
+          type: chartType,
+          data: values,
+          itemStyle: {
+            color
+          },
+          smooth: chartType === 'line'
+        }
+      ]
     }
   }
 

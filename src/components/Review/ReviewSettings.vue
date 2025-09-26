@@ -5,12 +5,10 @@
       <p class="text-gray-600">配置你的复习偏好和难度设置</p>
     </div>
 
-    <form @submit.prevent="saveSettings" class="space-y-6">
+    <form class="space-y-6" @submit.prevent="saveSettings">
       <!-- 复习类型选择 -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-3">
-          复习类型
-        </label>
+        <label class="block text-sm font-medium text-gray-700 mb-3">复习类型</label>
         <div class="space-y-3">
           <label class="flex items-center">
             <input
@@ -18,7 +16,7 @@
               type="radio"
               value="quick"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            >
+            />
             <div class="ml-3">
               <div class="font-medium text-gray-800">快速复习</div>
               <div class="text-sm text-gray-600">5-10分钟，专注高频错误词汇</div>
@@ -30,7 +28,7 @@
               type="radio"
               value="standard"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            >
+            />
             <div class="ml-3">
               <div class="font-medium text-gray-800">标准复习</div>
               <div class="text-sm text-gray-600">15-30分钟，平衡各种复习题型</div>
@@ -42,7 +40,7 @@
               type="radio"
               value="intensive"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            >
+            />
             <div class="ml-3">
               <div class="font-medium text-gray-800">深度复习</div>
               <div class="text-sm text-gray-600">30分钟以上，全面深入复习</div>
@@ -54,7 +52,7 @@
               type="radio"
               value="adaptive"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            >
+            />
             <div class="ml-3">
               <div class="font-medium text-gray-800">自适应复习</div>
               <div class="text-sm text-gray-600">根据学习情况自动调整难度和内容</div>
@@ -68,14 +66,7 @@
         <label class="block text-sm font-medium text-gray-700 mb-2">
           每次复习题目数量: {{ settings.questionsPerSession }}
         </label>
-        <input
-          v-model.number="settings.questionsPerSession"
-          type="range"
-          min="5"
-          max="50"
-          step="5"
-          class="w-full"
-        >
+        <input v-model.number="settings.questionsPerSession" type="range" min="5" max="50" step="5" class="w-full" />
         <div class="flex justify-between text-xs text-gray-500 mt-1">
           <span>5 题</span>
           <span>25 题</span>
@@ -85,9 +76,7 @@
 
       <!-- 复习模式偏好 -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-3">
-          复习模式偏好 (可多选)
-        </label>
+        <label class="block text-sm font-medium text-gray-700 mb-3">复习模式偏好 (可多选)</label>
         <div class="grid md:grid-cols-2 gap-4">
           <label class="flex items-center p-3 border rounded-lg hover:bg-gray-50">
             <input
@@ -95,7 +84,7 @@
               type="checkbox"
               value="recognition"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            >
+            />
             <div class="ml-3">
               <div class="font-medium text-gray-800">单词识别</div>
               <div class="text-sm text-gray-600">看单词选择含义</div>
@@ -107,7 +96,7 @@
               type="checkbox"
               value="recall"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            >
+            />
             <div class="ml-3">
               <div class="font-medium text-gray-800">单词回忆</div>
               <div class="text-sm text-gray-600">看含义输入单词</div>
@@ -119,7 +108,7 @@
               type="checkbox"
               value="context"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            >
+            />
             <div class="ml-3">
               <div class="font-medium text-gray-800">语境理解</div>
               <div class="text-sm text-gray-600">根据语境理解单词</div>
@@ -131,7 +120,7 @@
               type="checkbox"
               value="production"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            >
+            />
             <div class="ml-3">
               <div class="font-medium text-gray-800">单词造句</div>
               <div class="text-sm text-gray-600">用单词造句练习</div>
@@ -142,9 +131,7 @@
 
       <!-- 难度设置 -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-3">
-          难度偏好
-        </label>
+        <label class="block text-sm font-medium text-gray-700 mb-3">难度偏好</label>
         <div class="space-y-2">
           <label class="flex items-center">
             <input
@@ -152,7 +139,7 @@
               type="radio"
               value="easy"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            >
+            />
             <span class="ml-2">偏向简单 - 更多已掌握的单词</span>
           </label>
           <label class="flex items-center">
@@ -161,7 +148,7 @@
               type="radio"
               value="balanced"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            >
+            />
             <span class="ml-2">平衡难度 - 混合各种难度的单词</span>
           </label>
           <label class="flex items-center">
@@ -170,7 +157,7 @@
               type="radio"
               value="challenging"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            >
+            />
             <span class="ml-2">挑战模式 - 更多困难和新单词</span>
           </label>
         </div>
@@ -178,52 +165,26 @@
 
       <!-- 复习优先级 -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-3">
-          复习优先级
-        </label>
+        <label class="block text-sm font-medium text-gray-700 mb-3">复习优先级</label>
         <div class="space-y-2">
           <label class="flex items-center justify-between">
             <span>遗忘曲线优化</span>
-            <input
-              v-model="settings.priorityWeights.forgettingCurve"
-              type="range"
-              min="0"
-              max="100"
-              class="w-32"
-            >
+            <input v-model="settings.priorityWeights.forgettingCurve" type="range" min="0" max="100" class="w-32" />
             <span class="text-sm text-gray-600">{{ settings.priorityWeights.forgettingCurve }}%</span>
           </label>
           <label class="flex items-center justify-between">
             <span>错误频率</span>
-            <input
-              v-model="settings.priorityWeights.errorFrequency"
-              type="range"
-              min="0"
-              max="100"
-              class="w-32"
-            >
+            <input v-model="settings.priorityWeights.errorFrequency" type="range" min="0" max="100" class="w-32" />
             <span class="text-sm text-gray-600">{{ settings.priorityWeights.errorFrequency }}%</span>
           </label>
           <label class="flex items-center justify-between">
             <span>学习时间</span>
-            <input
-              v-model="settings.priorityWeights.recentLearning"
-              type="range"
-              min="0"
-              max="100"
-              class="w-32"
-            >
+            <input v-model="settings.priorityWeights.recentLearning" type="range" min="0" max="100" class="w-32" />
             <span class="text-sm text-gray-600">{{ settings.priorityWeights.recentLearning }}%</span>
           </label>
           <label class="flex items-center justify-between">
             <span>用户标记</span>
-            <input
-              v-model="settings.priorityWeights.userMarked"
-              type="range"
-              min="0"
-              max="100"
-              class="w-32"
-            >
+            <input v-model="settings.priorityWeights.userMarked" type="range" min="0" max="100" class="w-32" />
             <span class="text-sm text-gray-600">{{ settings.priorityWeights.userMarked }}%</span>
           </label>
         </div>
@@ -231,9 +192,7 @@
 
       <!-- 学习目标 -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          每日学习目标
-        </label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">每日学习目标</label>
         <div class="grid md:grid-cols-2 gap-4">
           <div>
             <label class="block text-xs text-gray-600 mb-1">复习时间 (分钟)</label>
@@ -243,7 +202,7 @@
               min="5"
               max="120"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-            >
+            />
           </div>
           <div>
             <label class="block text-xs text-gray-600 mb-1">新单词数量</label>
@@ -253,23 +212,21 @@
               min="0"
               max="50"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-            >
+            />
           </div>
         </div>
       </div>
 
       <!-- 智能提醒 -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-3">
-          智能提醒设置
-        </label>
+        <label class="block text-sm font-medium text-gray-700 mb-3">智能提醒设置</label>
         <div class="space-y-3">
           <label class="flex items-center">
             <input
               v-model="settings.notifications.enabled"
               type="checkbox"
               class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            >
+            />
             <span class="ml-2">启用复习提醒</span>
           </label>
 
@@ -283,7 +240,7 @@
                   v-model="settings.notifications.times[index]"
                   type="time"
                   class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                >
+                />
               </div>
             </div>
 
@@ -293,7 +250,7 @@
                   v-model="settings.notifications.adaptive"
                   type="checkbox"
                   class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                >
+                />
                 <span class="ml-2">智能提醒 - 根据遗忘曲线调整提醒时间</span>
               </label>
               <label class="flex items-center">
@@ -301,7 +258,7 @@
                   v-model="settings.notifications.weekendsOnly"
                   type="checkbox"
                   class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                >
+                />
                 <span class="ml-2">仅工作日提醒</span>
               </label>
             </div>
@@ -321,16 +278,16 @@
 
         <button
           type="button"
-          @click="resetToDefaults"
           class="py-3 px-6 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          @click="resetToDefaults"
         >
           恢复默认
         </button>
 
         <button
           type="button"
-          @click="$emit('close')"
           class="py-3 px-6 text-gray-600 hover:text-gray-800 transition-colors"
+          @click="$emit('close')"
         >
           取消
         </button>
@@ -342,24 +299,24 @@
         <div class="grid md:grid-cols-3 gap-4">
           <button
             type="button"
-            @click="applyTemplate('beginner')"
             class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-left"
+            @click="applyTemplate('beginner')"
           >
             <div class="font-medium text-gray-800 mb-1">初学者</div>
             <div class="text-xs text-gray-600">简单模式，重复较多，提醒频繁</div>
           </button>
           <button
             type="button"
-            @click="applyTemplate('intermediate')"
             class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-left"
+            @click="applyTemplate('intermediate')"
           >
             <div class="font-medium text-gray-800 mb-1">进阶者</div>
             <div class="text-xs text-gray-600">平衡难度，适度重复，智能提醒</div>
           </button>
           <button
             type="button"
-            @click="applyTemplate('advanced')"
             class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-left"
+            @click="applyTemplate('advanced')"
           >
             <div class="font-medium text-gray-800 mb-1">高级用户</div>
             <div class="text-xs text-gray-600">挑战模式，少量重复，精准提醒</div>

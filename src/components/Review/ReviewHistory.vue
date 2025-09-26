@@ -14,7 +14,7 @@
           placeholder="搜索单词或会话..."
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
           @input="debouncedSearch"
-        >
+        />
       </div>
 
       <div class="flex gap-2">
@@ -47,11 +47,15 @@
     <!-- 统计概览 -->
     <div class="grid md:grid-cols-4 gap-4 mb-6">
       <div class="bg-blue-50 p-4 rounded-lg">
-        <div class="text-2xl font-bold text-blue-600">{{ totalSessions }}</div>
+        <div class="text-2xl font-bold text-blue-600">
+          {{ totalSessions }}
+        </div>
         <div class="text-sm text-blue-700">总会话数</div>
       </div>
       <div class="bg-green-50 p-4 rounded-lg">
-        <div class="text-2xl font-bold text-green-600">{{ totalQuestions }}</div>
+        <div class="text-2xl font-bold text-green-600">
+          {{ totalQuestions }}
+        </div>
         <div class="text-sm text-green-700">总题目数</div>
       </div>
       <div class="bg-purple-50 p-4 rounded-lg">
@@ -59,7 +63,9 @@
         <div class="text-sm text-purple-700">平均正确率</div>
       </div>
       <div class="bg-orange-50 p-4 rounded-lg">
-        <div class="text-2xl font-bold text-orange-600">{{ formatDuration(totalStudyTime) }}</div>
+        <div class="text-2xl font-bold text-orange-600">
+          {{ formatDuration(totalStudyTime) }}
+        </div>
         <div class="text-sm text-orange-700">总学习时间</div>
       </div>
     </div>
@@ -70,7 +76,12 @@
       <div class="bg-gray-100 rounded-lg p-6 h-64 flex items-center justify-center">
         <div class="text-center text-gray-500">
           <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
           </svg>
           <div class="font-medium">学习趋势图表</div>
           <div class="text-sm">(图表功能开发中)</div>
@@ -84,22 +95,22 @@
         <h3 class="font-medium text-gray-800">复习会话</h3>
         <div class="flex items-center space-x-2">
           <button
-            @click="viewMode = 'list'"
             class="px-3 py-1 text-sm rounded"
             :class="{
               'bg-blue-100 text-blue-800': viewMode === 'list',
               'text-gray-600 hover:text-gray-800': viewMode !== 'list'
             }"
+            @click="viewMode = 'list'"
           >
             列表
           </button>
           <button
-            @click="viewMode = 'cards'"
             class="px-3 py-1 text-sm rounded"
             :class="{
               'bg-blue-100 text-blue-800': viewMode === 'cards',
               'text-gray-600 hover:text-gray-800': viewMode !== 'cards'
             }"
+            @click="viewMode = 'cards'"
           >
             卡片
           </button>
@@ -107,13 +118,18 @@
       </div>
 
       <div v-if="loading" class="text-center py-8">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4" />
         <p class="text-gray-600">加载复习历史...</p>
       </div>
 
       <div v-else-if="sessions.length === 0" class="text-center py-8">
         <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+          />
         </svg>
         <p class="text-gray-500">还没有复习记录</p>
         <p class="text-sm text-gray-400 mt-1">开始你的第一次复习吧！</p>
@@ -141,9 +157,7 @@
               </div>
             </div>
             <div class="text-right">
-              <div class="font-medium text-gray-800">
-                {{ session.correctAnswers }} / {{ session.totalQuestions }}
-              </div>
+              <div class="font-medium text-gray-800">{{ session.correctAnswers }} / {{ session.totalQuestions }}</div>
               <div class="text-sm text-gray-600">
                 {{ ((session.correctAnswers / session.totalQuestions) * 100).toFixed(1) }}% 正确率
               </div>
@@ -174,7 +188,9 @@
             </div>
             <div class="flex justify-between text-sm">
               <span class="text-gray-600">正确率:</span>
-              <span class="font-medium">{{ ((session.correctAnswers / session.totalQuestions) * 100).toFixed(1) }}%</span>
+              <span class="font-medium">
+                {{ ((session.correctAnswers / session.totalQuestions) * 100).toFixed(1) }}%
+              </span>
             </div>
             <div class="flex justify-between text-sm">
               <span class="text-gray-600">用时:</span>
@@ -186,7 +202,7 @@
             <div
               class="bg-blue-600 h-2 rounded-full"
               :style="{ width: `${(session.correctAnswers / session.totalQuestions) * 100}%` }"
-            ></div>
+            />
           </div>
 
           <div class="text-xs text-gray-500 mt-2">
@@ -198,14 +214,14 @@
       <!-- 分页 -->
       <div v-if="totalPages > 1" class="flex items-center justify-between mt-6">
         <div class="text-sm text-gray-600">
-          显示 {{ (currentPage - 1) * pageSize + 1 }}-{{ Math.min(currentPage * pageSize, totalSessions) }}
-          / 共 {{ totalSessions }} 条
+          显示 {{ (currentPage - 1) * pageSize + 1 }}-{{ Math.min(currentPage * pageSize, totalSessions) }} / 共
+          {{ totalSessions }} 条
         </div>
         <div class="flex items-center space-x-2">
           <button
-            @click="changePage(currentPage - 1)"
             :disabled="currentPage === 1"
             class="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            @click="changePage(currentPage - 1)"
           >
             上一页
           </button>
@@ -214,21 +230,21 @@
             <button
               v-for="page in visiblePages"
               :key="page"
-              @click="changePage(page)"
               class="px-3 py-1 border rounded hover:bg-gray-50"
               :class="{
                 'bg-blue-100 text-blue-800 border-blue-300': page === currentPage,
                 'bg-white text-gray-700 border-gray-300': page !== currentPage
               }"
+              @click="changePage(page)"
             >
               {{ page }}
             </button>
           </div>
 
           <button
-            @click="changePage(currentPage + 1)"
             :disabled="currentPage === totalPages"
             class="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            @click="changePage(currentPage + 1)"
           >
             下一页
           </button>
@@ -241,16 +257,11 @@
       <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
           <h3 class="text-lg font-semibold text-gray-800">会话详情</h3>
-          <button
-            @click="selectedSession = null"
-            class="text-gray-400 hover:text-gray-600 text-2xl"
-          >
-            ×
-          </button>
+          <button class="text-gray-400 hover:text-gray-600 text-2xl" @click="selectedSession = null">×</button>
         </div>
 
         <div class="p-6">
-          <SessionDetail :session="selectedSession" />
+          <session-detail :session="selectedSession" />
         </div>
       </div>
     </div>

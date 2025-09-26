@@ -46,114 +46,115 @@ class MockDataService {
   private wordEntries: WordEntry[] = [
     {
       id: 1,
-      word: "elaborate",
-      language: "en",
-      pronunciation: "/ɪˈlæbərət/",
+      word: 'elaborate',
+      language: 'en',
+      pronunciation: '/ɪˈlæbərət/',
       standardDefinitions: [
         {
           id: 1,
-          meaning: "involving many carefully arranged parts or details; detailed and complicated in design and planning",
-          partOfSpeech: "adjective",
+          meaning:
+            'involving many carefully arranged parts or details; detailed and complicated in design and planning',
+          partOfSpeech: 'adjective',
           difficulty: 3.2,
-          examples: ["they came to the party with an elaborate plan"],
+          examples: ['they came to the party with an elaborate plan'],
           frequency: 850,
-          synonyms: ["detailed", "complex", "intricate"]
+          synonyms: ['detailed', 'complex', 'intricate']
         },
         {
           id: 2,
-          meaning: "develop or present (a theory, policy, or system) in further detail",
-          partOfSpeech: "verb",
+          meaning: 'develop or present (a theory, policy, or system) in further detail',
+          partOfSpeech: 'verb',
           difficulty: 3.2,
-          examples: ["he would not elaborate on his news"],
+          examples: ['he would not elaborate on his news'],
           frequency: 850
         }
       ],
       frequency: 850,
       difficulty: 3.2,
-      etymology: "Late Middle English: from Latin elaboratus",
+      etymology: 'Late Middle English: from Latin elaboratus',
       createdAt: this.getRandomDate(365),
       updatedAt: this.getRandomDate(30)
     },
     {
       id: 2,
-      word: "substantial",
-      language: "en",
-      pronunciation: "/səbˈstænʃəl/",
+      word: 'substantial',
+      language: 'en',
+      pronunciation: '/səbˈstænʃəl/',
       standardDefinitions: [
         {
           id: 3,
-          meaning: "of considerable importance, size, or worth",
-          partOfSpeech: "adjective",
+          meaning: 'of considerable importance, size, or worth',
+          partOfSpeech: 'adjective',
           difficulty: 2.8,
-          examples: ["a substantial amount of cash", "substantial changes were made"],
+          examples: ['a substantial amount of cash', 'substantial changes were made'],
           frequency: 1200,
-          synonyms: ["significant", "considerable", "important"]
+          synonyms: ['significant', 'considerable', 'important']
         }
       ],
       frequency: 1200,
       difficulty: 2.8,
-      etymology: "Middle English: from Old French substantiel",
+      etymology: 'Middle English: from Old French substantiel',
       createdAt: this.getRandomDate(365),
       updatedAt: this.getRandomDate(30)
     },
     {
       id: 3,
-      word: "intricate",
-      language: "en",
-      pronunciation: "/ˈɪntrɪkət/",
+      word: 'intricate',
+      language: 'en',
+      pronunciation: '/ˈɪntrɪkət/',
       standardDefinitions: [
         {
           id: 4,
-          meaning: "very complicated or detailed",
-          partOfSpeech: "adjective",
+          meaning: 'very complicated or detailed',
+          partOfSpeech: 'adjective',
           difficulty: 3.5,
-          examples: ["an intricate network of canals"],
+          examples: ['an intricate network of canals'],
           frequency: 650,
-          synonyms: ["complex", "elaborate", "complicated"]
+          synonyms: ['complex', 'elaborate', 'complicated']
         }
       ],
       frequency: 650,
       difficulty: 3.5,
-      etymology: "Late Middle English: from Latin intricatus",
+      etymology: 'Late Middle English: from Latin intricatus',
       createdAt: this.getRandomDate(365),
       updatedAt: this.getRandomDate(30)
     },
     {
       id: 4,
-      word: "paradigm",
-      language: "en",
-      pronunciation: "/ˈpærədaɪm/",
+      word: 'paradigm',
+      language: 'en',
+      pronunciation: '/ˈpærədaɪm/',
       standardDefinitions: [
         {
           id: 5,
-          meaning: "a typical example or pattern of something; a model",
-          partOfSpeech: "noun",
+          meaning: 'a typical example or pattern of something; a model',
+          partOfSpeech: 'noun',
           difficulty: 4.1,
           examples: ["society's paradigm of the 'ideal woman'"],
           frequency: 420,
-          synonyms: ["model", "framework", "pattern"]
+          synonyms: ['model', 'framework', 'pattern']
         }
       ],
       frequency: 420,
       difficulty: 4.1,
-      etymology: "Late Middle English: via late Latin from Greek paradeigma",
+      etymology: 'Late Middle English: via late Latin from Greek paradeigma',
       createdAt: this.getRandomDate(365),
       updatedAt: this.getRandomDate(30)
     },
     {
       id: 5,
-      word: "resilience",
-      language: "en",
-      pronunciation: "/rɪˈzɪliəns/",
+      word: 'resilience',
+      language: 'en',
+      pronunciation: '/rɪˈzɪliəns/',
       standardDefinitions: [
         {
           id: 6,
-          meaning: "the capacity to recover quickly from difficulties; toughness",
-          partOfSpeech: "noun",
+          meaning: 'the capacity to recover quickly from difficulties; toughness',
+          partOfSpeech: 'noun',
           difficulty: 3.0,
-          examples: ["the often remarkable resilience of so many British institutions"],
+          examples: ['the often remarkable resilience of so many British institutions'],
           frequency: 890,
-          synonyms: ["toughness", "flexibility", "adaptability"]
+          synonyms: ['toughness', 'flexibility', 'adaptability']
         }
       ],
       frequency: 890,
@@ -170,12 +171,12 @@ class MockDataService {
       id: 1,
       wordEntryId: 1,
       userId: 1,
-      meaning: "详细阐述；精心制作的",
-      context: "The architect presented an elaborate design for the new building.",
-      sourceType: "reading",
-      sourceDetail: "Academic Article - Page 15",
+      meaning: '详细阐述；精心制作的',
+      context: 'The architect presented an elaborate design for the new building.',
+      sourceType: 'reading',
+      sourceDetail: 'Academic Article - Page 15',
       confidence: 4.2,
-      tags: ["architecture", "design"],
+      tags: ['architecture', 'design'],
       createdAt: this.getRandomDate(10),
       updatedAt: this.getRandomDate(5)
     },
@@ -183,12 +184,12 @@ class MockDataService {
       id: 2,
       wordEntryId: 2,
       userId: 1,
-      meaning: "大量的，实质的",
-      context: "There was substantial evidence to support the claim.",
-      sourceType: "reading",
-      sourceDetail: "News Article",
+      meaning: '大量的，实质的',
+      context: 'There was substantial evidence to support the claim.',
+      sourceType: 'reading',
+      sourceDetail: 'News Article',
       confidence: 3.8,
-      tags: ["legal", "evidence"],
+      tags: ['legal', 'evidence'],
       createdAt: this.getRandomDate(15),
       updatedAt: this.getRandomDate(8)
     },
@@ -196,12 +197,12 @@ class MockDataService {
       id: 3,
       wordEntryId: 3,
       userId: 1,
-      meaning: "复杂的，错综的",
-      context: "The intricate details of the painting were mesmerizing.",
-      sourceType: "reading",
-      sourceDetail: "Art Book - Chapter 3",
+      meaning: '复杂的，错综的',
+      context: 'The intricate details of the painting were mesmerizing.',
+      sourceType: 'reading',
+      sourceDetail: 'Art Book - Chapter 3',
       confidence: 3.5,
-      tags: ["art", "description"],
+      tags: ['art', 'description'],
       createdAt: this.getRandomDate(20),
       updatedAt: this.getRandomDate(12)
     },
@@ -209,12 +210,12 @@ class MockDataService {
       id: 4,
       wordEntryId: 4,
       userId: 1,
-      meaning: "范式，模式",
-      context: "The new paradigm in education emphasizes collaborative learning.",
-      sourceType: "listening",
-      sourceDetail: "Educational Podcast - Episode 12",
+      meaning: '范式，模式',
+      context: 'The new paradigm in education emphasizes collaborative learning.',
+      sourceType: 'listening',
+      sourceDetail: 'Educational Podcast - Episode 12',
       confidence: 4.0,
-      tags: ["education", "theory"],
+      tags: ['education', 'theory'],
       createdAt: this.getRandomDate(7),
       updatedAt: this.getRandomDate(3)
     },
@@ -222,12 +223,12 @@ class MockDataService {
       id: 5,
       wordEntryId: 5,
       userId: 1,
-      meaning: "韧性，恢复力",
-      context: "Her resilience helped her overcome many challenges.",
-      sourceType: "conversation",
-      sourceDetail: "Work Meeting",
+      meaning: '韧性，恢复力',
+      context: 'Her resilience helped her overcome many challenges.',
+      sourceType: 'conversation',
+      sourceDetail: 'Work Meeting',
       confidence: 4.5,
-      tags: ["psychology", "personal"],
+      tags: ['psychology', 'personal'],
       createdAt: this.getRandomDate(12),
       updatedAt: this.getRandomDate(6)
     }
@@ -355,9 +356,7 @@ class MockDataService {
 
   async searchWordEntries(query: string, page = 1, limit = 20) {
     await this.delay()
-    const filteredEntries = this.wordEntries.filter(entry =>
-      entry.word.toLowerCase().includes(query.toLowerCase())
-    )
+    const filteredEntries = this.wordEntries.filter(entry => entry.word.toLowerCase().includes(query.toLowerCase()))
 
     const start = (page - 1) * limit
     const items = filteredEntries.slice(start, start + limit)
@@ -445,10 +444,7 @@ class MockDataService {
         }
       ],
       contextSimilarity: Math.random() * 0.4 + 0.6,
-      recommendations: [
-        "Consider merging with existing record",
-        "Different context provides new learning opportunity"
-      ],
+      recommendations: ['Consider merging with existing record', 'Different context provides new learning opportunity'],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
@@ -466,7 +462,7 @@ class MockDataService {
       consistencyScore: 0.95,
       meaningEvolution: [],
       contextSimilarity: 0.95,
-      recommendations: ["This appears to be a new unique record"],
+      recommendations: ['This appears to be a new unique record'],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }
@@ -506,9 +502,9 @@ class MockDataService {
       locationDistribution: {
         'Academic Article': 30,
         'News Article': 25,
-        'Book': 20,
-        'Podcast': 15,
-        'Meeting': 10
+        Book: 20,
+        Podcast: 15,
+        Meeting: 10
       }
     })
   }
@@ -558,9 +554,7 @@ class MockDataService {
   async startReviewSession(wordRecordIds: number[]) {
     await this.delay()
     const sessionId = `session_${Date.now()}`
-    const reviews = this.reviewSchedules.filter(s =>
-      wordRecordIds.includes(s.wordRecordId)
-    ).slice(0, 10)
+    const reviews = this.reviewSchedules.filter(s => wordRecordIds.includes(s.wordRecordId)).slice(0, 10)
 
     return this.createResponse({
       sessionId,
@@ -768,25 +762,25 @@ class MockDataService {
       wordsInProgress: Math.floor(Math.random() * 80) + 50,
       wordsStruggling: Math.floor(Math.random() * 30) + 10,
       contextTypes: {
-        'academic': 30,
-        'business': 25,
-        'casual': 20,
-        'technical': 15,
-        'other': 10
+        academic: 30,
+        business: 25,
+        casual: 20,
+        technical: 15,
+        other: 10
       },
       locationTypes: {
-        'home': 40,
-        'work': 35,
-        'school': 15,
-        'other': 10
+        home: 40,
+        work: 35,
+        school: 15,
+        other: 10
       },
       sourceTypes: {
-        'reading': 45,
-        'listening': 25,
-        'conversation': 20,
-        'media': 5,
-        'study': 3,
-        'other': 2
+        reading: 45,
+        listening: 25,
+        conversation: 20,
+        media: 5,
+        study: 3,
+        other: 2
       },
       learningVelocity: Math.random() * 2 + 1,
       retentionRate: Math.random() * 0.3 + 0.7,
@@ -940,11 +934,7 @@ class MockDataService {
         realistic: completionDate.toISOString(),
         pessimistic: new Date(completionDate.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString()
       },
-      recommendations: [
-        '保持当前学习节奏',
-        '增加难词复习频率',
-        '关注薄弱的词汇类别'
-      ]
+      recommendations: ['保持当前学习节奏', '增加难词复习频率', '关注薄弱的词汇类别']
     })
   }
 
@@ -979,16 +969,8 @@ class MockDataService {
   async getPersonalizedInsights() {
     await this.delay()
     return this.createResponse({
-      strengths: [
-        '单词识别能力强',
-        '学习时间稳定',
-        '复习频率合理'
-      ],
-      weaknesses: [
-        '回忆类题目正确率较低',
-        '复杂词汇掌握不够',
-        '上下文理解需要加强'
-      ],
+      strengths: ['单词识别能力强', '学习时间稳定', '复习频率合理'],
+      weaknesses: ['回忆类题目正确率较低', '复杂词汇掌握不够', '上下文理解需要加强'],
       recommendations: [
         {
           title: '增加回忆练习',
@@ -1051,11 +1033,11 @@ class MockDataService {
         '5': 12
       },
       partOfSpeechDistribution: {
-        'noun': 45,
-        'verb': 38,
-        'adjective': 32,
-        'adverb': 18,
-        'other': 12
+        noun: 45,
+        verb: 38,
+        adjective: 32,
+        adverb: 18,
+        other: 12
       },
       frequencyDistribution: {
         veryCommon: 35,
@@ -1064,17 +1046,17 @@ class MockDataService {
         rare: 15
       },
       sourceDistribution: {
-        'reading': 75,
-        'listening': 35,
-        'conversation': 25,
-        'other': 15
+        reading: 75,
+        listening: 35,
+        conversation: 25,
+        other: 15
       },
       locationDistribution: {
         'Academic Articles': 45,
-        'News': 32,
-        'Books': 28,
-        'Podcasts': 20,
-        'Meetings': 15
+        News: 32,
+        Books: 28,
+        Podcasts: 20,
+        Meetings: 15
       }
     })
   }
@@ -1124,11 +1106,7 @@ class MockDataService {
         }
       },
       difficultyAdjustments: [],
-      learningStrategies: [
-        '增加视觉记忆辅助',
-        '使用间隔重复算法',
-        '结合上下文学习'
-      ]
+      learningStrategies: ['增加视觉记忆辅助', '使用间隔重复算法', '结合上下文学习']
     }
     return this.createResponse(recommendations)
   }
@@ -1296,16 +1274,12 @@ class MockDataService {
   async getLearningStrategies() {
     await this.delay()
     return this.createResponse({
-      currentStrategies: [
-        '间隔重复',
-        '上下文学习',
-        '主动回忆'
-      ],
+      currentStrategies: ['间隔重复', '上下文学习', '主动回忆'],
       suggestedStrategies: [
         {
           strategy: '视觉联想记忆',
           reason: '可以提高记忆效果30%',
-          expectedImprovement: 0.30,
+          expectedImprovement: 0.3,
           difficulty: 'easy' as const
         },
         {
@@ -1317,15 +1291,11 @@ class MockDataService {
         {
           strategy: '语音记忆辅助',
           reason: '利用听觉记忆增强效果',
-          expectedImprovement: 0.20,
+          expectedImprovement: 0.2,
           difficulty: 'easy' as const
         }
       ],
-      personalizedTips: [
-        '根据您的学习模式，建议在上午学习新词',
-        '利用碎片时间进行快速复习',
-        '结合真实语境加深印象'
-      ]
+      personalizedTips: ['根据您的学习模式，建议在上午学习新词', '利用碎片时间进行快速复习', '结合真实语境加深印象']
     })
   }
 

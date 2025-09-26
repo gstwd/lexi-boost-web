@@ -20,84 +20,54 @@
                 <div class="card-header">
                   <el-row justify="space-between" align="middle">
                     <el-col :span="12">
-                      <el-text type="info">
-                        显示 {{ words.length }} / {{ pagination.total }} 个单词
-                      </el-text>
+                      <el-text type="info">显示 {{ words.length }} / {{ pagination.total }} 个单词</el-text>
                     </el-col>
                     <el-col :span="12" style="text-align: right">
-                      <el-button type="primary" @click="showAddDialog = true" :icon="Plus">
-                        添加单词
-                      </el-button>
-                      <el-button @click="refreshWords" :icon="Refresh">
-                        刷新
-                      </el-button>
+                      <el-button type="primary" :icon="Plus" @click="showAddDialog = true">添加单词</el-button>
+                      <el-button :icon="Refresh" @click="refreshWords">刷新</el-button>
                     </el-col>
                   </el-row>
                 </div>
               </template>
 
-              <el-alert
-                v-if="error"
-                :title="error"
-                type="error"
-                show-icon
-                :closable="false"
-                class="mb-4"
-              >
+              <el-alert v-if="error" :title="error" type="error" show-icon :closable="false" class="mb-4">
                 <template #default>
-                  <el-button type="danger" size="small" @click="refreshWords">
-                    重试
-                  </el-button>
+                  <el-button type="danger" size="small" @click="refreshWords">重试</el-button>
                 </template>
               </el-alert>
 
               <el-empty v-if="!loading && words.length === 0" description="暂无单词数据">
-                <el-button type="primary" @click="showAddDialog = true">
-                  添加第一个单词
-                </el-button>
+                <el-button type="primary" @click="showAddDialog = true">添加第一个单词</el-button>
               </el-empty>
 
               <el-row v-else :gutter="16">
-                <el-col
-                  v-for="word in words"
-                  :key="word.id"
-                  :xs="24"
-                  :sm="12"
-                  :md="8"
-                  :lg="6"
-                  class="mb-4"
-                >
+                <el-col v-for="word in words" :key="word.id" :xs="24" :sm="12" :md="8" :lg="6" class="mb-4">
                   <el-card class="word-card" shadow="hover">
                     <template #header>
                       <div class="word-header">
-                        <el-text tag="h3" class="word-title">{{ word.word }}</el-text>
-                        <el-tag
-                          :type="getDifficultyTagType(word.difficulty)"
-                          size="small"
-                        >
+                        <el-text tag="h3" class="word-title">
+                          {{ word.word }}
+                        </el-text>
+                        <el-tag :type="getDifficultyTagType(word.difficulty)" size="small">
                           {{ getDifficultyText(word.difficulty) }}
                         </el-tag>
                       </div>
                     </template>
 
                     <div class="word-content">
-                      <el-text class="word-meaning">{{ word.meaning }}</el-text>
+                      <el-text class="word-meaning">
+                        {{ word.meaning }}
+                      </el-text>
 
                       <div v-if="word.pronunciation" class="word-pronunciation">
                         <el-text type="info" size="small">
-                          <el-icon><Microphone /></el-icon>
+                          <el-icon><microphone /></el-icon>
                           {{ word.pronunciation }}
                         </el-text>
                       </div>
 
                       <div v-if="word.tags && word.tags.length > 0" class="word-tags">
-                        <el-tag
-                          v-for="tag in word.tags"
-                          :key="tag"
-                          size="small"
-                          effect="plain"
-                          class="tag-item"
-                        >
+                        <el-tag v-for="tag in word.tags" :key="tag" size="small" effect="plain" class="tag-item">
                           {{ tag }}
                         </el-tag>
                       </div>
@@ -105,12 +75,8 @@
 
                     <template #footer>
                       <div class="word-actions">
-                        <el-button type="primary" size="small" @click="editWord(word)" :icon="Edit">
-                          编辑
-                        </el-button>
-                        <el-button type="danger" size="small" @click="deleteWord(word)" :icon="Delete">
-                          删除
-                        </el-button>
+                        <el-button type="primary" size="small" :icon="Edit" @click="editWord(word)">编辑</el-button>
+                        <el-button type="danger" size="small" :icon="Delete" @click="deleteWord(word)">删除</el-button>
                       </div>
                     </template>
                   </el-card>
@@ -123,8 +89,8 @@
                   :page-size="pagination.limit"
                   :total="pagination.total"
                   layout="prev, pager, next, jumper"
-                  @current-change="goToPage"
                   background
+                  @current-change="goToPage"
                 />
               </div>
             </el-card>
@@ -133,23 +99,13 @@
       </el-main>
     </el-container>
 
-    <el-dialog
-      v-model="showAddDialog"
-      title="添加单词"
-      width="500px"
-      :before-close="handleDialogClose"
-    >
+    <el-dialog v-model="showAddDialog" title="添加单词" width="500px" :before-close="handleDialogClose">
       <el-form :model="wordForm" label-width="80px">
         <el-form-item label="单词" required>
           <el-input v-model="wordForm.word" placeholder="请输入单词" />
         </el-form-item>
         <el-form-item label="释义" required>
-          <el-input
-            v-model="wordForm.meaning"
-            type="textarea"
-            :rows="3"
-            placeholder="请输入单词释义"
-          />
+          <el-input v-model="wordForm.meaning" type="textarea" :rows="3" placeholder="请输入单词释义" />
         </el-form-item>
         <el-form-item label="发音">
           <el-input v-model="wordForm.pronunciation" placeholder="请输入发音" />
@@ -244,7 +200,12 @@ const handleSaveWord = async () => {
   }
 
   try {
-    const tags = wordForm.tagsInput ? wordForm.tagsInput.split(',').map(tag => tag.trim()).filter(Boolean) : []
+    const tags = wordForm.tagsInput
+      ? wordForm.tagsInput
+          .split(',')
+          .map(tag => tag.trim())
+          .filter(Boolean)
+      : []
 
     await wordsStore.addWord({
       word: wordForm.word,
@@ -268,15 +229,11 @@ const editWord = (word: Word) => {
 
 const deleteWord = async (word: Word) => {
   try {
-    await ElMessageBox.confirm(
-      `确定要删除单词 "${word.word}" 吗？`,
-      '确认删除',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }
-    )
+    await ElMessageBox.confirm(`确定要删除单词 "${word.word}" 吗？`, '确认删除', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
 
     await wordsStore.deleteWord(word.id)
     ElMessage.success('删除成功')

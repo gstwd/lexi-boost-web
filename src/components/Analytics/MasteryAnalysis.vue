@@ -14,7 +14,7 @@
           placeholder="搜索单词..."
           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
           @input="debouncedSearch"
-        >
+        />
       </div>
 
       <div class="flex gap-2">
@@ -60,29 +60,37 @@
     <!-- 掌握度概览 -->
     <div class="grid md:grid-cols-4 gap-4 mb-6">
       <div class="bg-green-50 border border-green-200 p-4 rounded-lg text-center">
-        <div class="text-2xl font-bold text-green-600">{{ masteryStats.mastered }}</div>
+        <div class="text-2xl font-bold text-green-600">
+          {{ masteryStats.mastered }}
+        </div>
         <div class="text-sm text-green-700">已掌握</div>
         <div class="text-xs text-green-600 mt-1">{{ getMasteryPercentage('mastered') }}%</div>
       </div>
       <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg text-center">
-        <div class="text-2xl font-bold text-blue-600">{{ masteryStats.learning }}</div>
+        <div class="text-2xl font-bold text-blue-600">
+          {{ masteryStats.learning }}
+        </div>
         <div class="text-sm text-blue-700">学习中</div>
         <div class="text-xs text-blue-600 mt-1">{{ getMasteryPercentage('learning') }}%</div>
       </div>
       <div class="bg-red-50 border border-red-200 p-4 rounded-lg text-center">
-        <div class="text-2xl font-bold text-red-600">{{ masteryStats.struggling }}</div>
+        <div class="text-2xl font-bold text-red-600">
+          {{ masteryStats.struggling }}
+        </div>
         <div class="text-sm text-red-700">需加强</div>
         <div class="text-xs text-red-600 mt-1">{{ getMasteryPercentage('struggling') }}%</div>
       </div>
       <div class="bg-gray-50 border border-gray-200 p-4 rounded-lg text-center">
-        <div class="text-2xl font-bold text-gray-600">{{ masteryStats.new }}</div>
+        <div class="text-2xl font-bold text-gray-600">
+          {{ masteryStats.new }}
+        </div>
         <div class="text-sm text-gray-700">未复习</div>
         <div class="text-xs text-gray-600 mt-1">{{ getMasteryPercentage('new') }}%</div>
       </div>
     </div>
 
     <div v-if="loading" class="text-center py-8">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4" />
       <p class="text-gray-600">加载掌握度数据...</p>
     </div>
 
@@ -97,15 +105,17 @@
         <div class="flex items-center justify-between">
           <div class="flex-1">
             <div class="flex items-center space-x-4">
-              <h3 class="text-lg font-semibold text-gray-800">{{ word.word }}</h3>
+              <h3 class="text-lg font-semibold text-gray-800">
+                {{ word.word }}
+              </h3>
               <span class="px-2 py-1 text-xs rounded-full" :class="getMasteryLevelClass(word.masteryLevel)">
                 {{ getMasteryLevelLabel(word.masteryLevel) }}
               </span>
-              <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">
-                难度 {{ word.difficulty }}/5
-              </span>
+              <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">难度 {{ word.difficulty }}/5</span>
             </div>
-            <p class="text-gray-600 mt-1">{{ word.meaning }}</p>
+            <p class="text-gray-600 mt-1">
+              {{ word.meaning }}
+            </p>
             <div class="flex items-center space-x-6 text-sm text-gray-500 mt-2">
               <span>复习 {{ word.reviewCount }} 次</span>
               <span>正确率 {{ (word.accuracy * 100).toFixed(1) }}%</span>
@@ -122,7 +132,7 @@
                   width: `${(word.masteryLevel / 5) * 100}%`,
                   backgroundColor: getMasteryLevelColor(word.masteryLevel)
                 }"
-              ></div>
+              />
             </div>
             <div class="text-sm text-gray-600">{{ word.masteryLevel.toFixed(1) }}/5.0</div>
 
@@ -135,7 +145,12 @@
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                />
               </svg>
               <svg
                 v-else-if="word.masteryTrend === 'declining'"
@@ -144,16 +159,15 @@
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6 6"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 17h8m0 0V9m0 8l-8-8-4 4-6 6"
+                />
               </svg>
-              <svg
-                v-else
-                class="w-4 h-4 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>
+              <svg v-else class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14" />
               </svg>
             </div>
           </div>
@@ -163,14 +177,14 @@
       <!-- 分页 -->
       <div v-if="totalPages > 1" class="flex items-center justify-between mt-6">
         <div class="text-sm text-gray-600">
-          显示 {{ (currentPage - 1) * pageSize + 1 }}-{{ Math.min(currentPage * pageSize, totalWords) }}
-          / 共 {{ totalWords }} 个单词
+          显示 {{ (currentPage - 1) * pageSize + 1 }}-{{ Math.min(currentPage * pageSize, totalWords) }} / 共
+          {{ totalWords }} 个单词
         </div>
         <div class="flex items-center space-x-2">
           <button
-            @click="changePage(currentPage - 1)"
             :disabled="currentPage === 1"
             class="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            @click="changePage(currentPage - 1)"
           >
             上一页
           </button>
@@ -179,21 +193,21 @@
             <button
               v-for="page in visiblePages"
               :key="page"
-              @click="changePage(page)"
               class="px-3 py-1 border rounded hover:bg-gray-50"
               :class="{
                 'bg-blue-100 text-blue-800 border-blue-300': page === currentPage,
                 'bg-white text-gray-700 border-gray-300': page !== currentPage
               }"
+              @click="changePage(page)"
             >
               {{ page }}
             </button>
           </div>
 
           <button
-            @click="changePage(currentPage + 1)"
             :disabled="currentPage === totalPages"
             class="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            @click="changePage(currentPage + 1)"
           >
             下一页
           </button>
@@ -203,7 +217,12 @@
 
     <div v-else class="text-center py-12">
       <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+        />
       </svg>
       <p class="text-gray-500">没有找到符合条件的单词</p>
     </div>
@@ -213,16 +232,11 @@
       <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
           <h3 class="text-lg font-semibold text-gray-800">单词详细分析</h3>
-          <button
-            @click="selectedWord = null"
-            class="text-gray-400 hover:text-gray-600 text-2xl"
-          >
-            ×
-          </button>
+          <button class="text-gray-400 hover:text-gray-600 text-2xl" @click="selectedWord = null">×</button>
         </div>
 
         <div class="p-6">
-          <WordMasteryDetailComponent :word="selectedWord" />
+          <word-mastery-detail-component :word="selectedWord" />
         </div>
       </div>
     </div>
@@ -341,9 +355,8 @@ const filteredWords = computed(() => {
   // 搜索筛选
   if (filters.search.trim()) {
     const searchTerm = filters.search.toLowerCase()
-    filtered = filtered.filter(word =>
-      word.word.toLowerCase().includes(searchTerm) ||
-      word.meaning.toLowerCase().includes(searchTerm)
+    filtered = filtered.filter(
+      word => word.word.toLowerCase().includes(searchTerm) || word.meaning.toLowerCase().includes(searchTerm)
     )
   }
 
@@ -351,11 +364,16 @@ const filteredWords = computed(() => {
   if (filters.masteryLevel !== 'all') {
     filtered = filtered.filter(word => {
       switch (filters.masteryLevel) {
-        case 'mastered': return word.masteryLevel >= 4.0
-        case 'learning': return word.masteryLevel >= 2.5 && word.masteryLevel < 4.0
-        case 'struggling': return word.masteryLevel >= 1.0 && word.masteryLevel < 2.5
-        case 'new': return word.masteryLevel < 1.0
-        default: return true
+        case 'mastered':
+          return word.masteryLevel >= 4.0
+        case 'learning':
+          return word.masteryLevel >= 2.5 && word.masteryLevel < 4.0
+        case 'struggling':
+          return word.masteryLevel >= 1.0 && word.masteryLevel < 2.5
+        case 'new':
+          return word.masteryLevel < 1.0
+        default:
+          return true
       }
     })
   }
@@ -375,13 +393,11 @@ const sortedWords = computed(() => {
     case 'masteryLevel':
       return sorted.sort((a, b) => b.masteryLevel - a.masteryLevel)
     case 'recentActivity':
-      return sorted.sort((a, b) =>
-        new Date(b.lastReviewedAt).getTime() - new Date(a.lastReviewedAt).getTime()
-      )
+      return sorted.sort((a, b) => new Date(b.lastReviewedAt).getTime() - new Date(a.lastReviewedAt).getTime())
     case 'difficulty':
       return sorted.sort((a, b) => b.difficulty - a.difficulty)
     case 'errorRate':
-      return sorted.sort((a, b) => (1 - a.accuracy) - (1 - b.accuracy))
+      return sorted.sort((a, b) => 1 - a.accuracy - (1 - b.accuracy))
     case 'alphabetical':
       return sorted.sort((a, b) => a.word.localeCompare(b.word))
     default:

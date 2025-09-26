@@ -10,10 +10,7 @@
       <div class="mb-8">
         <h3 class="font-semibold text-gray-800 mb-4">学习趋势</h3>
         <div class="bg-white border rounded-lg p-4">
-          <LineChart
-            :option="learningTrendData"
-            height="300px"
-          />
+          <line-chart :option="learningTrendData" height="300px" />
         </div>
       </div>
 
@@ -22,10 +19,7 @@
         <div>
           <h3 class="font-semibold text-gray-800 mb-4">掌握度分布</h3>
           <div class="bg-white border rounded-lg p-4">
-            <PieChart
-              :option="masteryDistributionData"
-              height="300px"
-            />
+            <pie-chart :option="masteryDistributionData" height="300px" />
           </div>
         </div>
 
@@ -33,10 +27,7 @@
         <div>
           <h3 class="font-semibold text-gray-800 mb-4">难度分布</h3>
           <div class="bg-white border rounded-lg p-4">
-            <BarChart
-              :option="difficultyDistributionData"
-              height="300px"
-            />
+            <bar-chart :option="difficultyDistributionData" height="300px" />
           </div>
         </div>
       </div>
@@ -45,10 +36,7 @@
       <div class="mb-8">
         <h3 class="font-semibold text-gray-800 mb-4">每日学习时间分布</h3>
         <div class="bg-white border rounded-lg p-4">
-          <BarChart
-            :option="studyTimeData"
-            height="300px"
-          />
+          <bar-chart :option="studyTimeData" height="300px" />
         </div>
       </div>
     </div>
@@ -73,9 +61,7 @@ const learningTrendRawData = [
   { date: '2024-01-07', wordsAdded: 4, reviewsCompleted: 14, accuracy: 0.93 }
 ]
 
-const learningTrendData = computed(() =>
-  ChartUtils.generateLearningTrendChart(learningTrendRawData)
-)
+const learningTrendData = computed(() => ChartUtils.generateLearningTrendChart(learningTrendRawData))
 
 // 掌握度分布数据
 const masteryData = {
@@ -85,9 +71,7 @@ const masteryData = {
   notReviewed: 12
 }
 
-const masteryDistributionData = computed(() =>
-  ChartUtils.generateMasteryDistributionChart(masteryData)
-)
+const masteryDistributionData = computed(() => ChartUtils.generateMasteryDistributionChart(masteryData))
 
 // 难度分布数据
 const difficultyData = [
@@ -98,9 +82,7 @@ const difficultyData = [
   { difficulty: 5, count: 15 }
 ]
 
-const difficultyDistributionData = computed(() =>
-  ChartUtils.generateDifficultyDistributionChart(difficultyData)
-)
+const difficultyDistributionData = computed(() => ChartUtils.generateDifficultyDistributionChart(difficultyData))
 
 // 学习时间分布数据
 const studyTimeRawData = [
@@ -113,7 +95,5 @@ const studyTimeRawData = [
   { hour: 21, minutes: 28, performance: 0.86 }
 ]
 
-const studyTimeData = computed(() =>
-  ChartUtils.generateStudyTimeChart(studyTimeRawData)
-)
+const studyTimeData = computed(() => ChartUtils.generateStudyTimeChart(studyTimeRawData))
 </script>

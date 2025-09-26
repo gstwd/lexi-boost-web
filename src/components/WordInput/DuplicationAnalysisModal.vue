@@ -3,21 +3,18 @@
     <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
       <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <h2 class="text-xl font-semibold text-gray-800">重复录入分析</h2>
-        <button
-          @click="$emit('close')"
-          class="text-gray-400 hover:text-gray-600 text-2xl"
-        >
-          ×
-        </button>
+        <button class="text-gray-400 hover:text-gray-600 text-2xl" @click="$emit('close')">×</button>
       </div>
 
-      <div class="p-6" v-if="analysis">
+      <div v-if="analysis" class="p-6">
         <!-- 概览信息 -->
         <div class="bg-blue-50 rounded-lg p-4 mb-6">
           <h3 class="font-medium text-blue-800 mb-3">录入概览</h3>
           <div class="grid md:grid-cols-3 gap-4">
             <div class="text-center">
-              <div class="text-2xl font-bold text-blue-600">{{ analysis.totalCount }}</div>
+              <div class="text-2xl font-bold text-blue-600">
+                {{ analysis.totalCount }}
+              </div>
               <div class="text-sm text-blue-700">总录入次数</div>
             </div>
             <div class="text-center">
@@ -45,9 +42,7 @@
               }"
             >
               <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium">
-                  第 {{ index + 1 }} 次录入
-                </span>
+                <span class="text-sm font-medium">第 {{ index + 1 }} 次录入</span>
                 <div class="flex items-center space-x-2">
                   <span class="text-xs text-gray-500">
                     {{ formatDate(evolution.recordedAt) }}
@@ -64,7 +59,9 @@
                 </div>
               </div>
 
-              <p class="text-gray-700 mb-2">{{ evolution.meaning }}</p>
+              <p class="text-gray-700 mb-2">
+                {{ evolution.meaning }}
+              </p>
 
               <div class="flex items-center justify-between text-sm text-gray-600">
                 <span>信心度: {{ evolution.confidence }}/5</span>
@@ -75,7 +72,7 @@
         </div>
 
         <!-- 分析建议 -->
-        <div class="mb-6" v-if="analysis.recommendations.length > 0">
+        <div v-if="analysis.recommendations.length > 0" class="mb-6">
           <h3 class="font-medium text-gray-800 mb-4">系统建议</h3>
           <div class="space-y-2">
             <div
@@ -83,10 +80,22 @@
               :key="index"
               class="flex items-start space-x-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg"
             >
-              <svg class="w-5 h-5 text-yellow-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              <svg
+                class="w-5 h-5 text-yellow-500 mt-0.5 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
-              <p class="text-sm text-yellow-800">{{ recommendation }}</p>
+              <p class="text-sm text-yellow-800">
+                {{ recommendation }}
+              </p>
             </div>
           </div>
         </div>
@@ -110,12 +119,17 @@
         </div>
 
         <!-- 一致性分析图表 -->
-        <div class="mb-6" v-if="showChart">
+        <div v-if="showChart" class="mb-6">
           <h3 class="font-medium text-gray-800 mb-4">一致性趋势</h3>
           <div class="bg-gray-100 rounded-lg p-4 h-40 flex items-center justify-center">
             <div class="text-gray-500">
               <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
               </svg>
               <div class="text-sm">一致性趋势图表</div>
               <div class="text-xs">(图表功能开发中)</div>
@@ -126,30 +140,27 @@
         <!-- 操作按钮 -->
         <div class="flex space-x-4 pt-6 border-t border-gray-200">
           <button
-            @click="$emit('continue')"
             class="flex-1 py-3 px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            @click="$emit('continue')"
           >
             继续录入
           </button>
 
           <button
-            @click="editCurrentEntry"
             class="py-3 px-6 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            @click="editCurrentEntry"
           >
             修改当前录入
           </button>
 
           <button
-            @click="viewPreviousEntries"
             class="py-3 px-6 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            @click="viewPreviousEntries"
           >
             查看历史录入
           </button>
 
-          <button
-            @click="$emit('close')"
-            class="py-3 px-6 text-gray-600 hover:text-gray-800 transition-colors"
-          >
+          <button class="py-3 px-6 text-gray-600 hover:text-gray-800 transition-colors" @click="$emit('close')">
             取消
           </button>
         </div>
@@ -157,7 +168,7 @@
 
       <!-- 加载状态 -->
       <div v-else class="p-6 text-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
         <p class="text-gray-600">分析数据加载中...</p>
       </div>
     </div>

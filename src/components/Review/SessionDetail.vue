@@ -4,8 +4,12 @@
     <div class="mb-6">
       <div class="flex items-center justify-between mb-4">
         <div>
-          <h4 class="text-lg font-semibold text-gray-800">{{ getSessionTypeLabel(session.type) }}</h4>
-          <p class="text-sm text-gray-600">{{ formatDate(session.startedAt) }}</p>
+          <h4 class="text-lg font-semibold text-gray-800">
+            {{ getSessionTypeLabel(session.type) }}
+          </h4>
+          <p class="text-sm text-gray-600">
+            {{ formatDate(session.startedAt) }}
+          </p>
         </div>
         <span class="px-3 py-1 text-sm rounded-full" :class="getSessionStatusClass(session.status)">
           {{ getSessionStatusLabel(session.status) }}
@@ -14,11 +18,15 @@
 
       <div class="grid md:grid-cols-4 gap-4 mb-4">
         <div class="text-center">
-          <div class="text-2xl font-bold text-blue-600">{{ session.totalQuestions }}</div>
+          <div class="text-2xl font-bold text-blue-600">
+            {{ session.totalQuestions }}
+          </div>
           <div class="text-sm text-blue-700">总题数</div>
         </div>
         <div class="text-center">
-          <div class="text-2xl font-bold text-green-600">{{ session.correctAnswers }}</div>
+          <div class="text-2xl font-bold text-green-600">
+            {{ session.correctAnswers }}
+          </div>
           <div class="text-sm text-green-700">答对</div>
         </div>
         <div class="text-center">
@@ -26,7 +34,9 @@
           <div class="text-sm text-purple-700">正确率</div>
         </div>
         <div class="text-center">
-          <div class="text-2xl font-bold text-orange-600">{{ formatDuration(session.duration) }}</div>
+          <div class="text-2xl font-bold text-orange-600">
+            {{ formatDuration(session.duration) }}
+          </div>
           <div class="text-sm text-orange-700">用时</div>
         </div>
       </div>
@@ -36,12 +46,12 @@
         <div
           class="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-300"
           :style="{ width: `${accuracy}%` }"
-        ></div>
+        />
       </div>
     </div>
 
     <!-- 题目类型分析 -->
-    <div class="mb-6" v-if="typeAnalysis.length > 0">
+    <div v-if="typeAnalysis.length > 0" class="mb-6">
       <h5 class="font-medium text-gray-800 mb-3">题目类型分析</h5>
       <div class="space-y-3">
         <div
@@ -50,7 +60,7 @@
           class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
         >
           <div class="flex items-center space-x-3">
-            <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: type.color }"></div>
+            <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: type.color }" />
             <span class="font-medium">{{ getReviewTypeLabel(type.type) }}</span>
           </div>
           <div class="text-right">
@@ -65,7 +75,7 @@
                   width: `${type.accuracy}%`,
                   backgroundColor: type.color
                 }"
-              ></div>
+              />
             </div>
           </div>
         </div>
@@ -73,7 +83,7 @@
     </div>
 
     <!-- 错误单词分析 -->
-    <div class="mb-6" v-if="incorrectWords.length > 0">
+    <div v-if="incorrectWords.length > 0" class="mb-6">
       <h5 class="font-medium text-gray-800 mb-3">错误单词</h5>
       <div class="space-y-2">
         <div
@@ -82,14 +92,20 @@
           class="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded-lg"
         >
           <div class="flex-1">
-            <div class="font-medium text-red-800">{{ word.word }}</div>
-            <div class="text-sm text-red-600 mt-1">{{ word.meaning }}</div>
+            <div class="font-medium text-red-800">
+              {{ word.word }}
+            </div>
+            <div class="text-sm text-red-600 mt-1">
+              {{ word.meaning }}
+            </div>
             <div class="text-xs text-red-500 mt-1">
               你的答案: {{ word.userAnswer }} | 正确答案: {{ word.correctAnswer }}
             </div>
           </div>
           <div class="text-right">
-            <div class="text-xs text-red-600">{{ getReviewTypeLabel(word.questionType) }}</div>
+            <div class="text-xs text-red-600">
+              {{ getReviewTypeLabel(word.questionType) }}
+            </div>
             <div class="text-xs text-red-500">用时 {{ word.timeSpent || 0 }}秒</div>
           </div>
         </div>
@@ -116,7 +132,7 @@
     </div>
 
     <!-- 学习建议 -->
-    <div class="mb-6" v-if="suggestions.length > 0">
+    <div v-if="suggestions.length > 0" class="mb-6">
       <h5 class="font-medium text-gray-800 mb-3">学习建议</h5>
       <div class="space-y-2">
         <div
@@ -124,10 +140,22 @@
           :key="index"
           class="flex items-start space-x-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg"
         >
-          <svg class="w-5 h-5 text-yellow-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          <svg
+            class="w-5 h-5 text-yellow-500 mt-0.5 flex-shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
           </svg>
-          <p class="text-sm text-yellow-800">{{ suggestion }}</p>
+          <p class="text-sm text-yellow-800">
+            {{ suggestion }}
+          </p>
         </div>
       </div>
     </div>
@@ -136,12 +164,7 @@
     <div v-if="showDetails">
       <div class="flex items-center justify-between mb-4">
         <h5 class="font-medium text-gray-800">详细题目</h5>
-        <button
-          @click="showDetails = false"
-          class="text-blue-600 hover:text-blue-800 text-sm"
-        >
-          收起详情
-        </button>
+        <button class="text-blue-600 hover:text-blue-800 text-sm" @click="showDetails = false">收起详情</button>
       </div>
 
       <div class="space-y-3 max-h-80 overflow-y-auto">
@@ -178,9 +201,7 @@
 
           <div class="text-sm text-gray-600 mb-2">
             用时: {{ question.timeSpent || 0 }}秒
-            <span v-if="question.difficulty" class="ml-4">
-              难度反馈: {{ question.difficulty }}/5
-            </span>
+            <span v-if="question.difficulty" class="ml-4">难度反馈: {{ question.difficulty }}/5</span>
           </div>
 
           <div v-if="!question.isCorrect" class="text-sm">
@@ -192,12 +213,7 @@
     </div>
 
     <div v-else class="text-center">
-      <button
-        @click="showDetails = true"
-        class="text-blue-600 hover:text-blue-800 text-sm"
-      >
-        查看详细题目
-      </button>
+      <button class="text-blue-600 hover:text-blue-800 text-sm" @click="showDetails = true">查看详细题目</button>
     </div>
   </div>
 </template>
@@ -240,7 +256,7 @@ const accuracy = computed(() => {
 const typeAnalysis = computed(() => {
   if (!props.session.questions) return []
 
-  const analysis = new Map<string, { total: number, correct: number }>()
+  const analysis = new Map<string, { total: number; correct: number }>()
 
   props.session.questions.forEach(question => {
     const type = question.type

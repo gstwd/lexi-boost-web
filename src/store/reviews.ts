@@ -1,12 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { reviewsApi } from '@/api'
-import type {
-  ReviewSchedule,
-  ReviewSession,
-  ReviewFilters,
-  ReviewType
-} from '@/types'
+import type { ReviewSchedule, ReviewSession, ReviewFilters, ReviewType } from '@/types'
 
 export const useReviewsStore = defineStore('reviews', () => {
   // 状态
@@ -56,14 +51,10 @@ export const useReviewsStore = defineStore('reviews', () => {
   const totalPages = computed(() => Math.ceil(pagination.value.total / pagination.value.limit))
 
   const dueSchedules = computed(() =>
-    schedules.value.filter(schedule =>
-      schedule.status === 'due' || schedule.status === 'overdue'
-    )
+    schedules.value.filter(schedule => schedule.status === 'due' || schedule.status === 'overdue')
   )
 
-  const overdueSchedules = computed(() =>
-    schedules.value.filter(schedule => schedule.status === 'overdue')
-  )
+  const overdueSchedules = computed(() => schedules.value.filter(schedule => schedule.status === 'overdue'))
 
   const sessionProgress = computed(() => {
     if (!currentSession.value) return 0

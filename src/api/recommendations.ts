@@ -28,15 +28,17 @@ export const recommendationsApi = {
     return response.data
   },
 
-  async getDailyReviewPlan(targetMinutes = 30): Promise<ApiResponse<{
-    recommendations: WordRecommendation[]
-    estimatedDuration: number
-    breakdown: {
-      newWords: number
-      reviews: number
-      practice: number
-    }
-  }>> {
+  async getDailyReviewPlan(targetMinutes = 30): Promise<
+    ApiResponse<{
+      recommendations: WordRecommendation[]
+      estimatedDuration: number
+      breakdown: {
+        newWords: number
+        reviews: number
+        practice: number
+      }
+    }>
+  > {
     const response = await apiClient.get('/api/recommendations/daily-plan', {
       params: { targetMinutes }
     })
@@ -88,73 +90,85 @@ export const recommendationsApi = {
   },
 
   // 学习策略推荐
-  async getLearningStrategies(): Promise<ApiResponse<{
-    currentStrategies: string[]
-    suggestedStrategies: {
-      strategy: string
-      reason: string
-      expectedImprovement: number
-      difficulty: 'easy' | 'medium' | 'hard'
-    }[]
-    personalizedTips: string[]
-  }>> {
+  async getLearningStrategies(): Promise<
+    ApiResponse<{
+      currentStrategies: string[]
+      suggestedStrategies: {
+        strategy: string
+        reason: string
+        expectedImprovement: number
+        difficulty: 'easy' | 'medium' | 'hard'
+      }[]
+      personalizedTips: string[]
+    }>
+  > {
     const response = await apiClient.get('/api/recommendations/learning-strategies')
     return response.data
   },
 
   // 内容推荐
-  async getContentRecommendations(): Promise<ApiResponse<{
-    suggestedWords: {
-      word: string
-      reason: string
-      difficulty: number
-      priority: number
-      relatedWords: string[]
-    }[]
-    topicsToExplore: {
-      topic: string
-      wordCount: number
-      averageDifficulty: number
-      description: string
-    }[]
-    reviewMaterials: {
-      type: 'article' | 'video' | 'exercise' | 'game'
-      title: string
-      description: string
-      difficulty: number
-      estimatedTime: number
-      url?: string
-    }[]
-  }>> {
+  async getContentRecommendations(): Promise<
+    ApiResponse<{
+      suggestedWords: {
+        word: string
+        reason: string
+        difficulty: number
+        priority: number
+        relatedWords: string[]
+      }[]
+      topicsToExplore: {
+        topic: string
+        wordCount: number
+        averageDifficulty: number
+        description: string
+      }[]
+      reviewMaterials: {
+        type: 'article' | 'video' | 'exercise' | 'game'
+        title: string
+        description: string
+        difficulty: number
+        estimatedTime: number
+        url?: string
+      }[]
+    }>
+  > {
     const response = await apiClient.get('/api/recommendations/content')
     return response.data
   },
 
   // 用户反馈
-  async provideFeedback(recommendationId: string, feedback: {
-    helpful: boolean
-    followed: boolean
-    rating: number // 1-5
-    comment?: string
-  }): Promise<ApiResponse<void>> {
+  async provideFeedback(
+    recommendationId: string,
+    feedback: {
+      helpful: boolean
+      followed: boolean
+      rating: number // 1-5
+      comment?: string
+    }
+  ): Promise<ApiResponse<void>> {
     const response = await apiClient.post(`/api/recommendations/${recommendationId}/feedback`, feedback)
     return response.data
   },
 
-  async getRecommendationHistory(page = 1, limit = 20): Promise<ApiResponse<{
-    items: {
-      id: string
-      type: string
-      title: string
-      description: string
-      createdAt: string
-      followed: boolean
-      rating?: number
-    }[]
-    total: number
-    page: number
-    limit: number
-  }>> {
+  async getRecommendationHistory(
+    page = 1,
+    limit = 20
+  ): Promise<
+    ApiResponse<{
+      items: {
+        id: string
+        type: string
+        title: string
+        description: string
+        createdAt: string
+        followed: boolean
+        rating?: number
+      }[]
+      total: number
+      page: number
+      limit: number
+    }>
+  > {
     const response = await apiClient.get('/api/recommendations/history', {
       params: { page, limit }
     })
@@ -162,14 +176,16 @@ export const recommendationsApi = {
   },
 
   // 推荐设置
-  async getRecommendationSettings(): Promise<ApiResponse<{
-    enabled: boolean
-    frequency: 'daily' | 'weekly' | 'monthly'
-    types: string[]
-    maxRecommendations: number
-    difficulty: 'conservative' | 'balanced' | 'aggressive'
-    includeContentSuggestions: boolean
-  }>> {
+  async getRecommendationSettings(): Promise<
+    ApiResponse<{
+      enabled: boolean
+      frequency: 'daily' | 'weekly' | 'monthly'
+      types: string[]
+      maxRecommendations: number
+      difficulty: 'conservative' | 'balanced' | 'aggressive'
+      includeContentSuggestions: boolean
+    }>
+  > {
     const response = await apiClient.get('/api/recommendations/settings')
     return response.data
   },
