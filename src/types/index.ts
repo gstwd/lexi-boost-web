@@ -134,6 +134,32 @@ export interface ReviewSession extends BaseEntity {
   hintsUsed: number
   feedback?: string
   difficultyRating?: number
+
+  // 会话扩展信息
+  sessionId: string
+  startedAt: string
+  completedAt?: string
+  duration: number // 毫秒
+  status: 'active' | 'completed' | 'paused' | 'abandoned'
+  totalQuestions: number
+  correctAnswers: number
+  questions: ReviewQuestion[]
+}
+
+// 复习问题
+export interface ReviewQuestion {
+  id: string
+  wordRecordId: number
+  word: string
+  type: ReviewType
+  question: string
+  options?: string[]
+  correctAnswer: string
+  userAnswer?: string
+  isCorrect?: boolean
+  responseTime?: number
+  hintsUsed: number
+  difficulty: number
 }
 
 export type ReviewType = 'recognition' | 'recall' | 'context' | 'production' | 'synonym' | 'antonym'
@@ -153,9 +179,12 @@ export interface LearningStats {
 
   // 复习统计
   reviewSessions: number
-  averageAccuracy: number
+  reviewsCompleted: number
+  averageAccuracy?: number
   timeSpent: number // 分钟
+  totalStudyTime: number // 总学习时间（分钟）
   consistencyDays: number
+  monthlyStudyDays: number[]
 
   // 进度统计
   wordsMastered: number
@@ -171,9 +200,10 @@ export interface LearningStats {
   learningVelocity: number // 词/天
   retentionRate: number
   reviewEfficiency: number
+  weeklyGrowth: number // 周增长率
 }
 
-export type StatsPeriod = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'custom'
+export type StatsPeriod = 'daily' | 'weekly' | 'monthly' | 'yearly' | 'custom' | 'week'
 
 // 单词掌握进度
 export interface WordMasteryProgress {
@@ -193,6 +223,15 @@ export interface WordMasteryProgress {
 }
 
 export type MasteryTrend = 'improving' | 'stable' | 'declining' | 'fluctuating'
+
+// 掌握度统计
+export interface MasteryStats {
+  mastered: number
+  inProgress: number
+  struggling: number
+  notReviewed: number
+  total: number
+}
 
 export interface MasteryMilestone {
   level: number

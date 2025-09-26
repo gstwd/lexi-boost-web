@@ -82,7 +82,7 @@
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
                 </svg>
-                <span class="text-sm">+{{ stats?.weeklyGrowth?.words || 0 }} 本周</span>
+                <span class="text-sm">+{{ stats?.weeklyGrowth || 0 }} 本周</span>
               </div>
             </div>
             <div class="text-blue-200">
@@ -102,7 +102,7 @@
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
                 </svg>
-                <span class="text-sm">+{{ stats?.weeklyGrowth?.reviews || 0 }} 本周</span>
+                <span class="text-sm">+{{ stats?.weeklyGrowth || 0 }} 本周</span>
               </div>
             </div>
             <div class="text-green-200">
@@ -117,12 +117,12 @@
           <div class="flex items-center justify-between">
             <div>
               <p class="text-purple-100 text-sm">平均正确率</p>
-              <p class="text-3xl font-bold">{{ (stats?.averageAccuracy * 100 || 0).toFixed(1) }}%</p>
+              <p class="text-3xl font-bold">{{ ((stats?.averageAccuracy || 0) * 100).toFixed(1) }}%</p>
               <div class="flex items-center mt-2">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
                 </svg>
-                <span class="text-sm">+{{ ((stats?.weeklyGrowth?.accuracy || 0) * 100).toFixed(1) }}% 本周</span>
+                <span class="text-sm">+{{ ((stats?.weeklyGrowth || 0) * 100).toFixed(1) }}% 本周</span>
               </div>
             </div>
             <div class="text-purple-200">
@@ -142,7 +142,7 @@
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
                 </svg>
-                <span class="text-sm">+{{ formatStudyTime(stats?.weeklyGrowth?.studyTime || 0) }} 本周</span>
+                <span class="text-sm">+{{ formatStudyTime(stats?.weeklyGrowth || 0) }} 本周</span>
               </div>
             </div>
             <div class="text-orange-200">
@@ -176,17 +176,20 @@
 
         <div class="bg-white border rounded-lg p-4">
           <LineChart
-            v-if="selectedChartType === 'words' || selectedChartType === 'reviews' || selectedChartType === 'accuracy'"
+            v-if="(selectedChartType === 'words' || selectedChartType === 'reviews' || selectedChartType === 'accuracy') && chartDataReady"
             :data="getTrendChartData(selectedChartType)"
             :options="getTrendChartOptions(selectedChartType)"
             height="300px"
           />
           <BarChart
-            v-else-if="selectedChartType === 'time'"
+            v-else-if="selectedChartType === 'time' && chartDataReady"
             :data="getTimeChartData()"
             :options="getTimeChartOptions()"
             height="300px"
           />
+          <div v-else class="flex items-center justify-center h-72 text-gray-500">
+            加载图表数据中...
+          </div>
         </div>
       </div>
 
@@ -243,7 +246,7 @@
                 <span class="font-medium text-gray-800">未复习</span>
               </div>
               <div class="text-right">
-                <div class="font-bold text-gray-600">{{ masteryStats?.notReviewed || 0 }}</div>
+                <div class="font-bold text-gray-600">{{ ((masteryStats?.total || 0) - (masteryStats?.mastered || 0) - (masteryStats?.inProgress || 0) - (masteryStats?.struggling || 0)) || 0 }}</div>
                 <div class="text-sm text-gray-600">{{ masteryPercentage.notReviewed }}%</div>
               </div>
             </div>
@@ -285,10 +288,10 @@
             <div class="text-gray-600 mb-4">连续学习天数</div>
             <div class="bg-green-50 p-3 rounded-lg">
               <div class="text-sm text-green-700">
-                本月学习: {{ stats?.monthlyStudyDays || 0 }} 天
+                本月学习: {{ stats?.monthlyStudyDays?.length || 0 }} 天
               </div>
               <div class="text-sm text-green-600">
-                目标达成: {{ ((stats?.monthlyStudyDays || 0) / 30 * 100).toFixed(1) }}%
+                目标达成: {{ (((stats?.monthlyStudyDays?.length || 0) / 30) * 100).toFixed(1) }}%
               </div>
             </div>
           </div>
@@ -369,7 +372,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAnalyticsStore } from '@/store'
 import LineChart from '@/components/Charts/LineChart.vue'
 import PieChart from '@/components/Charts/PieChart.vue'
@@ -411,6 +414,10 @@ const masteryPercentage = computed(() => {
   }
 })
 
+const chartDataReady = computed(() => {
+  return !loading.value && selectedPeriod.value && selectedChartType.value
+})
+
 // 方法
 const formatStudyTime = (minutes: number): string => {
   if (minutes < 60) return `${minutes}m`
@@ -430,27 +437,30 @@ const formatDate = (dateString: string): string => {
   })
 }
 
-const getChartTypeLabel = (type: string): string => {
-  const chart = chartTypes.find(c => c.value === type)
-  return chart?.label || type
-}
 
 const fetchData = async () => {
   loading.value = true
 
   try {
     const filters = {
-      period: selectedPeriod.value,
+      period: selectedPeriod.value as any,
       includeTypes: dataTypes.value
     }
 
-    await Promise.allSettled([
-      analyticsStore.fetchLearningStats(filters),
-      analyticsStore.fetchHistoricalStats(selectedPeriod.value as any),
-      analyticsStore.fetchMasteryProgress(),
-      analyticsStore.fetchLearningPatterns(),
-      analyticsStore.fetchPersonalizedInsights()
+    // 使用 Promise.allSettled 避免单个请求失败导致整体失败
+    const results = await Promise.allSettled([
+      analyticsStore.fetchLearningStats?.(filters) || Promise.resolve(),
+      analyticsStore.fetchHistoricalStats?.(selectedPeriod.value as any) || Promise.resolve(),
+      analyticsStore.fetchMasteryProgress?.() || Promise.resolve(),
+      analyticsStore.fetchLearningPatterns?.() || Promise.resolve(),
+      analyticsStore.fetchPersonalizedInsights?.() || Promise.resolve()
     ])
+
+    // 检查哪些请求失败了
+    const failedRequests = results.filter(result => result.status === 'rejected')
+    if (failedRequests.length > 0) {
+      console.warn(`${failedRequests.length} analytics requests failed:`, failedRequests)
+    }
   } catch (error) {
     console.error('Fetch analytics data failed:', error)
   } finally {
@@ -462,11 +472,19 @@ const exportData = async () => {
   try {
     const format = 'csv' // 可以让用户选择
     const filters = {
-      period: selectedPeriod.value,
+      period: selectedPeriod.value as any,
       includeTypes: dataTypes.value
     }
 
-    const exportUrl = await analyticsStore.exportAnalytics(format, filters)
+    // 检查 exportAnalytics 方法是否存在
+    if (!analyticsStore.exportAnalytics) {
+      console.warn('Export analytics method not available')
+      alert('导出功能暂时不可用')
+      return
+    }
+
+    const exportResult = await analyticsStore.exportAnalytics(format, filters)
+    const exportUrl = typeof exportResult === 'string' ? exportResult : exportResult?.downloadUrl
     if (exportUrl) {
       // 触发下载
       const link = document.createElement('a')
@@ -484,29 +502,39 @@ const exportData = async () => {
 
 // Chart data generation methods
 const getTrendChartData = (type: string) => {
-  // Generate sample data based on analytics store data
-  const sampleData = generateSampleTrendData(type)
+  try {
+    // Generate sample data based on analytics store data
+    const sampleData = generateSampleTrendData()
 
-  if (type === 'words' || type === 'reviews') {
-    return ChartUtils.generateLearningTrendChart(sampleData)
-  } else if (type === 'accuracy') {
-    return {
-      labels: sampleData.map(d => {
-        const date = new Date(d.date)
-        return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
-      }),
-      datasets: [{
-        label: '正确率',
-        data: sampleData.map(d => d.accuracy * 100),
-        borderColor: '#F59E0B',
-        backgroundColor: 'rgba(245, 158, 11, 0.1)',
-        borderWidth: 2,
-        fill: true,
-        tension: 0.4
-      }]
+    if (!sampleData || sampleData.length === 0) {
+      console.warn('No sample data generated for trend chart')
+      return { labels: [], datasets: [] }
     }
+
+    if (type === 'words' || type === 'reviews') {
+      return ChartUtils.generateLearningTrendChart(sampleData)
+    } else if (type === 'accuracy') {
+      return {
+        labels: sampleData.map(d => {
+          const date = new Date(d.date)
+          return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
+        }),
+        datasets: [{
+          label: '正确率',
+          data: sampleData.map(d => d.accuracy * 100),
+          borderColor: '#F59E0B',
+          backgroundColor: 'rgba(245, 158, 11, 0.1)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4
+        }]
+      }
+    }
+    return { labels: [], datasets: [] }
+  } catch (error) {
+    console.error('Error generating trend chart data:', error)
+    return { labels: [], datasets: [] }
   }
-  return { labels: [], datasets: [] }
 }
 
 const getTrendChartOptions = (type: string) => {
@@ -518,9 +546,9 @@ const getTrendChartOptions = (type: string) => {
         title: {
           display: true,
           text: '正确率趋势',
-          font: { size: 16, weight: 'bold' }
+          font: { size: 16, weight: 'bold' as const }
         },
-        legend: { position: 'top' }
+        legend: { position: 'top' as const }
       },
       scales: {
         x: {
@@ -538,33 +566,51 @@ const getTrendChartOptions = (type: string) => {
 }
 
 const getTimeChartData = () => {
-  const sampleTimeData = [
-    { hour: 8, minutes: 25, performance: 0.82 },
-    { hour: 9, minutes: 35, performance: 0.88 },
-    { hour: 10, minutes: 18, performance: 0.75 },
-    { hour: 14, minutes: 22, performance: 0.71 },
-    { hour: 19, minutes: 45, performance: 0.85 },
-    { hour: 20, minutes: 38, performance: 0.89 },
-    { hour: 21, minutes: 28, performance: 0.86 }
-  ]
-  return ChartUtils.generateStudyTimeChart(sampleTimeData)
+  try {
+    const sampleTimeData = [
+      { hour: 8, minutes: 25, performance: 0.82 },
+      { hour: 9, minutes: 35, performance: 0.88 },
+      { hour: 10, minutes: 18, performance: 0.75 },
+      { hour: 14, minutes: 22, performance: 0.71 },
+      { hour: 19, minutes: 45, performance: 0.85 },
+      { hour: 20, minutes: 38, performance: 0.89 },
+      { hour: 21, minutes: 28, performance: 0.86 }
+    ]
+    return ChartUtils.generateStudyTimeChart(sampleTimeData)
+  } catch (error) {
+    console.error('Error generating time chart data:', error)
+    return { labels: [], datasets: [] }
+  }
 }
 
 const getTimeChartOptions = () => {
-  return ChartUtils.getStudyTimeOptions()
+  try {
+    return ChartUtils.getStudyTimeOptions()
+  } catch (error) {
+    console.error('Error getting time chart options:', error)
+    return {
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  }
 }
 
 const getMasteryDistributionChartData = () => {
-  const masteryData = {
-    mastered: masteryStats.value?.mastered || 89,
-    learning: masteryStats.value?.inProgress || 45,
-    struggling: masteryStats.value?.struggling || 23,
-    notReviewed: (masteryStats.value?.total || 169) - (masteryStats.value?.mastered || 89) - (masteryStats.value?.inProgress || 45) - (masteryStats.value?.struggling || 23) || 12
+  try {
+    const masteryData = {
+      mastered: masteryStats.value?.mastered || 89,
+      learning: masteryStats.value?.inProgress || 45,
+      struggling: masteryStats.value?.struggling || 23,
+      notReviewed: (masteryStats.value?.total || 169) - (masteryStats.value?.mastered || 89) - (masteryStats.value?.inProgress || 45) - (masteryStats.value?.struggling || 23) || 12
+    }
+    return ChartUtils.generateMasteryDistributionChart(masteryData)
+  } catch (error) {
+    console.error('Error generating mastery distribution chart data:', error)
+    return { labels: [], datasets: [] }
   }
-  return ChartUtils.generateMasteryDistributionChart(masteryData)
 }
 
-const generateSampleTrendData = (type: string) => {
+const generateSampleTrendData = () => {
   // Generate sample data based on the current period and type
   const days = selectedPeriod.value === 'week' ? 7 :
                selectedPeriod.value === 'month' ? 30 :

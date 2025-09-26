@@ -165,7 +165,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import type { DuplicationAnalysis } from '@/types'
 
 interface Props {

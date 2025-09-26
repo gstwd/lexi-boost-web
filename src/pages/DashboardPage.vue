@@ -318,11 +318,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useWordsStore, useRecommendationsStore, useAnalyticsStore } from '@/store'
+import { useRecommendationsStore, useAnalyticsStore } from '@/store'
 import { useRouter } from 'vue-router'
 
 // Stores
-const wordsStore = useWordsStore()
 const recommendationsStore = useRecommendationsStore()
 const analyticsStore = useAnalyticsStore()
 const router = useRouter()

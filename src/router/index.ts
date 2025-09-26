@@ -46,7 +46,8 @@ const router = createRouter({
       children: [
         {
           path: '',
-          redirect: 'session'
+          name: 'review-index',
+          redirect: '/review/session'
         },
         {
           path: 'session',
@@ -85,7 +86,8 @@ const router = createRouter({
       children: [
         {
           path: '',
-          redirect: 'dashboard'
+          name: 'analytics-index',
+          redirect: '/analytics/dashboard'
         },
         {
           path: 'dashboard',

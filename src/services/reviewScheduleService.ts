@@ -3,7 +3,12 @@
  * 封装艾宾浩斯算法，提供高级调度功能
  */
 
-import { EbbinghausScheduler, type ReviewRecord, type NextReview, type ScheduleParams } from '@/utils/ebbinghausScheduler'
+import {
+  EbbinghausScheduler,
+  type ReviewRecord,
+  type NextReview,
+  type ScheduleParams
+} from '@/utils/ebbinghausScheduler'
 
 export interface WordScheduleData {
   wordId: number
@@ -58,12 +63,9 @@ export class ReviewScheduleService {
   /**
    * 生成每日复习计划
    */
-  async generateDailySchedule(
-    allWords: WordScheduleData[],
-    targetDate: Date = new Date()
-  ): Promise<ScheduleSession> {
+  async generateDailySchedule(allWords: WordScheduleData[]): Promise<ScheduleSession> {
     // 计算所有单词的下次复习时间
-    const allSchedules = allWords.map(word =>
+    const allSchedules = allWords.map((word) =>
       this.scheduler.calculateNextReview(word.wordId, word.reviewHistory, word.masteryLevel)
     )
 
@@ -90,7 +92,7 @@ export class ReviewScheduleService {
    * 生成逾期复习计划
    */
   async generateOverdueSchedule(allWords: WordScheduleData[]): Promise<ScheduleSession> {
-    const allSchedules = allWords.map(word =>
+    const allSchedules = allWords.map((word) =>
       this.scheduler.calculateNextReview(word.wordId, word.reviewHistory, word.masteryLevel)
     )
 
@@ -110,28 +112,28 @@ export class ReviewScheduleService {
 
     switch (focusType) {
       case 'difficult':
-        filteredWords = allWords.filter(w => w.difficulty >= 4)
+        filteredWords = allWords.filter((w) => w.difficulty >= 4)
         break
       case 'low_mastery':
-        filteredWords = allWords.filter(w => w.masteryLevel < 2.5)
+        filteredWords = allWords.filter((w) => w.masteryLevel < 2.5)
         break
       case 'recent_errors':
-        filteredWords = allWords.filter(w => {
+        filteredWords = allWords.filter((w) => {
           const recentReviews = w.reviewHistory.slice(-3)
-          return recentReviews.some(r => !r.correct)
+          return recentReviews.some((r) => !r.correct)
         })
         break
       default:
         filteredWords = allWords
     }
 
-    const schedules = filteredWords.map(word =>
+    const schedules = filteredWords.map((word) =>
       this.scheduler.calculateNextReview(word.wordId, word.reviewHistory, word.masteryLevel)
     )
 
     // 优先选择需要复习的困难单词
     const focusedReviews = schedules
-      .filter(s => s.priority === 'high' || s.priority === 'critical')
+      .filter((s) => s.priority === 'high' || s.priority === 'critical')
       .slice(0, 20)
 
     return this.createScheduleSession('focused', focusedReviews)
@@ -144,13 +146,13 @@ export class ReviewScheduleService {
     allWords: WordScheduleData[],
     sessionLengthMinutes: number
   ): Promise<ScheduleSession> {
-    const allSchedules = allWords.map(word =>
+    const allSchedules = allWords.map((word) =>
       this.scheduler.calculateNextReview(word.wordId, word.reviewHistory, word.masteryLevel)
     )
 
     // 估算每个单词复习时间
-    const wordsWithEstimatedTime = allSchedules.map(schedule => {
-      const word = allWords.find(w => w.wordId === schedule.wordId)
+    const wordsWithEstimatedTime = allSchedules.map((schedule) => {
+      const word = allWords.find((w) => w.wordId === schedule.wordId)
       const estimatedTime = this.estimateReviewTime(word!, schedule)
       return { ...schedule, estimatedTime }
     })
@@ -168,7 +170,7 @@ export class ReviewScheduleService {
    * 获取复习统计信息
    */
   async getScheduleStats(allWords: WordScheduleData[]): Promise<ScheduleStats> {
-    const allSchedules = allWords.map(word =>
+    const allSchedules = allWords.map((word) =>
       this.scheduler.calculateNextReview(word.wordId, word.reviewHistory, word.masteryLevel)
     )
 
@@ -178,18 +180,20 @@ export class ReviewScheduleService {
 
     const todaysDue = this.scheduler.getTodaysReviews(allSchedules).length
     const overdue = this.scheduler.getOverdueReviews(allSchedules).length
-    const upcomingWeek = allSchedules.filter(s =>
-      s.nextReviewDate > today && s.nextReviewDate <= nextWeek
+    const upcomingWeek = allSchedules.filter(
+      (s) => s.nextReviewDate > today && s.nextReviewDate <= nextWeek
     ).length
 
-    const intervals = allSchedules.map(s => s.intervalDays)
-    const averageInterval = intervals.reduce((sum, interval) => sum + interval, 0) / intervals.length
+    const intervals = allSchedules.map((s) => s.intervalDays)
+    const averageInterval =
+      intervals.reduce((sum, interval) => sum + interval, 0) / intervals.length
 
     // 计算保持率
-    const recentReviews = allWords.flatMap(w => w.reviewHistory.slice(-1))
-    const retentionRate = recentReviews.length > 0
-      ? recentReviews.filter(r => r.correct).length / recentReviews.length
-      : 0
+    const recentReviews = allWords.flatMap((w) => w.reviewHistory.slice(-1))
+    const retentionRate =
+      recentReviews.length > 0
+        ? recentReviews.filter((r) => r.correct).length / recentReviews.length
+        : 0
 
     // 难度分布
     const difficultyDistribution = allWords.reduce((dist, word) => {
@@ -212,7 +216,7 @@ export class ReviewScheduleService {
    * 优化调度参数
    */
   async optimizeScheduling(allWords: WordScheduleData[]): Promise<void> {
-    const historicalData = allWords.map(word => ({
+    const historicalData = allWords.map((word) => ({
       wordId: word.wordId,
       reviewHistory: word.reviewHistory,
       actualRetention: this.calculateWordRetention(word.reviewHistory)
@@ -260,16 +264,19 @@ export class ReviewScheduleService {
     currentSelection: NextReview[],
     needed: number
   ): NextReview[] {
-    const currentIds = new Set(currentSelection.map(r => r.wordId))
+    const currentIds = new Set(currentSelection.map((r) => r.wordId))
     const candidates = allSchedules
-      .filter(s => !currentIds.has(s.wordId))
-      .filter(s => s.nextReviewDate > new Date()) // 未到期的单词
+      .filter((s) => !currentIds.has(s.wordId))
+      .filter((s) => s.nextReviewDate > new Date()) // 未到期的单词
       .sort((a, b) => a.nextReviewDate.getTime() - b.nextReviewDate.getTime()) // 按时间排序
 
     return candidates.slice(0, needed)
   }
 
-  private createScheduleSession(type: ScheduleSession['sessionType'], words: NextReview[]): ScheduleSession {
+  private createScheduleSession(
+    type: ScheduleSession['sessionType'],
+    words: NextReview[]
+  ): ScheduleSession {
     const priorityDistribution = words.reduce((dist, word) => {
       dist[word.priority] = (dist[word.priority] || 0) + 1
       return dist
@@ -306,14 +313,21 @@ export class ReviewScheduleService {
 
     // 根据优先级调整
     switch (schedule.priority) {
-      case 'critical': baseTime *= 2; break
-      case 'high': baseTime *= 1.5; break
-      case 'low': baseTime *= 0.8; break
+      case 'critical':
+        baseTime *= 2
+        break
+      case 'high':
+        baseTime *= 1.5
+        break
+      case 'low':
+        baseTime *= 0.8
+        break
     }
 
     // 根据历史响应时间调整
     if (word.reviewHistory.length > 0) {
-      const avgResponseTime = word.reviewHistory.reduce((sum, r) => sum + r.responseTime, 0) / word.reviewHistory.length
+      const avgResponseTime =
+        word.reviewHistory.reduce((sum, r) => sum + r.responseTime, 0) / word.reviewHistory.length
       baseTime = (baseTime + avgResponseTime * 1000) / 2
     }
 
@@ -352,7 +366,7 @@ export class ReviewScheduleService {
     if (history.length === 0) return 0.5
 
     const recentReviews = history.slice(-10) // 最近10次
-    return recentReviews.filter(r => r.correct).length / recentReviews.length
+    return recentReviews.filter((r) => r.correct).length / recentReviews.length
   }
 
   private generateSessionId(): string {

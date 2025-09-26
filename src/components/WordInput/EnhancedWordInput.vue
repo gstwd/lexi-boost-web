@@ -323,7 +323,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
 import { useWordsStore } from '@/store'
-import type { UserWordRecord, WordEntry, LocationInfo, SourceType } from '@/types'
+import type { UserWordRecord, WordEntry, LocationInfo, SourceType, DuplicationAnalysis } from '@/types'
 
 // Store
 const wordsStore = useWordsStore()
@@ -338,7 +338,7 @@ const showAllDefinitions = ref(false)
 const newTag = ref('')
 const duplicationWarning = ref<{ message: string } | null>(null)
 const showDuplicationModal = ref(false)
-const duplicationAnalysisData = ref(null)
+const duplicationAnalysisData = ref<DuplicationAnalysis | null>(null)
 
 // 表单数据
 const form = reactive({
@@ -358,7 +358,7 @@ const form = reactive({
 })
 
 // 搜索防抖
-let searchTimeout: number | null = null
+let searchTimeout: ReturnType<typeof setTimeout> | null = null
 
 const handleWordInput = () => {
   if (searchTimeout) {

@@ -15,6 +15,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler,
   type ChartData,
   type ChartOptions
 } from 'chart.js'
@@ -27,7 +28,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 )
 
 interface Props {
@@ -80,11 +82,15 @@ const createChart = () => {
   const ctx = chartRef.value.getContext('2d')
   if (!ctx) return
 
-  chartInstance = new ChartJS(ctx, {
-    type: 'line',
-    data: props.data,
-    options: props.options
-  })
+  try {
+    chartInstance = new ChartJS(ctx, {
+      type: 'line',
+      data: props.data,
+      options: props.options
+    })
+  } catch (error) {
+    console.error('Failed to create line chart:', error)
+  }
 }
 
 const updateChart = () => {
@@ -105,7 +111,11 @@ const destroyChart = () => {
 watch(() => props.data, updateChart, { deep: true })
 
 onMounted(() => {
-  createChart()
+  try {
+    createChart()
+  } catch (error) {
+    console.error('Failed to mount LineChart:', error)
+  }
 })
 
 onUnmounted(() => {
