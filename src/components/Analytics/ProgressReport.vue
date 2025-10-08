@@ -29,7 +29,7 @@
     </div>
 
     <div v-if="generating" class="text-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
       <p class="text-gray-600">生成学习报告中...</p>
     </div>
 
@@ -219,7 +219,7 @@
                       :style="{
                         width: `${(timeSlot.sessions / Math.max(...report.patterns.activeTimeSlots.map(t => t.sessions))) * 100}%`
                       }"
-                    />
+                    ></div>
                   </div>
                   <span class="text-sm text-gray-600">{{ timeSlot.sessions }}</span>
                 </div>
@@ -239,7 +239,7 @@
                 <span class="text-gray-700">{{ getQuestionTypeLabel(type.type) }}</span>
                 <div class="flex items-center space-x-2">
                   <div class="w-16 bg-gray-200 rounded-full h-2">
-                    <div class="bg-green-500 h-2 rounded-full" :style="{ width: `${type.accuracy * 100}%` }" />
+                    <div class="bg-green-500 h-2 rounded-full" :style="{ width: `${type.accuracy * 100}%` }"></div>
                   </div>
                   <span class="text-sm text-gray-600">{{ (type.accuracy * 100).toFixed(0) }}%</span>
                 </div>

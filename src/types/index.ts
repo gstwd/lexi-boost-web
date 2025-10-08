@@ -80,7 +80,6 @@ export interface UserWordRecord extends BaseEntity {
   location?: LocationInfo
   sourceType: SourceType
   sourceDetail?: string
-  confidence: number // 1-5
   sessionId?: string
   tags?: string[]
   notes?: string

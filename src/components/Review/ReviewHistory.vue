@@ -118,7 +118,7 @@
       </div>
 
       <div v-if="loading" class="text-center py-8">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4" />
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
         <p class="text-gray-600">加载复习历史...</p>
       </div>
 
@@ -202,7 +202,7 @@
             <div
               class="bg-blue-600 h-2 rounded-full"
               :style="{ width: `${(session.correctAnswers / session.totalQuestions) * 100}%` }"
-            />
+            ></div>
           </div>
 
           <div class="text-xs text-gray-500 mt-2">

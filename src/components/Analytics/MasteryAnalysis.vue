@@ -90,7 +90,7 @@
     </div>
 
     <div v-if="loading" class="text-center py-8">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4" />
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
       <p class="text-gray-600">加载掌握度数据...</p>
     </div>
 
@@ -132,7 +132,7 @@
                   width: `${(word.masteryLevel / 5) * 100}%`,
                   backgroundColor: getMasteryLevelColor(word.masteryLevel)
                 }"
-              />
+              ></div>
             </div>
             <div class="text-sm text-gray-600">{{ word.masteryLevel.toFixed(1) }}/5.0</div>
 

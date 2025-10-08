@@ -51,7 +51,7 @@
     </div>
 
     <div v-if="loading && !recommendations" class="text-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
       <p class="text-gray-600">加载推荐内容...</p>
     </div>
 
@@ -277,7 +277,7 @@
                   width: `${Math.min((goal.current / goal.target) * 100, 100)}%`,
                   backgroundColor: getGoalProgressColor(goal.current, goal.target)
                 }"
-              />
+              ></div>
             </div>
 
             <div class="text-xs text-gray-600">

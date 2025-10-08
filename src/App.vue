@@ -18,7 +18,7 @@
             class="nav-item"
             :class="{ active: $route.path.startsWith(route.path) }"
           >
-            <div class="nav-icon" v-html="route.icon" />
+            <div class="nav-icon" v-html="route.icon"></div>
             <span class="nav-text">{{ route.title }}</span>
           </router-link>
         </div>

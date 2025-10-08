@@ -43,7 +43,7 @@
               width: `${(word.masteryLevel / 5) * 100}%`,
               backgroundColor: getMasteryLevelColor(word.masteryLevel)
             }"
-          />
+          ></div>
         </div>
       </div>
     </div>

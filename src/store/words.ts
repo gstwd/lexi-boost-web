@@ -37,12 +37,6 @@ export const useWordsStore = defineStore('words', () => {
     return uniqueWords.size
   })
 
-  const averageConfidence = computed(() => {
-    if (wordRecords.value.length === 0) return 0
-    const total = wordRecords.value.reduce((sum, record) => sum + record.confidence, 0)
-    return Number((total / wordRecords.value.length).toFixed(2))
-  })
-
   // 原有方法
   const fetchWords = async (page = 1, limit = 20) => {
     loading.value = true
@@ -366,7 +360,6 @@ export const useWordsStore = defineStore('words', () => {
     recordPagination,
     totalRecordPages,
     uniqueWordsCount,
-    averageConfidence,
 
     // 词条管理
     searchWordEntries,

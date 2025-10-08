@@ -91,6 +91,7 @@ This is "Lexi Boost" - a comprehensive Vue 3 vocabulary learning web application
 **API Structure**: RESTful API design with consistent response formats using ApiResponse<T> wrapper.
 
 **Code Quality**:
+
 - ESLint 9.x with flat configuration for JavaScript, TypeScript, and Vue files
 - Prettier for consistent code formatting
 - Practical Vue linting rules (max 3 attributes per line for single-line elements)

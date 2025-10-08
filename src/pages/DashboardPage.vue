@@ -265,7 +265,7 @@
                   <div
                     class="bg-blue-600 h-2 rounded-full transition-all duration-300"
                     :style="{ width: `${getProgressPercentage('words')}%` }"
-                  />
+                  ></div>
                 </div>
               </div>
 
@@ -278,7 +278,7 @@
                   <div
                     class="bg-green-600 h-2 rounded-full transition-all duration-300"
                     :style="{ width: `${getProgressPercentage('reviews')}%` }"
-                  />
+                  ></div>
                 </div>
               </div>
 
@@ -291,7 +291,7 @@
                   <div
                     class="bg-purple-600 h-2 rounded-full transition-all duration-300"
                     :style="{ width: `${getProgressPercentage('time')}%` }"
-                  />
+                  ></div>
                 </div>
               </div>
             </div>

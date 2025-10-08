@@ -24,7 +24,7 @@
           <div
             class="bg-blue-600 h-2 rounded-full transition-all duration-300"
             :style="{ width: `${sessionProgress}%` }"
-          />
+          ></div>
         </div>
 
         <!-- 会话信息 -->
@@ -186,7 +186,7 @@
               rows="4"
               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none resize-none"
               :disabled="answerSubmitted"
-            />
+            ></textarea>
             <button
               v-if="!answerSubmitted"
               class="w-full mt-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"

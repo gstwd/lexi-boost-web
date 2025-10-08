@@ -71,7 +71,7 @@
     </div>
 
     <div v-if="loading" class="text-center py-12">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
       <p class="text-gray-600">加载统计数据...</p>
     </div>
 
@@ -244,7 +244,7 @@
           <div class="space-y-4">
             <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
               <div class="flex items-center space-x-3">
-                <div class="w-4 h-4 bg-green-500 rounded-full" />
+                <div class="w-4 h-4 bg-green-500 rounded-full"></div>
                 <span class="font-medium text-green-800">已掌握</span>
               </div>
               <div class="text-right">
@@ -257,7 +257,7 @@
 
             <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
               <div class="flex items-center space-x-3">
-                <div class="w-4 h-4 bg-blue-500 rounded-full" />
+                <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
                 <span class="font-medium text-blue-800">学习中</span>
               </div>
               <div class="text-right">
@@ -270,7 +270,7 @@
 
             <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
               <div class="flex items-center space-x-3">
-                <div class="w-4 h-4 bg-red-500 rounded-full" />
+                <div class="w-4 h-4 bg-red-500 rounded-full"></div>
                 <span class="font-medium text-red-800">需加强</span>
               </div>
               <div class="text-right">
@@ -283,7 +283,7 @@
 
             <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <div class="flex items-center space-x-3">
-                <div class="w-4 h-4 bg-gray-400 rounded-full" />
+                <div class="w-4 h-4 bg-gray-400 rounded-full"></div>
                 <span class="font-medium text-gray-800">未复习</span>
               </div>
               <div class="text-right">

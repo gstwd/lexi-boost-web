@@ -46,7 +46,7 @@
         <div
           class="bg-gradient-to-r from-blue-500 to-green-500 h-3 rounded-full transition-all duration-300"
           :style="{ width: `${accuracy}%` }"
-        />
+        ></div>
       </div>
     </div>
 
@@ -60,7 +60,7 @@
           class="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
         >
           <div class="flex items-center space-x-3">
-            <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: type.color }" />
+            <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: type.color }"></div>
             <span class="font-medium">{{ getReviewTypeLabel(type.type) }}</span>
           </div>
           <div class="text-right">
@@ -75,7 +75,7 @@
                   width: `${type.accuracy}%`,
                   backgroundColor: type.color
                 }"
-              />
+              ></div>
             </div>
           </div>
         </div>
