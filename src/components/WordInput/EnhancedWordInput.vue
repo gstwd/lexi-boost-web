@@ -160,11 +160,9 @@
               v-model="form.location.type"
               class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
             >
-              <option value="home">家</option>
-              <option value="school">学校</option>
-              <option value="work">工作</option>
-              <option value="travel">旅行</option>
-              <option value="other">其他</option>
+              <option v-for="item in Dicts.wordEntryLocation" :key="item.value" :value="item.value">
+                {{ item.label }}
+              </option>
             </select>
           </div>
           <button
@@ -275,10 +273,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { useWordsStore } from '@/store'
 import DuplicationAnalysisModal from './DuplicationAnalysisModal.vue'
 import type { UserWordRecord, WordEntry, LocationInfo, SourceType, DuplicationAnalysis } from '@/types'
+import { Dicts } from '@/dicts'
 
 // Store
 const wordsStore = useWordsStore()
@@ -309,7 +308,7 @@ const form = reactive({
   sourceDetail: '',
   location: {
     name: '',
-    type: 'home' as 'home' | 'school' | 'work' | 'travel' | 'other',
+    type: 0,
     coordinates: null as [number, number] | null
   } as LocationInfo,
   tags: [] as string[],
@@ -435,7 +434,7 @@ const handleSubmit = async () => {
   submitting.value = true
 
   try {
-    const recordData: Omit<UserWordRecord, 'id' | 'createdAt' | 'updatedAt'> = {
+    const recordData: Omit<UserWordRecord, 'id' | 'createTime' | 'updateTime'> = {
       wordEntryId: selectedWordEntry.value?.id || 0, // 需要后端处理词条创建
       userId: 1, // 临时硬编码，实际应从认证状态获取
       meaning: form.meaning,

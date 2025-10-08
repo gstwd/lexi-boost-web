@@ -1,9 +1,10 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios'
 import { mockDataService } from '@/services/mockDataService'
+import { ElMessage } from 'element-plus'
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001'
-const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true' || import.meta.env.DEV
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
+// const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true' || import.meta.env.DEV
+const USE_MOCK_DATA = true
 const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
@@ -12,16 +13,12 @@ const apiClient: AxiosInstance = axios.create({
   }
 })
 
-// Mock data interceptor - intercept requests before they're sent if using mock data
+// 请求拦截器
 apiClient.interceptors.request.use(
   async config => {
-    console.log('API Request:', config.method?.toUpperCase(), config.url)
-
-    // Check if we should use mock data
     if (USE_MOCK_DATA) {
       const mockResponse = await handleMockRequest(config)
       if (mockResponse) {
-        // Create a fake successful response
         const response: AxiosResponse = {
           data: mockResponse,
           status: 200,
@@ -30,47 +27,40 @@ apiClient.interceptors.request.use(
           config,
           request: {}
         }
-
-        // Throw a special error that we'll catch in the response interceptor
         const mockError = new Error('MOCK_RESPONSE') as any
         mockError.response = response
         mockError.isMock = true
         throw mockError
       }
     }
-
     return config
   },
   (error: AxiosError) => {
-    console.error('Request Error:', error)
+    ElMessage.error('请求发送失败，请检查网络或配置')
     return Promise.reject(error)
   }
 )
 
+// 响应拦截器
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log('API Response:', response.status, response.config.url)
     return response
   },
   async (error: AxiosError | any) => {
-    // Handle mock responses
+    // ✅ Mock 响应处理
     if (error.isMock && error.response) {
-      console.log('Mock Response:', error.response.status, error.response.config.url)
       return Promise.resolve(error.response)
     }
 
-    console.error('Response Error:', error.response?.status, error.message)
-
-    // If backend is unavailable, fallback to mock data
+    // ✅ 后端不可用时尝试 Mock
     if (
       error.code === 'NETWORK_ERROR' ||
       error.code === 'ECONNREFUSED' ||
       (error.response?.status && error.response.status >= 500)
     ) {
-      console.warn('Backend unavailable, falling back to mock data')
-
       const mockResponse = await handleMockRequest(error.config)
       if (mockResponse) {
+        ElMessage.warning('后端服务不可用，已使用模拟数据') // ✅ 提示使用了 mock
         return Promise.resolve({
           data: mockResponse,
           status: 200,
@@ -82,12 +72,17 @@ apiClient.interceptors.response.use(
       }
     }
 
+    // ✅ 错误分类弹窗提示
     if (error.response?.status === 401) {
-      console.warn('Unauthorized access')
-    } else if (error.response?.status && error.response?.status >= 500) {
-      console.error('Server error')
+      ElMessage.warning('未授权或登录已过期，请重新登录')
+    } else if (error.response?.status && error.response.status >= 500) {
+      ElMessage.error('服务器内部错误，请稍后再试')
     } else if (error.code === 'NETWORK_ERROR') {
-      console.error('Network error')
+      ElMessage.error('网络错误，请检查连接')
+    } else if (error.response?.status === 404) {
+      ElMessage.error('请求的资源不存在')
+    } else {
+      ElMessage.error(error.message || '请求发生错误')
     }
 
     return Promise.reject(error)

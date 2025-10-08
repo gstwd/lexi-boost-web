@@ -1,8 +1,8 @@
 // 基础类型定义
 export interface BaseEntity {
   id: number
-  createdAt: string
-  updatedAt: string
+  createTime: string
+  updateTime: string
 }
 
 export interface User {
@@ -31,7 +31,7 @@ export interface ReminderSettings {
 export interface LocationInfo {
   name?: string
   coordinates?: [number, number] // [latitude, longitude]
-  type?: 'home' | 'school' | 'work' | 'travel' | 'other'
+  type?: number
   address?: string
 }
 
