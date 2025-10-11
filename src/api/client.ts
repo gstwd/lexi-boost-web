@@ -1,10 +1,22 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError, AxiosRequestConfig } from 'axios'
+import axios, {
+  AxiosInstance,
+  AxiosResponse,
+  AxiosError,
+  AxiosAdapter,
+  InternalAxiosRequestConfig
+} from 'axios'
 import { mockDataService } from '@/services/mockDataService'
-import { ElMessage } from 'element-plus'
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
-// const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true' || import.meta.env.DEV
-const USE_MOCK_DATA = true
+const DEFAULT_BASE_URL = 'http://localhost:3001'
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || DEFAULT_BASE_URL
+const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true' || import.meta.env.DEV
+const mockRetryTracker = new WeakSet<InternalAxiosRequestConfig>()
+
+type ApiClientError = AxiosError & {
+  isNetworkError?: boolean
+  isMockResponse?: boolean
+}
+
 const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
@@ -13,88 +25,127 @@ const apiClient: AxiosInstance = axios.create({
   }
 })
 
-// 请求拦截器
-apiClient.interceptors.request.use(
-  async config => {
-    if (USE_MOCK_DATA) {
-      const mockResponse = await handleMockRequest(config)
-      if (mockResponse) {
-        const response: AxiosResponse = {
-          data: mockResponse,
-          status: 200,
-          statusText: 'OK',
-          headers: {},
-          config,
-          request: {}
-        }
-        const mockError = new Error('MOCK_RESPONSE') as any
-        mockError.response = response
-        mockError.isMock = true
-        throw mockError
-      }
-    }
-    return config
-  },
-  (error: AxiosError) => {
-    ElMessage.error('请求发送失败，请检查网络或配置')
-    return Promise.reject(error)
-  }
-)
+const originalAdapter = extractAdapter(axios.defaults.adapter)
 
-// 响应拦截器
+if (USE_MOCK_DATA) {
+  apiClient.defaults.adapter = createMockEnabledAdapter(originalAdapter)
+}
+
+function extractAdapter(adapter: unknown): AxiosAdapter | undefined {
+  if (!adapter) {
+    return undefined
+  }
+
+  if (Array.isArray(adapter)) {
+    const [first] = adapter
+    return typeof first === 'function' ? (first as AxiosAdapter) : undefined
+  }
+
+  return typeof adapter === 'function' ? (adapter as AxiosAdapter) : undefined
+}
+
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response
-  },
-  async (error: AxiosError | any) => {
-    // ✅ Mock 响应处理
-    if (error.isMock && error.response) {
-      return Promise.resolve(error.response)
+  response => response,
+  async error => {
+    if (!axios.isAxiosError(error)) {
+      return Promise.reject(error instanceof Error ? error : new Error('Unknown API error'))
     }
 
-    // ✅ 后端不可用时尝试 Mock
-    if (
-      error.code === 'NETWORK_ERROR' ||
-      error.code === 'ECONNREFUSED' ||
-      (error.response?.status && error.response.status >= 500)
-    ) {
-      const mockResponse = await handleMockRequest(error.config)
-      if (mockResponse) {
-        ElMessage.warning('后端服务不可用，已使用模拟数据') // ✅ 提示使用了 mock
-        return Promise.resolve({
-          data: mockResponse,
-          status: 200,
-          statusText: 'OK (Mock)',
-          headers: {},
-          config: error.config,
-          request: {}
-        })
+    const config = error.config as InternalAxiosRequestConfig | undefined
+
+    if (!USE_MOCK_DATA && config && shouldFallbackToMock(error) && !hasRetriedWithMock(config)) {
+      markRetriedWithMock(config)
+      const mockPayload = await handleMockRequest(config)
+      if (mockPayload) {
+        return createMockAxiosResponse(config, mockPayload, 'OK (Mock Fallback)')
       }
     }
 
-    // ✅ 错误分类弹窗提示
-    if (error.response?.status === 401) {
-      ElMessage.warning('未授权或登录已过期，请重新登录')
-    } else if (error.response?.status && error.response.status >= 500) {
-      ElMessage.error('服务器内部错误，请稍后再试')
-    } else if (error.code === 'NETWORK_ERROR') {
-      ElMessage.error('网络错误，请检查连接')
-    } else if (error.response?.status === 404) {
-      ElMessage.error('请求的资源不存在')
-    } else {
-      ElMessage.error(error.message || '请求发生错误')
-    }
-
-    return Promise.reject(error)
+    return Promise.reject(normalizeAxiosError(error))
   }
 )
 
-// Mock request handler
-async function handleMockRequest(config: AxiosRequestConfig): Promise<any> {
+function createMockEnabledAdapter(fallback?: AxiosAdapter): AxiosAdapter {
+  return async config => {
+    const mockPayload = await handleMockRequest(config)
+    if (mockPayload) {
+      return createMockAxiosResponse(config, mockPayload)
+    }
+
+    if (fallback) {
+      return fallback(config)
+    }
+
+    throw new Error('No adapter available for mock request')
+  }
+}
+
+function shouldFallbackToMock(error: AxiosError): boolean {
+  if (error.response?.status && error.response.status >= 500) {
+    return true
+  }
+  if (!error.response) {
+    return true
+  }
+  if (error.code === AxiosError.ERR_NETWORK) {
+    return true
+  }
+  return false
+}
+
+function hasRetriedWithMock(config: InternalAxiosRequestConfig): boolean {
+  return mockRetryTracker.has(config)
+}
+
+function markRetriedWithMock(config: InternalAxiosRequestConfig) {
+  mockRetryTracker.add(config)
+}
+
+function createMockAxiosResponse(
+  config: InternalAxiosRequestConfig,
+  data: unknown,
+  statusText = 'OK (Mock)'
+): AxiosResponse {
+  return {
+    data,
+    status: 200,
+    statusText,
+    headers: {
+      'x-mock-response': 'true'
+    },
+    config,
+    request: {}
+  }
+}
+
+function normalizeAxiosError(error: AxiosError): ApiClientError {
+  const normalized: ApiClientError = error
+  normalized.isNetworkError = !error.response || error.code === AxiosError.ERR_NETWORK
+  normalized.isMockResponse = Boolean(error.response?.headers?.['x-mock-response'])
+  return normalized
+}
+
+function parseRequestData(rawData: InternalAxiosRequestConfig['data']): any {
+  if (rawData == null) {
+    return {}
+  }
+
+  if (typeof rawData === 'string' && rawData.length > 0) {
+    try {
+      return JSON.parse(rawData)
+    } catch {
+      return rawData
+    }
+  }
+
+  return rawData
+}
+
+async function handleMockRequest(config: InternalAxiosRequestConfig): Promise<any> {
   const url = config.url || ''
   const method = config.method?.toLowerCase() || 'get'
   const params = config.params || {}
-  const data = config.data || {}
+  const data = parseRequestData(config.data)
 
   try {
     // Words API
@@ -322,4 +373,5 @@ async function handleMockRequest(config: AxiosRequestConfig): Promise<any> {
   return null
 }
 
+export type { ApiClientError }
 export default apiClient

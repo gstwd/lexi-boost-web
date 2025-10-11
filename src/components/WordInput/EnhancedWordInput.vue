@@ -273,11 +273,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, onBeforeUnmount } from 'vue'
 import { useWordsStore } from '@/store'
 import DuplicationAnalysisModal from './DuplicationAnalysisModal.vue'
 import type { UserWordRecord, WordEntry, LocationInfo, SourceType, DuplicationAnalysis } from '@/types'
 import { Dicts } from '@/dicts'
+import { ElMessage } from 'element-plus'
 
 // Store
 const wordsStore = useWordsStore()
@@ -315,15 +316,16 @@ const form = reactive({
   notes: ''
 })
 
-// 搜索防抖
-let searchTimeout: ReturnType<typeof setTimeout> | null = null
+// 输入节流与重复校验的定时器
+let suggestionTimeout: ReturnType<typeof setTimeout> | null = null
+let duplicationTimeout: ReturnType<typeof setTimeout> | null = null
 
 const handleWordInput = () => {
-  if (searchTimeout) {
-    clearTimeout(searchTimeout)
+  if (suggestionTimeout) {
+    clearTimeout(suggestionTimeout)
   }
 
-  searchTimeout = setTimeout(async () => {
+  suggestionTimeout = setTimeout(async () => {
     if (form.word.trim().length >= 2) {
       await searchWordEntries(form.word.trim())
     } else {
@@ -357,7 +359,7 @@ const handleWordBlur = () => {
 
 const getCurrentLocation = () => {
   if (!navigator.geolocation) {
-    alert('您的浏览器不支持地理位置功能')
+    ElMessage.warning("\u60a8\u7684\u6d4f\u89c8\u5668\u4e0d\u652f\u6301\u5730\u7406\u4f4d\u7f6e\u529f\u80fd")
     return
   }
 
@@ -368,8 +370,8 @@ const getCurrentLocation = () => {
       gettingLocation.value = false
     },
     error => {
-      console.error('获取位置失败:', error)
-      alert('获取位置失败，请检查权限设置')
+      console.error("\u83b7\u53d6\u4f4d\u7f6e\u5931\u8d25:", error)
+      ElMessage.error("\u83b7\u53d6\u4f4d\u7f6e\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u6743\u9650\u8bbe\u7f6e")
       gettingLocation.value = false
     }
   )
@@ -390,14 +392,32 @@ const removeTag = (tag: string) => {
   }
 }
 
+watch(() => form.contextualMeaning.chinese, value => {
+  const normalized = value?.trim() || ''
+  if (form.meaning !== normalized) {
+    form.meaning = normalized
+  }
+})
+
 // 重复检测
 watch([() => form.word, () => form.meaning, () => form.context], async ([word, meaning, context]) => {
   if (word.trim() && meaning.trim() && context.trim()) {
     // 防抖检查重复
-    if (searchTimeout) clearTimeout(searchTimeout)
-    searchTimeout = setTimeout(async () => {
+    if (duplicationTimeout) clearTimeout(duplicationTimeout)
+    duplicationTimeout = setTimeout(async () => {
       await checkDuplication(word.trim(), meaning.trim(), context.trim())
     }, 1000)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (suggestionTimeout) {
+    clearTimeout(suggestionTimeout)
+    suggestionTimeout = null
+  }
+  if (duplicationTimeout) {
+    clearTimeout(duplicationTimeout)
+    duplicationTimeout = null
   }
 })
 
@@ -434,7 +454,7 @@ const handleSubmit = async () => {
   submitting.value = true
 
   try {
-    const recordData: Omit<UserWordRecord, 'id' | 'createTime' | 'updateTime'> = {
+    const recordData: Omit<UserWordRecord, 'id' | 'createdAt' | 'updatedAt'> = {
       wordEntryId: selectedWordEntry.value?.id || 0, // 需要后端处理词条创建
       userId: 1, // 临时硬编码，实际应从认证状态获取
       meaning: form.meaning,
@@ -450,11 +470,11 @@ const handleSubmit = async () => {
     await wordsStore.createWordRecord(recordData)
 
     // 成功提示
-    alert('单词录入成功！')
+    ElMessage.success("\u5355\u8bcd\u5f55\u5165\u6210\u529f\uff01")
     resetForm()
   } catch (error) {
     console.error('Submit failed:', error)
-    alert('录入失败，请重试')
+    ElMessage.error("\u5f55\u5165\u5931\u8d25\uff0c\u8bf7\u91cd\u8bd5")
   } finally {
     submitting.value = false
   }
@@ -464,17 +484,31 @@ const resetForm = () => {
   Object.assign(form, {
     word: '',
     meaning: '',
+    contextualMeaning: {
+      partOfSpeech: '',
+      chinese: '',
+      english: ''
+    },
     context: '',
     sourceType: 'reading' as SourceType,
     sourceDetail: '',
     location: {
       name: '',
-      type: 'home',
+      type: 0,
       coordinates: null
     },
     tags: [],
     notes: ''
   })
+
+  if (suggestionTimeout) {
+    clearTimeout(suggestionTimeout)
+    suggestionTimeout = null
+  }
+  if (duplicationTimeout) {
+    clearTimeout(duplicationTimeout)
+    duplicationTimeout = null
+  }
 
   selectedWordEntry.value = null
   searchSuggestions.value = []

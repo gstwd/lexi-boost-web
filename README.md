@@ -174,6 +174,7 @@ npm run type-check # 单独进行类型检查
 
 ```env
 VITE_API_BASE_URL=http://localhost:3001
+VITE_USE_MOCK_DATA=true
 ```
 
 ### 开发工作流

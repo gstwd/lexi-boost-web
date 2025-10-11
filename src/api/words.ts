@@ -73,7 +73,7 @@ export const wordsApi = {
 
   // 用户单词记录
   async createWordRecord(
-    record: Omit<UserWordRecord, 'id' | 'createTime' | 'updateTime'>
+    record: Omit<UserWordRecord, 'id' | 'createdAt' | 'updatedAt'>
   ): Promise<ApiResponse<UserWordRecord>> {
     const response = await apiClient.post('/api/word-records', record)
     return response.data

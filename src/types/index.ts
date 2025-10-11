@@ -1,8 +1,8 @@
 // 基础类型定义
 export interface BaseEntity {
   id: number
-  createTime: string
-  updateTime: string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface User {
