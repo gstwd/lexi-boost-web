@@ -103,9 +103,7 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
 
     try {
       const response = await recommendationsApi.getPersonalizedRecommendations()
-      if (response.success) {
-        recommendations.value = response.data
-      }
+      recommendations.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch recommendations'
       console.error('Error fetching recommendations:', err)
@@ -120,9 +118,7 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
 
     try {
       const response = await recommendationsApi.refreshRecommendations()
-      if (response.success) {
-        recommendations.value = response.data
-      }
+      recommendations.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to refresh recommendations'
       console.error('Error refreshing recommendations:', err)
@@ -137,9 +133,7 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
 
     try {
       const response = await recommendationsApi.getUrgentReviews(limit)
-      if (response.success) {
-        urgentReviews.value = response.data
-      }
+      urgentReviews.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch urgent reviews'
       console.error('Error fetching urgent reviews:', err)
@@ -154,9 +148,7 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
 
     try {
       const response = await recommendationsApi.getDailyReviewPlan(targetMinutes)
-      if (response.success) {
-        dailyPlan.value = response.data
-      }
+      dailyPlan.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch daily plan'
       console.error('Error fetching daily plan:', err)
@@ -171,9 +163,7 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
 
     try {
       const response = await recommendationsApi.getAdaptiveReviews(sessionLength)
-      if (response.success) {
-        return response.data
-      }
+      return response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to get adaptive reviews'
       console.error('Error getting adaptive reviews:', err)
@@ -190,9 +180,7 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
 
     try {
       const response = await recommendationsApi.getWeeklyGoals()
-      if (response.success) {
-        weeklyGoals.value = response.data
-      }
+      weeklyGoals.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch weekly goals'
       console.error('Error fetching weekly goals:', err)
@@ -207,13 +195,11 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
 
     try {
       const response = await recommendationsApi.updateGoalProgress(goalType, progress)
-      if (response.success) {
-        const index = weeklyGoals.value.findIndex(goal => goal.type === goalType)
-        if (index !== -1) {
-          weeklyGoals.value[index] = response.data
-        }
-        return response.data
+      const index = weeklyGoals.value.findIndex(goal => goal.type === goalType)
+      if (index !== -1) {
+        weeklyGoals.value[index] = response
       }
+      return response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to update goal progress'
       console.error('Error updating goal progress:', err)
@@ -230,9 +216,7 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
 
     try {
       const response = await recommendationsApi.getStudyTimeRecommendation()
-      if (response.success) {
-        studyTimeRecommendation.value = response.data
-      }
+      studyTimeRecommendation.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch study time recommendation'
       console.error('Error fetching study time recommendation:', err)
@@ -248,9 +232,7 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
 
     try {
       const response = await recommendationsApi.getDifficultyAdjustments()
-      if (response.success) {
-        difficultyAdjustments.value = response.data
-      }
+      difficultyAdjustments.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch difficulty adjustments'
       console.error('Error fetching difficulty adjustments:', err)
@@ -300,9 +282,7 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
 
     try {
       const response = await recommendationsApi.getLearningStrategies()
-      if (response.success) {
-        learningStrategies.value = response.data
-      }
+      learningStrategies.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch learning strategies'
       console.error('Error fetching learning strategies:', err)
@@ -318,9 +298,7 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
 
     try {
       const response = await recommendationsApi.getContentRecommendations()
-      if (response.success) {
-        contentRecommendations.value = response.data
-      }
+      contentRecommendations.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch content recommendations'
       console.error('Error fetching content recommendations:', err)
@@ -360,9 +338,7 @@ export const useRecommendationsStore = defineStore('recommendations', () => {
 
     try {
       const response = await recommendationsApi.getRecommendationSettings()
-      if (response.success) {
-        settings.value = response.data
-      }
+      settings.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch recommendation settings'
       console.error('Error fetching recommendation settings:', err)

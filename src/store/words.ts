@@ -138,9 +138,7 @@ export const useWordsStore = defineStore('words', () => {
 
     try {
       const response = await wordsApi.searchWordEntries(query, page, limit)
-      if (response.success) {
-        searchResults.value = response.data.items
-      }
+      searchResults.value = response.items
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to search word entries'
       console.error('Error searching word entries:', err)
@@ -155,9 +153,7 @@ export const useWordsStore = defineStore('words', () => {
 
     try {
       const response = await wordsApi.getWordEntry(word)
-      if (response.success) {
-        return response.data
-      }
+      return response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to get word entry'
       console.error('Error getting word entry:', err)
@@ -174,11 +170,9 @@ export const useWordsStore = defineStore('words', () => {
 
     try {
       const response = await wordsApi.createWordRecord(record)
-      if (response.success) {
-        wordRecords.value.unshift(response.data)
-        recordPagination.value.total += 1
-        return response.data
-      }
+      wordRecords.value.unshift(response)
+      recordPagination.value.total += 1
+      return response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to create word record'
       console.error('Error creating word record:', err)
@@ -194,13 +188,11 @@ export const useWordsStore = defineStore('words', () => {
 
     try {
       const response = await wordsApi.getWordRecords(filters, page, limit)
-      if (response.success) {
-        wordRecords.value = response.data.items
-        recordPagination.value = {
-          page: response.data.page,
-          limit: response.data.limit,
-          total: response.data.total
-        }
+      wordRecords.value = response.items
+      recordPagination.value = {
+        page: response.page,
+        limit: response.limit,
+        total: response.total
       }
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch word records'
@@ -216,10 +208,8 @@ export const useWordsStore = defineStore('words', () => {
 
     try {
       const response = await wordsApi.getWordRecord(id)
-      if (response.success) {
-        currentWordRecord.value = response.data
-        return response.data
-      }
+      currentWordRecord.value = response
+      return response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to get word record'
       console.error('Error getting word record:', err)
@@ -235,16 +225,14 @@ export const useWordsStore = defineStore('words', () => {
 
     try {
       const response = await wordsApi.updateWordRecord(id, updates)
-      if (response.success) {
-        const index = wordRecords.value.findIndex(r => r.id === id)
-        if (index !== -1) {
-          wordRecords.value[index] = response.data
-        }
-        if (currentWordRecord.value?.id === id) {
-          currentWordRecord.value = response.data
-        }
-        return response.data
+      const index = wordRecords.value.findIndex(r => r.id === id)
+      if (index !== -1) {
+        wordRecords.value[index] = response
       }
+      if (currentWordRecord.value?.id === id) {
+        currentWordRecord.value = response
+      }
+      return response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to update word record'
       console.error('Error updating word record:', err)
@@ -281,10 +269,8 @@ export const useWordsStore = defineStore('words', () => {
 
     try {
       const response = await wordsApi.checkDuplication(word, meaning, context)
-      if (response.success) {
-        duplicationAnalysis.value = response.data
-        return response.data
-      }
+      duplicationAnalysis.value = response
+      return response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to check duplication'
       console.error('Error checking duplication:', err)
@@ -300,10 +286,8 @@ export const useWordsStore = defineStore('words', () => {
 
     try {
       const response = await wordsApi.getDuplicationAnalysis(wordEntryId)
-      if (response.success) {
-        duplicationAnalysis.value = response.data
-        return response.data
-      }
+      duplicationAnalysis.value = response
+      return response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to get duplication analysis'
       console.error('Error getting duplication analysis:', err)

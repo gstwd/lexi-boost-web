@@ -364,7 +364,7 @@ export interface DifficultyAdjustment {
 
 // API响应类型
 export interface ApiResponse<T> {
-  success: boolean
+  code: number
   data: T
   message?: string
   timestamp: string

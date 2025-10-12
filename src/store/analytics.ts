@@ -132,9 +132,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
 
     try {
       const response = await analyticsApi.getLearningStats(filters)
-      if (response.success) {
-        stats.value = response.data
-      }
+      stats.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch learning stats'
       console.error('Error fetching learning stats:', err)
@@ -149,9 +147,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
 
     try {
       const response = await analyticsApi.getHistoricalStats(period, limit, groupBy)
-      if (response.success) {
-        historicalData.value = response.data
-      }
+      historicalData.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch historical stats'
       console.error('Error fetching historical stats:', err)
@@ -166,9 +162,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
 
     try {
       const response = await analyticsApi.getWordMasteryProgress(filters, page, limit)
-      if (response.success) {
-        masteryProgress.value = response.data
-      }
+      masteryProgress.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch mastery progress'
       console.error('Error fetching mastery progress:', err)
@@ -183,9 +177,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
 
     try {
       const response = await analyticsApi.getLearningPatterns()
-      if (response.success) {
-        learningPatterns.value = response.data
-      }
+      learningPatterns.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch learning patterns'
       console.error('Error fetching learning patterns:', err)
@@ -200,9 +192,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
 
     try {
       const response = await analyticsApi.getPersonalizedInsights()
-      if (response.success) {
-        personalizedInsights.value = response.data
-      }
+      personalizedInsights.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch personalized insights'
       console.error('Error fetching personalized insights:', err)
@@ -217,9 +207,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
 
     try {
       const response = await analyticsApi.getVocabularyDistribution()
-      if (response.success) {
-        vocabularyDistribution.value = response.data
-      }
+      vocabularyDistribution.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to fetch vocabulary distribution'
       console.error('Error fetching vocabulary distribution:', err)
@@ -234,9 +222,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
 
     try {
       const response = await analyticsApi.getWordMasteryDetail(wordEntryId)
-      if (response.success) {
-        return response.data
-      }
+      return response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to get word mastery detail'
       console.error('Error getting word mastery detail:', err)
@@ -252,9 +238,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
 
     try {
       const response = await analyticsApi.getProgressPrediction(targetMasteryLevel)
-      if (response.success) {
-        return response.data
-      }
+      return response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to get progress prediction'
       console.error('Error getting progress prediction:', err)
@@ -270,9 +254,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
 
     try {
       const response = await analyticsApi.getComparativeAnalysis()
-      if (response.success) {
-        return response.data
-      }
+      return response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to get comparative analysis'
       console.error('Error getting comparative analysis:', err)
@@ -288,9 +270,7 @@ export const useAnalyticsStore = defineStore('analytics', () => {
 
     try {
       const response = await analyticsApi.exportAnalytics(format, filters)
-      if (response.success) {
-        return response.data
-      }
+      return response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to export analytics'
       console.error('Error exporting analytics:', err)

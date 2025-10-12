@@ -1,5 +1,5 @@
-import apiClient from './client'
-import type { ReviewSchedule, ReviewSession, ReviewFilters, ReviewType, PaginatedResponse, ApiResponse } from '@/types'
+import { request } from './client'
+import type { ReviewSchedule, ReviewSession, ReviewFilters, ReviewType, PaginatedResponse } from '@/types'
 
 export const reviewsApi = {
   // 复习调度管理
@@ -7,45 +7,39 @@ export const reviewsApi = {
     filters?: ReviewFilters,
     page = 1,
     limit = 20
-  ): Promise<ApiResponse<PaginatedResponse<ReviewSchedule>>> {
-    const response = await apiClient.get('/api/reviews/schedules', {
+  ): Promise<PaginatedResponse<ReviewSchedule>> {
+    return request.get('/api/reviews/schedules', {
       params: { ...filters, page, limit }
     })
-    return response.data
   },
 
-  async getDueReviews(limit = 50): Promise<ApiResponse<ReviewSchedule[]>> {
-    const response = await apiClient.get('/api/reviews/due', {
+  async getDueReviews(limit = 50): Promise<ReviewSchedule[]> {
+    return request.get('/api/reviews/due', {
       params: { limit }
     })
-    return response.data
   },
 
-  async getReviewSchedule(id: number): Promise<ApiResponse<ReviewSchedule>> {
-    const response = await apiClient.get(`/api/reviews/schedules/${id}`)
-    return response.data
+  async getReviewSchedule(id: number): Promise<ReviewSchedule> {
+    return request.get(`/api/reviews/schedules/${id}`)
   },
 
-  async updateReviewSchedule(id: number, updates: Partial<ReviewSchedule>): Promise<ApiResponse<ReviewSchedule>> {
-    const response = await apiClient.put(`/api/reviews/schedules/${id}`, updates)
-    return response.data
+  async updateReviewSchedule(id: number, updates: Partial<ReviewSchedule>): Promise<ReviewSchedule> {
+    return request.put(`/api/reviews/schedules/${id}`, updates)
   },
 
-  async rescheduleReview(id: number, newDate: string): Promise<ApiResponse<ReviewSchedule>> {
-    const response = await apiClient.post(`/api/reviews/schedules/${id}/reschedule`, {
+  async rescheduleReview(id: number, newDate: string): Promise<ReviewSchedule> {
+    return request.post(`/api/reviews/schedules/${id}/reschedule`, {
       newDate
     })
-    return response.data
   },
 
   // 复习会话管理
   async startReviewSession(
     wordRecordIds: number[]
-  ): Promise<ApiResponse<{ sessionId: string; reviews: ReviewSchedule[] }>> {
-    const response = await apiClient.post('/api/reviews/sessions/start', {
+  ): Promise<{ sessionId: string; reviews: ReviewSchedule[] }> {
+    return request.post('/api/reviews/sessions/start', {
       wordRecordIds
     })
-    return response.data
   },
 
   async submitReviewResult(sessionData: {
@@ -60,21 +54,17 @@ export const reviewsApi = {
     hintsUsed: number
     feedback?: string
     difficultyRating?: number
-  }): Promise<ApiResponse<ReviewSession & { nextReviewDate: string }>> {
-    const response = await apiClient.post('/api/reviews/sessions/submit', sessionData)
-    return response.data
+  }): Promise<ReviewSession & { nextReviewDate: string }> {
+    return request.post('/api/reviews/sessions/submit', sessionData)
   },
 
-  async endReviewSession(sessionId: string): Promise<
-    ApiResponse<{
-      completedReviews: number
-      accuracy: number
-      timeSpent: number
-      nextDueCount: number
-    }>
-  > {
-    const response = await apiClient.post(`/api/reviews/sessions/${sessionId}/end`)
-    return response.data
+  async endReviewSession(sessionId: string): Promise<{
+    completedReviews: number
+    accuracy: number
+    timeSpent: number
+    nextDueCount: number
+  }> {
+    return request.post(`/api/reviews/sessions/${sessionId}/end`)
   },
 
   // 复习历史
@@ -87,67 +77,56 @@ export const reviewsApi = {
       reviewType?: ReviewType
       accuracy?: { min: number; max: number }
     }
-  ): Promise<ApiResponse<PaginatedResponse<ReviewSession>>> {
-    const response = await apiClient.get('/api/reviews/sessions', {
+  ): Promise<PaginatedResponse<ReviewSession>> {
+    return request.get('/api/reviews/sessions', {
       params: { ...filters, page, limit }
     })
-    return response.data
   },
 
-  async getReviewSession(id: number): Promise<ApiResponse<ReviewSession>> {
-    const response = await apiClient.get(`/api/reviews/sessions/${id}`)
-    return response.data
+  async getReviewSession(id: number): Promise<ReviewSession> {
+    return request.get(`/api/reviews/sessions/${id}`)
   },
 
   // 复习统计
   async getReviewStats(
     period: 'daily' | 'weekly' | 'monthly',
     limit = 30
-  ): Promise<
-    ApiResponse<{
-      dates: string[]
-      reviewCounts: number[]
-      accuracyRates: number[]
-      timeSpent: number[]
-      reviewTypes: Record<ReviewType, number>
-      averageResponseTime: number
-    }>
-  > {
-    const response = await apiClient.get('/api/reviews/stats', {
+  ): Promise<{
+    dates: string[]
+    reviewCounts: number[]
+    accuracyRates: number[]
+    timeSpent: number[]
+    reviewTypes: Record<ReviewType, number>
+    averageResponseTime: number
+  }> {
+    return request.get('/api/reviews/stats', {
       params: { period, limit }
     })
-    return response.data
   },
 
-  async getDashboardStats(): Promise<
-    ApiResponse<{
-      dueToday: number
-      completedToday: number
-      streak: number
-      weeklyProgress: number
-      averageAccuracy: number
-      totalWordsLearned: number
-      masteredWords: number
-    }>
-  > {
-    const response = await apiClient.get('/api/reviews/dashboard')
-    return response.data
+  async getDashboardStats(): Promise<{
+    dueToday: number
+    completedToday: number
+    streak: number
+    weeklyProgress: number
+    averageAccuracy: number
+    totalWordsLearned: number
+    masteredWords: number
+  }> {
+    return request.get('/api/reviews/dashboard')
   },
 
   // 复习设置和偏好
-  async getReviewSettings(): Promise<
-    ApiResponse<{
-      dailyGoal: number
-      sessionLength: number
-      reviewTypes: ReviewType[]
-      difficultySetting: 'adaptive' | 'manual'
-      showContext: boolean
-      allowHints: boolean
-      autoSchedule: boolean
-    }>
-  > {
-    const response = await apiClient.get('/api/reviews/settings')
-    return response.data
+  async getReviewSettings(): Promise<{
+    dailyGoal: number
+    sessionLength: number
+    reviewTypes: ReviewType[]
+    difficultySetting: 'adaptive' | 'manual'
+    showContext: boolean
+    allowHints: boolean
+    autoSchedule: boolean
+  }> {
+    return request.get('/api/reviews/settings')
   },
 
   async updateReviewSettings(settings: {
@@ -158,32 +137,27 @@ export const reviewsApi = {
     showContext?: boolean
     allowHints?: boolean
     autoSchedule?: boolean
-  }): Promise<ApiResponse<void>> {
-    const response = await apiClient.put('/api/reviews/settings', settings)
-    return response.data
+  }): Promise<void> {
+    return request.put('/api/reviews/settings', settings)
   },
 
   // 批量操作
   async markMultipleAsReviewed(
     scheduleIds: number[],
     result: 'correct' | 'incorrect' | 'skip'
-  ): Promise<
-    ApiResponse<{
-      updated: number
-      nextReviews: ReviewSchedule[]
-    }>
-  > {
-    const response = await apiClient.post('/api/reviews/bulk-review', {
+  ): Promise<{
+    updated: number
+    nextReviews: ReviewSchedule[]
+  }> {
+    return request.post('/api/reviews/bulk-review', {
       scheduleIds,
       result
     })
-    return response.data
   },
 
-  async resetReviewProgress(wordRecordIds: number[]): Promise<ApiResponse<void>> {
-    const response = await apiClient.post('/api/reviews/reset', {
+  async resetReviewProgress(wordRecordIds: number[]): Promise<void> {
+    return request.post('/api/reviews/reset', {
       wordRecordIds
     })
-    return response.data
   }
 }
