@@ -359,7 +359,7 @@ const handleWordBlur = () => {
 
 const getCurrentLocation = () => {
   if (!navigator.geolocation) {
-    ElMessage.warning("\u60a8\u7684\u6d4f\u89c8\u5668\u4e0d\u652f\u6301\u5730\u7406\u4f4d\u7f6e\u529f\u80fd")
+    ElMessage.warning('\u60a8\u7684\u6d4f\u89c8\u5668\u4e0d\u652f\u6301\u5730\u7406\u4f4d\u7f6e\u529f\u80fd')
     return
   }
 
@@ -370,8 +370,8 @@ const getCurrentLocation = () => {
       gettingLocation.value = false
     },
     error => {
-      console.error("\u83b7\u53d6\u4f4d\u7f6e\u5931\u8d25:", error)
-      ElMessage.error("\u83b7\u53d6\u4f4d\u7f6e\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u6743\u9650\u8bbe\u7f6e")
+      console.error('\u83b7\u53d6\u4f4d\u7f6e\u5931\u8d25:', error)
+      ElMessage.error('\u83b7\u53d6\u4f4d\u7f6e\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u6743\u9650\u8bbe\u7f6e')
       gettingLocation.value = false
     }
   )
@@ -392,12 +392,15 @@ const removeTag = (tag: string) => {
   }
 }
 
-watch(() => form.contextualMeaning.chinese, value => {
-  const normalized = value?.trim() || ''
-  if (form.meaning !== normalized) {
-    form.meaning = normalized
+watch(
+  () => form.contextualMeaning.chinese,
+  value => {
+    const normalized = value?.trim() || ''
+    if (form.meaning !== normalized) {
+      form.meaning = normalized
+    }
   }
-})
+)
 
 // 重复检测
 watch([() => form.word, () => form.meaning, () => form.context], async ([word, meaning, context]) => {
@@ -470,11 +473,11 @@ const handleSubmit = async () => {
     await wordsStore.createWordRecord(recordData)
 
     // 成功提示
-    ElMessage.success("\u5355\u8bcd\u5f55\u5165\u6210\u529f\uff01")
+    ElMessage.success('\u5355\u8bcd\u5f55\u5165\u6210\u529f\uff01')
     resetForm()
   } catch (error) {
     console.error('Submit failed:', error)
-    ElMessage.error("\u5f55\u5165\u5931\u8d25\uff0c\u8bf7\u91cd\u8bd5")
+    ElMessage.error('\u5f55\u5165\u5931\u8d25\uff0c\u8bf7\u91cd\u8bd5')
   } finally {
     submitting.value = false
   }

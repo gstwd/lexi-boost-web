@@ -28,7 +28,7 @@ const tsFiles = ['**/*.ts', '**/*.tsx', '**/*.mts', '**/*.cts', '**/*.d.ts']
 const jsFiles = ['**/*.js', '**/*.jsx', '**/*.mjs', '**/*.cjs']
 const vueFiles = ['**/*.vue']
 
-const tsConfigs = pluginTypeScript.configs['flat/recommended'].map((config) => ({
+const tsConfigs = pluginTypeScript.configs['flat/recommended'].map(config => ({
   ...config,
   files: tsFiles,
   languageOptions: {
@@ -47,7 +47,7 @@ const tsConfigs = pluginTypeScript.configs['flat/recommended'].map((config) => (
   }
 }))
 
-const vueConfigs = pluginVue.configs['flat/recommended'].map((config) => ({
+const vueConfigs = pluginVue.configs['flat/recommended'].map(config => ({
   ...config,
   files: vueFiles,
   languageOptions: {

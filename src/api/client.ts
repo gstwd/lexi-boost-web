@@ -1,10 +1,4 @@
-import axios, {
-  AxiosInstance,
-  AxiosResponse,
-  AxiosError,
-  AxiosAdapter,
-  InternalAxiosRequestConfig
-} from 'axios'
+import axios, { AxiosInstance, AxiosResponse, AxiosError, AxiosAdapter, InternalAxiosRequestConfig } from 'axios'
 import { mockDataService } from '@/services/mockDataService'
 
 const DEFAULT_BASE_URL = 'http://localhost:3001'
