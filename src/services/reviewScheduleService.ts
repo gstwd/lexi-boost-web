@@ -28,7 +28,7 @@ export interface ScheduleSession {
   estimatedDuration: number
   totalWords: number
   priorityDistribution: Record<string, number>
-  createdAt: Date
+  createTime: Date
 }
 
 export interface ScheduleStats {
@@ -291,7 +291,7 @@ export class ReviewScheduleService {
       estimatedDuration: Math.round(estimatedDuration),
       totalWords: words.length,
       priorityDistribution,
-      createdAt: new Date()
+      createTime: new Date()
     }
   }
 

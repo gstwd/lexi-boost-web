@@ -1,8 +1,8 @@
 // 基础类型定义
 export interface BaseEntity {
   id: number
-  createdAt: string
-  updatedAt: string
+  createTime: string
+  updateTime: string
 }
 
 export interface User {
@@ -10,7 +10,7 @@ export interface User {
   username: string
   email: string
   preferences: UserPreferences
-  createdAt: string
+  createTime: string
 }
 
 export interface UserPreferences {
@@ -75,6 +75,7 @@ export type PartOfSpeech =
 export interface UserWordRecord extends BaseEntity {
   wordEntryId: number
   userId: number
+  word: string
   meaning: string // 用户理解的含义
   context: string // 上下文
   location?: LocationInfo

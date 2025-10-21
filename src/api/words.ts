@@ -1,11 +1,5 @@
 import apiClient, { request } from './client'
-import type {
-  WordEntry,
-  UserWordRecord,
-  WordRecordFilters,
-  PaginatedResponse,
-  DuplicationAnalysis
-} from '@/types'
+import type { WordEntry, UserWordRecord, WordRecordFilters, PaginatedResponse, DuplicationAnalysis } from '@/types'
 
 export interface Word {
   id: number
@@ -64,17 +58,11 @@ export const wordsApi = {
   },
 
   // 用户单词记录
-  async createWordRecord(
-    record: Omit<UserWordRecord, 'id' | 'createdAt' | 'updatedAt'>
-  ): Promise<UserWordRecord> {
+  async createWordRecord(record: Omit<UserWordRecord, 'id' | 'createTime' | 'updateTime'>): Promise<UserWordRecord> {
     return request.post('/api/word-records', record)
   },
 
-  async getWordRecords(
-    filters?: WordRecordFilters,
-    page = 1,
-    limit = 20
-  ): Promise<PaginatedResponse<UserWordRecord>> {
+  async getWordRecords(filters?: WordRecordFilters, page = 1, limit = 20): Promise<PaginatedResponse<UserWordRecord>> {
     return request.get('/api/word-records', {
       params: { ...filters, page, limit }
     })
@@ -107,7 +95,7 @@ export const wordsApi = {
 
   // 批量操作
   async bulkCreateWordRecords(
-    records: Omit<UserWordRecord, 'id' | 'createdAt' | 'updatedAt'>[]
+    records: Omit<UserWordRecord, 'id' | 'createTime' | 'updateTime'>[]
   ): Promise<UserWordRecord[]> {
     return request.post('/api/word-records/bulk', { records })
   },

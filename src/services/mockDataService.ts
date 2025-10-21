@@ -72,8 +72,8 @@ class MockDataService {
       frequency: 850,
       difficulty: 3.2,
       etymology: 'Late Middle English: from Latin elaboratus',
-      createdAt: this.getRandomDate(365),
-      updatedAt: this.getRandomDate(30)
+      createTime: this.getRandomDate(365),
+      updateTime: this.getRandomDate(30)
     },
     {
       id: 2,
@@ -94,8 +94,8 @@ class MockDataService {
       frequency: 1200,
       difficulty: 2.8,
       etymology: 'Middle English: from Old French substantiel',
-      createdAt: this.getRandomDate(365),
-      updatedAt: this.getRandomDate(30)
+      createTime: this.getRandomDate(365),
+      updateTime: this.getRandomDate(30)
     },
     {
       id: 3,
@@ -116,8 +116,8 @@ class MockDataService {
       frequency: 650,
       difficulty: 3.5,
       etymology: 'Late Middle English: from Latin intricatus',
-      createdAt: this.getRandomDate(365),
-      updatedAt: this.getRandomDate(30)
+      createTime: this.getRandomDate(365),
+      updateTime: this.getRandomDate(30)
     },
     {
       id: 4,
@@ -138,8 +138,8 @@ class MockDataService {
       frequency: 420,
       difficulty: 4.1,
       etymology: 'Late Middle English: via late Latin from Greek paradeigma',
-      createdAt: this.getRandomDate(365),
-      updatedAt: this.getRandomDate(30)
+      createTime: this.getRandomDate(365),
+      updateTime: this.getRandomDate(30)
     },
     {
       id: 5,
@@ -160,8 +160,8 @@ class MockDataService {
       frequency: 890,
       difficulty: 3.0,
       etymology: "Mid 17th century: from Latin resilire 'to rebound'",
-      createdAt: this.getRandomDate(365),
-      updatedAt: this.getRandomDate(30)
+      createTime: this.getRandomDate(365),
+      updateTime: this.getRandomDate(30)
     }
   ]
 
@@ -177,8 +177,8 @@ class MockDataService {
       sourceDetail: 'Academic Article - Page 15',
       confidence: 4.2,
       tags: ['architecture', 'design'],
-      createdAt: this.getRandomDate(10),
-      updatedAt: this.getRandomDate(5)
+      createTime: this.getRandomDate(10),
+      updateTime: this.getRandomDate(5)
     },
     {
       id: 2,
@@ -190,8 +190,8 @@ class MockDataService {
       sourceDetail: 'News Article',
       confidence: 3.8,
       tags: ['legal', 'evidence'],
-      createdAt: this.getRandomDate(15),
-      updatedAt: this.getRandomDate(8)
+      createTime: this.getRandomDate(15),
+      updateTime: this.getRandomDate(8)
     },
     {
       id: 3,
@@ -203,8 +203,8 @@ class MockDataService {
       sourceDetail: 'Art Book - Chapter 3',
       confidence: 3.5,
       tags: ['art', 'description'],
-      createdAt: this.getRandomDate(20),
-      updatedAt: this.getRandomDate(12)
+      createTime: this.getRandomDate(20),
+      updateTime: this.getRandomDate(12)
     },
     {
       id: 4,
@@ -216,8 +216,8 @@ class MockDataService {
       sourceDetail: 'Educational Podcast - Episode 12',
       confidence: 4.0,
       tags: ['education', 'theory'],
-      createdAt: this.getRandomDate(7),
-      updatedAt: this.getRandomDate(3)
+      createTime: this.getRandomDate(7),
+      updateTime: this.getRandomDate(3)
     },
     {
       id: 5,
@@ -229,8 +229,8 @@ class MockDataService {
       sourceDetail: 'Work Meeting',
       confidence: 4.5,
       tags: ['psychology', 'personal'],
-      createdAt: this.getRandomDate(12),
-      updatedAt: this.getRandomDate(6)
+      createTime: this.getRandomDate(12),
+      updateTime: this.getRandomDate(6)
     }
   ]
 
@@ -249,8 +249,8 @@ class MockDataService {
       status: 'due',
       priority: 5,
       lastReviewDate: this.getRandomDate(2),
-      createdAt: this.getRandomDate(10),
-      updatedAt: this.getRandomDate(2)
+      createTime: this.getRandomDate(10),
+      updateTime: this.getRandomDate(2)
     },
     {
       id: 2,
@@ -264,8 +264,8 @@ class MockDataService {
       consecutiveCorrect: 1,
       status: 'due',
       priority: 6,
-      createdAt: this.getRandomDate(5),
-      updatedAt: this.getRandomDate(1)
+      createTime: this.getRandomDate(5),
+      updateTime: this.getRandomDate(1)
     },
     {
       id: 3,
@@ -280,8 +280,8 @@ class MockDataService {
       status: 'overdue',
       priority: 8,
       lastReviewDate: this.getRandomDate(3),
-      createdAt: this.getRandomDate(15),
-      updatedAt: this.getRandomDate(3)
+      createTime: this.getRandomDate(15),
+      updateTime: this.getRandomDate(3)
     },
     {
       id: 4,
@@ -296,8 +296,8 @@ class MockDataService {
       status: 'pending',
       priority: 3,
       lastReviewDate: this.getRandomDate(7),
-      createdAt: this.getRandomDate(20),
-      updatedAt: this.getRandomDate(7)
+      createTime: this.getRandomDate(20),
+      updateTime: this.getRandomDate(7)
     }
   ]
 
@@ -386,8 +386,8 @@ class MockDataService {
     await this.delay()
     const newRecord: UserWordRecord = {
       id: Math.floor(Math.random() * 1000) + 100,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createTime: new Date().toISOString(),
+      updateTime: new Date().toISOString(),
       ...record
     }
     return this.createResponse(newRecord)
@@ -416,7 +416,7 @@ class MockDataService {
   async updateWordRecord(id: number, updates: any) {
     await this.delay()
     const record = this.userWordRecords.find(r => r.id === id) || this.userWordRecords[0]
-    return this.createResponse({ ...record, ...updates, updatedAt: new Date().toISOString() })
+    return this.createResponse({ ...record, ...updates, updateTime: new Date().toISOString() })
   }
 
   async deleteWordRecord(_id: number) {
@@ -445,8 +445,8 @@ class MockDataService {
       ],
       contextSimilarity: Math.random() * 0.4 + 0.6,
       recommendations: ['Consider merging with existing record', 'Different context provides new learning opportunity'],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      createTime: new Date().toISOString(),
+      updateTime: new Date().toISOString()
     }
     return this.createResponse(analysis)
   }
@@ -463,8 +463,8 @@ class MockDataService {
       meaningEvolution: [],
       contextSimilarity: 0.95,
       recommendations: ['This appears to be a new unique record'],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      createTime: new Date().toISOString(),
+      updateTime: new Date().toISOString()
     }
     return this.createResponse(analysis)
   }
@@ -473,8 +473,8 @@ class MockDataService {
     await this.delay()
     const createdRecords = records.map((record, index) => ({
       id: Math.floor(Math.random() * 1000) + 200 + index,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createTime: new Date().toISOString(),
+      updateTime: new Date().toISOString(),
       ...record
     }))
     return this.createResponse(createdRecords)
@@ -542,13 +542,13 @@ class MockDataService {
   async updateReviewSchedule(id: number, updates: any) {
     await this.delay()
     const schedule = this.reviewSchedules.find(s => s.id === id) || this.reviewSchedules[0]
-    return this.createResponse({ ...schedule, ...updates, updatedAt: new Date().toISOString() })
+    return this.createResponse({ ...schedule, ...updates, updateTime: new Date().toISOString() })
   }
 
   async rescheduleReview(id: number, newDate: string) {
     await this.delay()
     const schedule = this.reviewSchedules.find(s => s.id === id) || this.reviewSchedules[0]
-    return this.createResponse({ ...schedule, nextReviewDate: newDate, updatedAt: new Date().toISOString() })
+    return this.createResponse({ ...schedule, nextReviewDate: newDate, updateTime: new Date().toISOString() })
   }
 
   async startReviewSession(wordRecordIds: number[]) {
@@ -579,8 +579,8 @@ class MockDataService {
       hintsUsed: sessionData.hintsUsed,
       feedback: sessionData.feedback,
       difficultyRating: sessionData.difficultyRating,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createTime: new Date().toISOString(),
+      updateTime: new Date().toISOString(),
       startedAt: new Date().toISOString(),
       completedAt: new Date().toISOString(),
       duration: sessionData.responseTime,
@@ -620,8 +620,8 @@ class MockDataService {
       expectedResponse: 'Expected response',
       contextShown: Math.random() > 0.5,
       hintsUsed: Math.floor(Math.random() * 3),
-      createdAt: this.getRandomDate(30),
-      updatedAt: this.getRandomDate(30),
+      createTime: this.getRandomDate(30),
+      updateTime: this.getRandomDate(30),
       startedAt: this.getRandomDate(30),
       completedAt: this.getRandomDate(29),
       duration: Math.floor(Math.random() * 3000) + 1000,
@@ -654,8 +654,8 @@ class MockDataService {
       expectedResponse: 'Expected response',
       contextShown: true,
       hintsUsed: 1,
-      createdAt: this.getRandomDate(7),
-      updatedAt: this.getRandomDate(7),
+      createTime: this.getRandomDate(7),
+      updateTime: this.getRandomDate(7),
       startedAt: this.getRandomDate(7),
       completedAt: this.getRandomDate(6),
       duration: 2500,
@@ -1364,7 +1364,7 @@ class MockDataService {
       type: ['review', 'study_time', 'difficulty', 'strategy'][Math.floor(Math.random() * 4)],
       title: `推荐${(page - 1) * limit + i + 1}`,
       description: `这是推荐${(page - 1) * limit + i + 1}的描述`,
-      createdAt: this.getRandomDate(30),
+      createTime: this.getRandomDate(30),
       followed: Math.random() > 0.5,
       rating: Math.random() > 0.3 ? Math.floor(Math.random() * 3) + 3 : undefined
     }))

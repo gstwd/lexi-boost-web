@@ -318,7 +318,7 @@
                   </div>
                 </div>
                 <div class="text-xs text-gray-500">
-                  {{ formatRelativeTime(word.createdAt) }}
+                  {{ formatRelativeTime(word.createTime) }}
                 </div>
               </div>
             </div>
@@ -389,9 +389,9 @@ const weeklyGoal = ref({
 })
 
 const recentWords = ref([
-  { id: 1, word: 'elaborate', meaning: '详细阐述', createdAt: '2024-01-15T10:30:00Z' },
-  { id: 2, word: 'substantial', meaning: '大量的', createdAt: '2024-01-14T15:20:00Z' },
-  { id: 3, word: 'intricate', meaning: '复杂的', createdAt: '2024-01-13T09:45:00Z' }
+  { id: 1, word: 'elaborate', meaning: '详细阐述', createTime: '2024-01-15T10:30:00Z' },
+  { id: 2, word: 'substantial', meaning: '大量的', createTime: '2024-01-14T15:20:00Z' },
+  { id: 3, word: 'intricate', meaning: '复杂的', createTime: '2024-01-13T09:45:00Z' }
 ])
 
 const recentAchievements = ref([

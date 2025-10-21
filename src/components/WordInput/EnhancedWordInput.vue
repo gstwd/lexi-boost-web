@@ -457,9 +457,10 @@ const handleSubmit = async () => {
   submitting.value = true
 
   try {
-    const recordData: Omit<UserWordRecord, 'id' | 'createdAt' | 'updatedAt'> = {
+    const recordData: Omit<UserWordRecord, 'id' | 'createTime' | 'updateTime'> = {
       wordEntryId: selectedWordEntry.value?.id || 0, // 需要后端处理词条创建
       userId: 1, // 临时硬编码，实际应从认证状态获取
+      word: form.word,
       meaning: form.meaning,
       context: form.context,
       location: includeLocation.value ? form.location : undefined,

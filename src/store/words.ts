@@ -164,7 +164,7 @@ export const useWordsStore = defineStore('words', () => {
   }
 
   // 用户单词记录管理
-  const createWordRecord = async (record: Omit<UserWordRecord, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const createWordRecord = async (record: Omit<UserWordRecord, 'id' | 'createTime' | 'updateTime'>) => {
     loading.value = true
     error.value = null
 

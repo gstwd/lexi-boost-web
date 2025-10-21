@@ -138,7 +138,7 @@ export const recommendationsApi = {
       type: string
       title: string
       description: string
-      createdAt: string
+      createTime: string
       followed: boolean
       rating?: number
     }[]
