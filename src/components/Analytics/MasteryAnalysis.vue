@@ -97,7 +97,7 @@
     <!-- 单词列表 -->
     <div v-else-if="filteredWords.length > 0" class="space-y-4">
       <div
-        v-for="word in paginatedWords"
+        v-for="word in pageWords"
         :key="word.id"
         class="border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
         @click="viewWordDetail(word)"
@@ -430,7 +430,7 @@ const visiblePages = computed(() => {
   return pages
 })
 
-const paginatedWords = computed(() => {
+const pageWords = computed(() => {
   const start = (currentPage.value - 1) * pageSize.value
   const end = start + pageSize.value
   return sortedWords.value.slice(start, end)

@@ -36,14 +36,11 @@ export interface LocationInfo {
 }
 
 // 单词词条（标准词典数据）
-export interface WordEntry extends BaseEntity {
+export interface WordEntry {
+  id: number
   word: string
-  language: string
-  standardDefinitions: Definition[]
-  frequency: number // 使用频率 1-10000
-  difficulty: number // 标准难度 1-5
-  pronunciation?: string
-  etymology?: string
+  phonetic?: string
+  translation: string
 }
 
 // 标准释义
@@ -371,7 +368,7 @@ export interface ApiResponse<T> {
   timestamp: string
 }
 
-export interface PaginatedResponse<T> {
+export interface PageResponse<T> {
   items: T[]
   total: number
   page: number

@@ -1,13 +1,9 @@
 import { request } from './client'
-import type { ReviewSchedule, ReviewSession, ReviewFilters, ReviewType, PaginatedResponse } from '@/types'
+import type { ReviewSchedule, ReviewSession, ReviewFilters, ReviewType, PageResponse } from '@/types'
 
 export const reviewsApi = {
   // 复习调度管理
-  async getReviewSchedules(
-    filters?: ReviewFilters,
-    page = 1,
-    limit = 20
-  ): Promise<PaginatedResponse<ReviewSchedule>> {
+  async getReviewSchedules(filters?: ReviewFilters, page = 1, limit = 20): Promise<PageResponse<ReviewSchedule>> {
     return request.get('/api/reviews/schedules', {
       params: { ...filters, page, limit }
     })
@@ -34,9 +30,7 @@ export const reviewsApi = {
   },
 
   // 复习会话管理
-  async startReviewSession(
-    wordRecordIds: number[]
-  ): Promise<{ sessionId: string; reviews: ReviewSchedule[] }> {
+  async startReviewSession(wordRecordIds: number[]): Promise<{ sessionId: string; reviews: ReviewSchedule[] }> {
     return request.post('/api/reviews/sessions/start', {
       wordRecordIds
     })
@@ -77,7 +71,7 @@ export const reviewsApi = {
       reviewType?: ReviewType
       accuracy?: { min: number; max: number }
     }
-  ): Promise<PaginatedResponse<ReviewSession>> {
+  ): Promise<PageResponse<ReviewSession>> {
     return request.get('/api/reviews/sessions', {
       params: { ...filters, page, limit }
     })

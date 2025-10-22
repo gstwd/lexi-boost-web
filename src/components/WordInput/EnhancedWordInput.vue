@@ -29,14 +29,14 @@
             >
               <div class="font-medium text-gray-800">{{ suggestion.word }}</div>
               <div class="text-sm text-gray-600 truncate">
-                {{ suggestion.standardDefinitions[0]?.meaning }}
+                {{ suggestion.translation }}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 标准释义 -->
+      <!-- 标准释义
       <section v-if="selectedWordEntry" class="rounded-lg shadow-sm border border-gray-200 bg-white p-5">
         <h3 class="text-gray-800 font-semibold text-base mb-3 flex items-center">
           <span class="w-1.5 h-5 bg-blue-500 rounded mr-2"></span>
@@ -60,9 +60,9 @@
           class="mt-3 text-sm text-blue-600 hover:underline"
           @click="showAllDefinitions = !showAllDefinitions"
         >
-          {{ showAllDefinitions ? '收起' : `查看全部 ${selectedWordEntry.standardDefinitions.length} 个释义` }}
+          {{ showAllDefinitions ? '收起' : `查看全部 1 个释义` }}
         </button>
-      </section>
+      </section> -->
 
       <!-- 当前语境含义 -->
       <section class="rounded-lg shadow-sm border border-gray-200 bg-white p-5">
@@ -282,7 +282,6 @@ import { ElMessage } from 'element-plus'
 
 // Store
 const wordsStore = useWordsStore()
-
 // 状态
 const submitting = ref(false)
 const includeLocation = ref(false)

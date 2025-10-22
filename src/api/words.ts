@@ -1,10 +1,10 @@
 import { request } from './client'
-import type { WordEntry, UserWordRecord, WordRecordFilters, PaginatedResponse, DuplicationAnalysis } from '@/types'
+import type { WordEntry, UserWordRecord, WordRecordFilters, PageResponse, DuplicationAnalysis } from '@/types'
 
 // 扩展的API接口
 export const wordsApi = {
   // 词条查询和管理
-  async searchWordEntries(query: string, page = 1, limit = 20): Promise<PaginatedResponse<WordEntry>> {
+  async searchWordEntries(query: string, page = 1, limit = 20): Promise<WordEntry[]> {
     return request.get('/api/word-entries/search', {
       params: { query, page, limit }
     })
@@ -23,7 +23,7 @@ export const wordsApi = {
     return request.post('/api/word-records', record)
   },
 
-  async getWordRecords(filters?: WordRecordFilters, page = 1, limit = 20): Promise<PaginatedResponse<UserWordRecord>> {
+  async getWordRecords(filters?: WordRecordFilters, page = 1, limit = 20): Promise<PageResponse<UserWordRecord>> {
     return request.get('/api/word-records', {
       params: { ...filters, page, limit }
     })

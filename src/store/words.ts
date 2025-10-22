@@ -36,7 +36,7 @@ export const useWordsStore = defineStore('words', () => {
 
     try {
       const response = await wordsApi.searchWordEntries(query, page, limit)
-      searchResults.value = response.items
+      searchResults.value = response
     } catch (err) {
       error.value = err instanceof Error ? err.message : 'Failed to search word entries'
       console.error('Error searching word entries:', err)
