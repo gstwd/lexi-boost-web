@@ -1,47 +1,8 @@
 import { request } from './client'
 import type { WordEntry, UserWordRecord, WordRecordFilters, PaginatedResponse, DuplicationAnalysis } from '@/types'
 
-export interface Word {
-  id: number
-  word: string
-  meaning: string
-  pronunciation?: string
-  difficulty: 'easy' | 'medium' | 'hard'
-  tags?: string[]
-}
-
-export interface WordsResponse {
-  words: Word[]
-  total: number
-  page: number
-  limit: number
-}
-
 // 扩展的API接口
 export const wordsApi = {
-  // 原有的基础CRUD
-  async getWords(page = 1, limit = 20): Promise<WordsResponse> {
-    return request.get(`/api/words`, {
-      params: { page, limit }
-    })
-  },
-
-  async getWordById(id: number): Promise<Word> {
-    return request.get(`/api/words/${id}`)
-  },
-
-  async createWord(word: Omit<Word, 'id'>): Promise<Word> {
-    return request.post('/api/words', word)
-  },
-
-  async updateWord(id: number, word: Partial<Word>): Promise<Word> {
-    return request.put(`/api/words/${id}`, word)
-  },
-
-  async deleteWord(id: number): Promise<void> {
-    return request.delete(`/api/words/${id}`)
-  },
-
   // 词条查询和管理
   async searchWordEntries(query: string, page = 1, limit = 20): Promise<PaginatedResponse<WordEntry>> {
     return request.get('/api/word-entries/search', {

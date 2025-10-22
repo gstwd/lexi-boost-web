@@ -20,7 +20,7 @@
                 <div class="card-header">
                   <el-row justify="space-between" align="middle">
                     <el-col :span="12">
-                      <el-text type="info">显示 {{ words.length }} / {{ pagination.total }} 个单词</el-text>
+                      <el-text type="info">显示 {{ wordRecords.length }} / {{ recordPagination.total }} 个单词</el-text>
                     </el-col>
                     <el-col :span="12" style="text-align: right">
                       <el-button type="primary" :icon="Plus" @click="showAddDialog = true">添加单词</el-button>
@@ -36,20 +36,21 @@
                 </template>
               </el-alert>
 
-              <el-empty v-if="!loading && words.length === 0" description="暂无单词数据">
+              <el-empty v-if="!loading && wordRecords.length === 0" description="暂无单词数据">
                 <el-button type="primary" @click="showAddDialog = true">添加第一个单词</el-button>
               </el-empty>
 
               <el-row v-else :gutter="16">
-                <el-col v-for="word in words" :key="word.id" :xs="24" :sm="12" :md="8" :lg="6" class="mb-4">
+                <el-col v-for="word in wordRecords" :key="word.id" :xs="24" :sm="12" :md="8" :lg="6" class="mb-4">
                   <el-card class="word-card" shadow="hover">
                     <template #header>
                       <div class="word-header">
                         <el-text tag="h3" class="word-title">
                           {{ word.word }}
                         </el-text>
-                        <el-tag :type="getDifficultyTagType(word.difficulty)" size="small">
-                          {{ getDifficultyText(word.difficulty) }}
+                        <!-- TODO 以前是单词难度，待修改展示内容 -->
+                        <el-tag :type="getDifficultyTagType(word.meaning)" size="small">
+                          {{ getDifficultyText(word.meaning) }}
                         </el-tag>
                       </div>
                     </template>
@@ -59,10 +60,11 @@
                         {{ word.meaning }}
                       </el-text>
 
-                      <div v-if="word.pronunciation" class="word-pronunciation">
+                      <div v-if="word.sourceType" class="word-pronunciation">
                         <el-text type="info" size="small">
+                          <!-- TODO 以前是发音，待修改 -->
                           <el-icon><microphone /></el-icon>
-                          {{ word.pronunciation }}
+                          {{ word.sourceType }}
                         </el-text>
                       </div>
 
@@ -85,9 +87,9 @@
 
               <div v-if="totalPages > 1" class="pagination-wrapper">
                 <el-pagination
-                  v-model:current-page="pagination.page"
-                  :page-size="pagination.limit"
-                  :total="pagination.total"
+                  v-model:current-page="recordPagination.page"
+                  :page-size="recordPagination.limit"
+                  :total="recordPagination.total"
                   layout="prev, pager, next, jumper"
                   background
                   @current-change="goToPage"
@@ -134,12 +136,12 @@ import { onMounted, computed, ref, reactive } from 'vue'
 import { useWordsStore } from '@/store'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Refresh, Edit, Delete, Microphone } from '@element-plus/icons-vue'
-import type { Word } from '@/api/words'
+import type { UserWordRecord } from '@/types'
 
 const wordsStore = useWordsStore()
 
-const { words, loading, error, pagination } = wordsStore
-const totalPages = computed(() => wordsStore.totalPages)
+const { wordRecords, loading, error, recordPagination } = wordsStore
+const totalPages = computed(() => wordsStore.totalRecordPages)
 
 const showAddDialog = ref(false)
 const wordForm = reactive({
@@ -169,12 +171,12 @@ const getDifficultyText = (difficulty: string) => {
 }
 
 const refreshWords = () => {
-  wordsStore.fetchWords(pagination.page, pagination.limit)
+  wordsStore.fetchWordRecords({}, recordPagination.page, recordPagination.limit)
 }
 
 const goToPage = (page: number) => {
   if (page >= 1 && page <= totalPages.value) {
-    wordsStore.fetchWords(page, pagination.limit)
+    wordsStore.fetchWordRecords({}, page, recordPagination.limit)
   }
 }
 
@@ -207,13 +209,11 @@ const handleSaveWord = async () => {
           .filter(Boolean)
       : []
 
-    await wordsStore.addWord({
-      word: wordForm.word,
-      meaning: wordForm.meaning,
-      pronunciation: wordForm.pronunciation || undefined,
-      difficulty: wordForm.difficulty,
-      tags: tags.length > 0 ? tags : undefined
-    })
+    // await wordsStore.createWordRecord({
+    //   word: wordForm.word,
+    //   meaning: wordForm.meaning,
+    //   tags: tags.length > 0 ? tags : undefined
+    // })
 
     ElMessage.success('单词添加成功')
     handleDialogClose()
@@ -223,11 +223,11 @@ const handleSaveWord = async () => {
   }
 }
 
-const editWord = (word: Word) => {
+const editWord = (word: UserWordRecord) => {
   ElMessage.info('编辑功能开发中...')
 }
 
-const deleteWord = async (word: Word) => {
+const deleteWord = async (word: UserWordRecord) => {
   try {
     await ElMessageBox.confirm(`确定要删除单词 "${word.word}" 吗？`, '确认删除', {
       confirmButtonText: '确定',
@@ -235,7 +235,7 @@ const deleteWord = async (word: Word) => {
       type: 'warning'
     })
 
-    await wordsStore.deleteWord(word.id)
+    await wordsStore.deleteWordRecord(word.id)
     ElMessage.success('删除成功')
     refreshWords()
   } catch (error) {
