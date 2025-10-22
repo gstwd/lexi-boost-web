@@ -1,4 +1,4 @@
-import apiClient, { request } from './client'
+import { request } from './client'
 import type { WordEntry, UserWordRecord, WordRecordFilters, PaginatedResponse, DuplicationAnalysis } from '@/types'
 
 export interface Word {
@@ -21,25 +21,25 @@ export interface WordsResponse {
 export const wordsApi = {
   // 原有的基础CRUD
   async getWords(page = 1, limit = 20): Promise<WordsResponse> {
-    return apiClient.get(`/api/words`, {
+    return request.get(`/api/words`, {
       params: { page, limit }
     })
   },
 
   async getWordById(id: number): Promise<Word> {
-    return apiClient.get(`/api/words/${id}`)
+    return request.get(`/api/words/${id}`)
   },
 
   async createWord(word: Omit<Word, 'id'>): Promise<Word> {
-    return apiClient.post('/api/words', word)
+    return request.post('/api/words', word)
   },
 
   async updateWord(id: number, word: Partial<Word>): Promise<Word> {
-    return apiClient.put(`/api/words/${id}`, word)
+    return request.put(`/api/words/${id}`, word)
   },
 
   async deleteWord(id: number): Promise<void> {
-    return apiClient.delete(`/api/words/${id}`)
+    return request.delete(`/api/words/${id}`)
   },
 
   // 词条查询和管理
